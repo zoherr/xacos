@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 import { Command } from "commander";
-import initCommand from "../commands/init.js";
-import prismaCommand from "../commands/prisma.js";
-import createCommand from "../commands/create.js";
+import initCommand from "../src/commands/init.js";
+import prismaCommand from "../src/commands/prisma.js";
+import createCommand from "../src/commands/create.js";
 
 const program = new Command();
 
