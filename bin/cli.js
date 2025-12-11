@@ -8,12 +8,12 @@ const program = new Command();
 
 program
   .name("xacos")
-  .description("Node backend scaffolding CLI")
+  .description("Xacos backend scaffolding CLI")
   .version("1.0.0");
 
 program
   .command("init")
-  .option("--ts", "Create project in TypeScript")
+  .option("--ts", "Use TypeScript")
   .action(initCommand);
 
 program
@@ -22,7 +22,6 @@ program
 
 program
   .command("create <name>")
-  .description("Create model/controller/service/route")
   .action(createCommand);
 
-program.parse(process.argv);
+program.parse();

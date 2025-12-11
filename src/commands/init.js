@@ -1,26 +1,16 @@
 import fs from "fs-extra";
+import path from "path";
+import chalk from "chalk";
 
-export default async function initCommand(options) {
-  const isTs = options.ts;
+export default async function initCommand(opts) {
+  const useTs = opts.ts;
+  const templatePath = useTs
+    ? path.join(__dirname, "../templates/ts/base-project")
+    : path.join(__dirname, "../templates/js/base-project");
 
-  console.log("🚀 Creating Xacos backend structure...");
+  const dest = process.cwd();
 
-  fs.ensureDirSync("src/controllers");
-  fs.ensureDirSync("src/models");
-  fs.ensureDirSync("src/routes");
-  fs.ensureDirSync("src/services");
+  await fs.copy(templatePath, dest);
 
-  const indexFile = isTs ? "src/index.ts" : "src/index.js";
-
-  fs.writeFileSync(
-    indexFile,
-    `
-import express from "express";
-const app = express();
-app.use(express.json());
-app.listen(3000, () => console.log("Server running on port 3000"));`
-  );
-
-  console.log("✔ Backend initialized!");
+  console.log(chalk.green("✔ Project initialized successfully"));
 }
-

@@ -1,45 +1,19 @@
 import fs from "fs-extra";
+import path from "path";
+import chalk from "chalk";
 
 export default async function createCommand(name) {
-  const pascal = name.charAt(0).toUpperCase() + name.slice(1);
-  const lower = name.toLowerCase();
+  const basePath = process.cwd();
+  const folders = ["routes", "controllers", "services", "models"];
 
-  console.log(`🚧 Creating ${pascal} resources...`);
-
-  fs.writeFileSync(
-    `src/models/${pascal}.ts`,
-    `export const ${pascal}Model = {}`
-  );
-
-  fs.writeFileSync(
-    `src/controllers/${pascal}Controller.ts`,
-    `export default {
-  async index(req, res) {
-    res.send("${pascal} list");
+  for (const folder of folders) {
+    const filePath = path.join(basePath, "src", folder, `${name}.${folder.slice(0,-1)}.js`);
+    const templatePath = path.join(
+      path.dirname(new URL(import.meta.url).pathname),
+      `../templates/js/${folder.slice(0,-1)}.js`
+    );
+    await fs.copy(templatePath, filePath);
   }
-}`
-  );
 
-  fs.writeFileSync(
-    `src/services/${pascal}Service.ts`,
-    `export default {
-  async getAll() {
-    return [];
-  }
-}`
-  );
-
-  fs.writeFileSync(
-    `src/routes/${lower}.js`,
-    `
-import { Router } from "express";
-import Controller from "../controllers/${pascal}Controller.js";
-
-const router = Router();
-router.get("/", Controller.index);
-export default router;
-`
-  );
-
-  console.log("✔ All files created!");
+  console.log(chalk.green(`✔ Created ${name} module successfully`));
 }
