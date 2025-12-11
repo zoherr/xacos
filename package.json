@@ -1,0 +1,16 @@
+{
+    "name": "xacos",
+    "version": "1.0.0",
+    "description": "Backend scaffolding CLI",
+    "main": "bin/cli.js",
+    "type": "module",
+    "bin": {
+      "xacos": "./bin/cli.js",
+      "init-xacos": "./bin/cli.js"
+    },
+    "dependencies": {
+      "commander": "^12.0.0",
+      "fs-extra": "^11.2.0"
+    }
+  }
+  
