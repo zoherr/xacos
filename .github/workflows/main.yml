@@ -3,12 +3,11 @@ name: Publish Package
 on:
   push:
     tags:
-      - 'v*' # Trigger on version tags (e.g., v1.0.0)
+      - 'v*'
 
-# CRITICAL: This grants permission for OIDC token generation
 permissions:
-  id-token: write
-  contents: read # Necessary for checking out code
+  id-token: write  # Required for OIDC
+  contents: read
 
 jobs:
   publish:
@@ -16,12 +15,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Use setup-node and ensure npm version is recent (11.5.1 or later recommended)
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
-          # The OIDC setup automatically handles authentication if Trusted Publishing is configured.
 
+      # Ensure npm 11.5.1 or later is installed
+      - name: Update npm
+        run: npm install -g npm@latest
       - run: npm ci
       - run: npm publish
