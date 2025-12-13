@@ -40,22 +40,22 @@ export const navigation = [
   {
     id: "0",
     title: "Features",
-    url: "#features",
+    url: "/#features",
   },
   {
     id: "1",
     title: "Commands",
-    url: "#how-to-use",
+    url: "/#how-to-use",
   },
   {
     id: "2",
     title: "Documentation",
-    url: "#roadmap",
+    url: "/docs",
   },
   {
     id: "3",
     title: "Get Started",
-    url: "#pricing",
+    url: "/#pricing",
   },
 ];
 
@@ -66,9 +66,9 @@ export const notificationImages = [notification4, notification3, notification2];
 export const companyLogos = [yourlogo, yourlogo, yourlogo, yourlogo, yourlogo];
 
 export const brainwaveServices = [
-  "Professional Structure",
-  "TypeScript Support",
-  "Auto-wiring Routes",
+  "Quick Start Guide",
+  "API Reference",
+  "Plugin Documentation",
 ];
 
 export const brainwaveServicesIcons = [
@@ -82,8 +82,8 @@ export const brainwaveServicesIcons = [
 export const roadmap = [
   {
     id: "0",
-    title: "Project Initialization",
-    text: "Create production-ready Node.js backend projects with a single command. Support for JavaScript and TypeScript with professional folder structure.",
+    title: "Docker Plugin",
+    text: "Containerize your applications with Docker. Includes Dockerfile and docker-compose.yml with automatic service configuration.",
     date: "v1.0.0",
     status: "done",
     imageUrl: roadmap1,
@@ -91,24 +91,24 @@ export const roadmap = [
   },
   {
     id: "1",
-    title: "Database Integration",
-    text: "Seamless setup for MongoDB with Mongoose or Prisma ORM. Automatic database configuration and connection management.",
+    title: "Pub/Sub Plugin",
+    text: "Event-driven architecture with pub/sub system. Create subscribers and publishers for decoupled communication.",
     date: "v1.0.0",
     status: "done",
     imageUrl: roadmap2,
   },
   {
     id: "2",
-    title: "Module Generation",
-    text: "Generate complete modules with controller, service, model, and routes. Auto-wiring routes for instant API endpoints.",
+    title: "Message Queue Plugin",
+    text: "Background job processing with BullMQ. Handle email queues, notifications, and async tasks efficiently.",
     date: "v1.0.0",
     status: "done",
     imageUrl: roadmap3,
   },
   {
     id: "3",
-    title: "Advanced Features",
-    text: "Redis caching, WebSocket support, Socket.io integration, message queues with BullMQ, and Docker deployment ready.",
+    title: "GitHub Actions Plugin",
+    text: "CI/CD workflows with GitHub Actions. Automated testing, building, and deployment pipelines ready to use.",
     date: "v1.0.8",
     status: "done",
     imageUrl: roadmap4,
@@ -116,63 +116,63 @@ export const roadmap = [
 ];
 
 export const collabText =
-  "Xacos integrates seamlessly with the modern Node.js ecosystem. Build faster with industry-standard tools and best practices.";
+  "Xacos supports powerful plugins for Docker, Pub/Sub, Message Queues, GitHub Actions, and more. Extend your backend with one command.";
 
 export const collabContent = [
   {
     id: "0",
-    title: "Express.js Framework",
+    title: "Plugin System",
     text: collabText,
   },
   {
     id: "1",
-    title: "TypeScript Support",
+    title: "Easy Integration",
   },
   {
     id: "2",
-    title: "Production Ready",
+    title: "One Command Setup",
   },
 ];
 
 export const collabApps = [
   {
     id: "0",
-    title: "Express.js",
+    title: "Docker",
     icon: yourlogo,
     width: 36,
     height: 36,
   },
   {
     id: "1",
-    title: "MongoDB",
+    title: "Pub/Sub",
     icon: yourlogo,
     width: 34,
     height: 36,
   },
   {
     id: "2",
-    title: "Prisma",
+    title: "Message Queue",
     icon: yourlogo,
     width: 36,
     height: 28,
   },
   {
     id: "3",
-    title: "Redis",
+    title: "GitHub Actions",
     icon: yourlogo,
     width: 34,
     height: 35,
   },
   {
     id: "4",
-    title: "TypeScript",
+    title: "Redis",
     icon: yourlogo,
     width: 34,
     height: 34,
   },
   {
     id: "5",
-    title: "Docker",
+    title: "WebSocket",
     icon: yourlogo,
     width: 34,
     height: 34,
@@ -186,7 +186,7 @@ export const collabApps = [
   },
   {
     id: "7",
-    title: "GitHub Actions",
+    title: "Prisma",
     icon: yourlogo,
     width: 38,
     height: 32,

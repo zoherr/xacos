@@ -13,15 +13,15 @@ import Generating from "./Generating";
 
 const Services = () => {
   return (
-    <Section id="how-to-use">
+    <Section id="how-to-use" className="bg-n-11">
       <div className="container">
         <Heading
-          title="Professional Backend Scaffolding Made Simple."
-          text="Xacos CLI unlocks the potential of rapid Node.js backend development with industry best practices"
+          title="Complete Documentation & Guides"
+          text="Everything you need to get started with Xacos CLI. From quick start to advanced features, we've got you covered."
         />
 
         <div className="relative">
-          <div className="relative z-1 flex items-center h-[39rem] mb-5 p-8 border border-n-1/10 rounded-3xl overflow-hidden lg:p-20 xl:h-[46rem]">
+          <div className="relative z-1 flex items-center h-[39rem] mb-5 p-8 border border-n-6 bg-white rounded-3xl overflow-hidden lg:p-20 xl:h-[46rem] shadow-lg">
             <div className="absolute top-0 left-0 w-full h-full pointer-events-none md:w-3/5 xl:w-auto">
               <img
                 className="w-full h-full object-cover md:object-right"
@@ -33,9 +33,9 @@ const Services = () => {
             </div>
 
             <div className="relative z-1 max-w-[17rem] ml-auto">
-              <h4 className="h4 mb-4">One Command Setup</h4>
+              <h4 className="h4 mb-4">Documentation Hub</h4>
               <p className="body-2 mb-[3rem] text-n-3">
-                Initialize a complete backend project with all the tools you need. TypeScript, databases, and more.
+                Comprehensive guides, API references, and examples to help you build amazing backends with Xacos CLI.
               </p>
               <ul className="body-2">
                 {brainwaveServices.map((item, index) => (
@@ -66,18 +66,18 @@ const Services = () => {
               </div>
 
               <div className="absolute inset-0 flex flex-col justify-end p-8 bg-gradient-to-b from-n-8/0 to-n-8/90 lg:p-15">
-                <h4 className="h4 mb-4">Module Generation</h4>
+                <h4 className="h4 mb-4">Quick Start Guide</h4>
                 <p className="body-2 mb-[3rem] text-n-3">
-                  Generate complete modules with controller, service, model, and routes. Auto-wired and ready to use.
+                  Get up and running in minutes with our step-by-step quick start guide. Perfect for beginners and experts alike.
                 </p>
               </div>
 
               <PhotoChatMessage />
             </div>
 
-            <div className="p-4 bg-n-7 rounded-3xl overflow-hidden lg:min-h-[46rem]">
+            <div className="p-4 bg-white border border-n-6 rounded-3xl overflow-hidden lg:min-h-[46rem] shadow-lg">
               <div className="py-12 px-4 xl:px-8">
-                <h4 className="h4 mb-4">Advanced Features</h4>
+                <h4 className="h4 mb-4">API Reference</h4>
                 <p className="body-2 mb-[2rem] text-n-3">
                   The world’s most powerful AI photo and video art generation
                   engine. What will you create?
@@ -90,7 +90,7 @@ const Services = () => {
                       className={`rounded-2xl flex items-center justify-center ${
                         index === 2
                           ? "w-[3rem] h-[3rem] p-0.25 bg-conic-gradient md:w-[4.5rem] md:h-[4.5rem]"
-                          : "flex w-10 h-10 bg-n-6 md:w-15 md:h-15"
+                          : "flex w-10 h-10 bg-gradient-to-br from-[#1A0A0A] to-[#2A1515] border border-color-1/20 md:w-15 md:h-15"
                       }`}
                     >
                       <div
@@ -107,7 +107,7 @@ const Services = () => {
                 </ul>
               </div>
 
-              <div className="relative h-[20rem] bg-n-8 rounded-xl overflow-hidden md:h-[25rem]">
+              <div className="relative h-[20rem] bg-gradient-to-br from-[#1A0A0A] to-[#2A1515] border border-color-1/20 rounded-xl overflow-hidden md:h-[25rem]">
                 <img
                   src={service3}
                   className="w-full h-full object-cover"
