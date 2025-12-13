@@ -7,42 +7,59 @@ import ClipPath from "../assets/svg/ClipPath";
 
 const Benefits = () => {
   return (
-    <Section id="features" className="bg-n-11">
+    <Section id="features">
       <div className="container relative z-2">
         <Heading
           className="md:max-w-md lg:max-w-2xl"
-          title="Why Choose Xacos CLI?"
+          title="Build Faster, Ship Sooner with Xacos CLI"
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-          {benefits.map((item, index) => (
+        <div className="flex flex-wrap gap-10 mb-10">
+          {benefits.map((item) => (
             <div
+              className="block relative p-0.5 bg-no-repeat bg-[length:100%_100%] md:max-w-[24rem]"
+              style={{
+                backgroundImage: `url(${item.backgroundUrl})`,
+              }}
               key={item.id}
-              className="group relative p-6 bg-white border border-n-6 rounded-2xl hover:border-color-1 transition-all duration-300 hover:shadow-xl hover:shadow-color-1/20 hover:-translate-y-1"
             >
-              <div className="flex items-start gap-4 mb-4">
-                <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-color-1/10 to-color-2/10 rounded-xl flex items-center justify-center border border-color-1/20">
+              <div className="relative z-2 flex flex-col min-h-[22rem] p-[2.4rem] pointer-events-none">
+                <h5 className="h5 mb-5">{item.title}</h5>
+                <p className="body-2 mb-6 text-n-3">{item.text}</p>
+                <div className="flex items-center mt-auto">
                   <img
                     src={item.iconUrl}
-                    width={24}
-                    height={24}
+                    width={48}
+                    height={48}
                     alt={item.title}
-                    className="opacity-90"
                   />
-                </div>
-                <div className="flex-1">
-                  <h5 className="h5 mb-2 text-n-2 group-hover:text-color-1 transition-colors">
-                    {item.title}
-                  </h5>
+                  <p className="ml-auto font-code text-xs font-bold text-n-1 uppercase tracking-wider">
+                    Explore more
+                  </p>
+                  <Arrow />
                 </div>
               </div>
-              <p className="body-2 text-n-4 leading-relaxed">{item.text}</p>
-              <div className="mt-4 flex items-center text-color-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                <span className="font-code text-xs font-bold uppercase tracking-wider">
-                  Learn more
-                </span>
-                <Arrow />
+
+              {item.light && <GradientLight />}
+
+              <div
+                className="absolute inset-0.5 bg-n-8"
+                style={{ clipPath: "url(#benefits)" }}
+              >
+                <div className="absolute inset-0 opacity-0 transition-opacity hover:opacity-10">
+                  {item.imageUrl && (
+                    <img
+                      src={item.imageUrl}
+                      width={380}
+                      height={362}
+                      alt={item.title}
+                      className="w-full h-full object-cover"
+                    />
+                  )}
+                </div>
               </div>
+
+              <ClipPath />
             </div>
           ))}
         </div>

@@ -16,22 +16,22 @@ export default {
           6: "#FF8E53",
         },
         stroke: {
-          1: "#E5E7EB",
+          1: "#26242C",
         },
         n: {
-          1: "#000000",
-          2: "#1F2937",
-          3: "#4B5563",
-          4: "#6B7280",
-          5: "#9CA3AF",
-          6: "#E5E7EB",
-          7: "#F3F4F6",
-          8: "#FFFFFF",
-          9: "#3B82F6",
-          10: "#6366F1",
-          11: "#F9FAFB",
-          12: "#E5E7EB",
-          13: "#9CA3AF",
+          1: "#FFFFFF",
+          2: "#CAC6DD",
+          3: "#ADA8C3",
+          4: "#757185",
+          5: "#3F3A52",
+          6: "#252134",
+          7: "#15131D",
+          8: "#0E0C15",
+          9: "#474060",
+          10: "#43435C",
+          11: "#1B1B2E",
+          12: "#2E2A41",
+          13: "#6C7275",
         },
       },
       fontFamily: {
@@ -69,9 +69,9 @@ export default {
       backgroundImage: {
         "radial-gradient": "radial-gradient(var(--tw-gradient-stops))",
         "conic-gradient":
-          "conic-gradient(from 225deg, #3B82F6, #6366F1, #8B5CF6, #A855F7, #3B82F6)",
-        "blue-gradient": "linear-gradient(135deg, #3B82F6 0%, #6366F1 50%, #8B5CF6 100%)",
-        "light-gradient": "linear-gradient(135deg, #F9FAFB 0%, #FFFFFF 100%)",
+          "conic-gradient(from 225deg, #FF6B6B, #FF8E53, #FF6B9D, #FF8E8E, #FF6B6B)",
+        "red-gradient": "linear-gradient(135deg, #FF6B6B 0%, #FF8E53 50%, #FF6B9D 100%)",
+        "orange-gradient": "linear-gradient(135deg, #FF8E53 0%, #FF6B6B 100%)",
       },
     },
   },
@@ -123,12 +123,3 @@ export default {
         ".button": {
           "@apply font-code text-xs font-bold uppercase tracking-wider": {},
         },
-      });
-      addUtilities({
-        ".tap-highlight-color": {
-          "-webkit-tap-highlight-color": "rgba(0, 0, 0, 0)",
-        },
-      });
-    }),
-  ],
-};

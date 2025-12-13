@@ -7,7 +7,7 @@ import { check2, grid, loading1 } from "../assets";
 import { Gradient } from "./design/Roadmap";
 
 const Roadmap = () => (
-  <Section className="overflow-hidden bg-n-11" id="roadmap">
+  <Section className="overflow-hidden" id="roadmap">
     <div className="container md:pb-10">
       <Heading tag="Ready to get started" title="What we’re working on" />
 
@@ -22,7 +22,7 @@ const Roadmap = () => (
               }`}
               key={item.id}
             >
-              <div className="relative p-8 bg-white border border-n-6 rounded-[2.4375rem] overflow-hidden xl:p-15 shadow-lg">
+              <div className="relative p-8 bg-n-8 rounded-[2.4375rem] overflow-hidden xl:p-15">
                 <div className="absolute top-0 left-0 max-w-full">
                   <img
                     className="w-full"
@@ -36,7 +36,7 @@ const Roadmap = () => (
                   <div className="flex items-center justify-between max-w-[27rem] mb-8 md:mb-20">
                     <Tagline>{item.date}</Tagline>
 
-                    <div className="flex items-center px-4 py-1 bg-gradient-to-r from-color-1 to-color-2 rounded text-white">
+                    <div className="flex items-center px-4 py-1 bg-n-1 rounded text-n-8">
                       <img
                         className="mr-2.5"
                         src={item.status === "done" ? check2 : loading1}
