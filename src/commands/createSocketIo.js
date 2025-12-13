@@ -2,6 +2,7 @@ import fs from "fs-extra";
 import path from "path";
 import { fileURLToPath } from "url";
 import chalk from "chalk";
+import { generateFromTemplate, getTemplatePath } from "../utils/templateEngine.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,73 +25,10 @@ export default async function createSocketIoCommand() {
     // Ensure sockets directory exists
     await fs.ensureDir(path.join(projectPath, "src/sockets"));
 
-    const content = `import { Server } from "socket.io";
-
-export const initSocketIO = (server) => {
-  const io = new Server(server, {
-    cors: {
-      origin: process.env.CORS_ORIGIN || "*",
-      methods: ["GET", "POST"],
-      credentials: true,
-    },
-    path: "/socket.io",
-  });
-
-  io.on("connection", (socket) => {
-    console.log(\`🔌 Client connected: \${socket.id}\`);
-
-    // Join room
-    socket.on("join-room", (roomId) => {
-      socket.join(roomId);
-      console.log(\`📥 Socket \${socket.id} joined room \${roomId}\`);
-      io.to(roomId).emit("user-joined", { socketId: socket.id });
-    });
-
-    // Leave room
-    socket.on("leave-room", (roomId) => {
-      socket.leave(roomId);
-      console.log(\`📤 Socket \${socket.id} left room \${roomId}\`);
-      io.to(roomId).emit("user-left", { socketId: socket.id });
-    });
-
-    // Handle custom events
-    socket.on("message", (data) => {
-      console.log("📨 Message received:", data);
-      // Echo to sender
-      socket.emit("message", { 
-        from: socket.id, 
-        data,
-        timestamp: new Date().toISOString() 
-      });
-      
-      // Broadcast to others in the same room (if in a room)
-      const rooms = Array.from(socket.rooms);
-      rooms.forEach((room) => {
-        if (room !== socket.id) {
-          io.to(room).emit("message", { 
-            from: socket.id, 
-            data,
-            timestamp: new Date().toISOString() 
-          });
-        }
-      });
-    });
-
-    // Handle disconnect
-    socket.on("disconnect", (reason) => {
-      console.log(\`🔌 Client disconnected: \${socket.id} (reason: \${reason})\`);
-    });
-
-    // Handle errors
-    socket.on("error", (error) => {
-      console.error(\`❌ Socket error for \${socket.id}:\`, error);
-    });
-  });
-
-  return io;
-};
-`;
-    await fs.writeFile(path.join(projectPath, `src/sockets/index.${ext}`), content);
+    // Use template
+    const templatePath = getTemplatePath("socketio.js", "features");
+    const destinationPath = path.join(projectPath, `src/sockets/index.${ext}`);
+    await generateFromTemplate(templatePath, destinationPath, { ext });
 
     // Update server.js to use Socket.io
     const serverPath = path.join(projectPath, `src/server.${ext}`);

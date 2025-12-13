@@ -2,6 +2,7 @@ import fs from "fs-extra";
 import path from "path";
 import { fileURLToPath } from "url";
 import chalk from "chalk";
+import { generateFromTemplate, getTemplatePath } from "../utils/templateEngine.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,47 +25,10 @@ export default async function createRedisCommand() {
     // Ensure utils directory exists
     await fs.ensureDir(path.join(projectPath, "src/utils"));
 
-    const content = `import Redis from "ioredis";
-
-export const redis = new Redis({
-  host: process.env.REDIS_HOST || "localhost",
-  port: parseInt(process.env.REDIS_PORT || "6379"),
-  retryStrategy: (times) => {
-    const delay = Math.min(times * 50, 2000);
-    return delay;
-  },
-});
-
-redis.on("connect", () => {
-  console.log("✅ Redis connected");
-});
-
-redis.on("error", (err) => {
-  console.error("❌ Redis error:", err);
-});
-
-// Helper functions
-export const getCache = async (key) => {
-  const value = await redis.get(key);
-  return value ? JSON.parse(value) : null;
-};
-
-export const setCache = async (key, value, expiry = 3600) => {
-  await redis.setex(key, expiry, JSON.stringify(value));
-};
-
-export const deleteCache = async (key) => {
-  await redis.del(key);
-};
-
-export const clearCache = async (pattern = "*") => {
-  const keys = await redis.keys(pattern);
-  if (keys.length > 0) {
-    await redis.del(...keys);
-  }
-};
-`;
-    await fs.writeFile(path.join(projectPath, `src/utils/redis.${ext}`), content);
+    // Use template
+    const templatePath = getTemplatePath("redis.js", "features");
+    const destinationPath = path.join(projectPath, `src/utils/redis.${ext}`);
+    await generateFromTemplate(templatePath, destinationPath, { ext });
 
     // Update package.json to include ioredis
     const packageJsonPath = path.join(projectPath, "package.json");

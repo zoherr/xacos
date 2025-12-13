@@ -2,6 +2,7 @@ import fs from "fs-extra";
 import path from "path";
 import { fileURLToPath } from "url";
 import chalk from "chalk";
+import { generateFromTemplate, getTemplatePath } from "../utils/templateEngine.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,80 +25,10 @@ export default async function createWsCommand() {
     // Ensure sockets directory exists
     await fs.ensureDir(path.join(projectPath, "src/sockets"));
 
-    const content = `import { WebSocketServer } from "ws";
-
-export const initWebSocket = (server) => {
-  const wss = new WebSocketServer({ 
-    server,
-    path: "/ws",
-  });
-
-  wss.on("connection", (ws, req) => {
-    const clientIp = req.socket.remoteAddress;
-    console.log(\`🔌 WebSocket client connected from \${clientIp}\`);
-
-    // Send welcome message
-    ws.send(JSON.stringify({ 
-      type: "welcome", 
-      message: "Connected to WebSocket server" 
-    }));
-
-    ws.on("message", (message) => {
-      try {
-        const data = JSON.parse(message.toString());
-        console.log("📨 Received:", data);
-
-        // Echo back
-        ws.send(JSON.stringify({ 
-          type: "echo", 
-          data,
-          timestamp: new Date().toISOString() 
-        }));
-
-        // Broadcast to all clients (optional)
-        // wss.clients.forEach((client) => {
-        //   if (client !== ws && client.readyState === WebSocket.OPEN) {
-        //     client.send(JSON.stringify({ type: "broadcast", data }));
-        //   }
-        // });
-      } catch (error) {
-        ws.send(JSON.stringify({ 
-          type: "error", 
-          message: "Invalid JSON format" 
-        }));
-      }
-    });
-
-    ws.on("close", () => {
-      console.log(\`🔌 WebSocket client disconnected from \${clientIp}\`);
-    });
-
-    ws.on("error", (error) => {
-      console.error("❌ WebSocket error:", error);
-    });
-
-    // Heartbeat
-    const heartbeat = setInterval(() => {
-      if (ws.isAlive === false) {
-        return ws.terminate();
-      }
-      ws.isAlive = false;
-      ws.ping();
-    }, 30000);
-
-    ws.on("pong", () => {
-      ws.isAlive = true;
-    });
-
-    ws.on("close", () => {
-      clearInterval(heartbeat);
-    });
-  });
-
-  return wss;
-};
-`;
-    await fs.writeFile(path.join(projectPath, `src/sockets/index.${ext}`), content);
+    // Use template
+    const templatePath = getTemplatePath("websocket.js", "features");
+    const destinationPath = path.join(projectPath, `src/sockets/index.${ext}`);
+    await generateFromTemplate(templatePath, destinationPath, { ext });
 
     // Update server.js to use WebSocket
     const serverPath = path.join(projectPath, `src/server.${ext}`);

@@ -2,6 +2,7 @@ import fs from "fs-extra";
 import path from "path";
 import { fileURLToPath } from "url";
 import chalk from "chalk";
+import { generateFromTemplate, getTemplatePath } from "../utils/templateEngine.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,9 +17,14 @@ export default async function addCommand(name) {
 
   // Check if we're in a xacos project
   let isTs = false;
+  let useMongo = false;
+  let usePrisma = false;
+  
   try {
     const config = await fs.readJSON(xacosConfigPath);
     isTs = config.ts || false;
+    useMongo = config.mongodb || false;
+    usePrisma = config.prisma || false;
   } catch (error) {
     // Not a xacos project, default to JS
   }
@@ -28,27 +34,82 @@ export default async function addCommand(name) {
   try {
     // Ensure directories exist
     const dirs = ["controllers", "services", "models", "routes"];
+    if (isTs) {
+      dirs.push("interfaces");
+    }
+    
     for (const dir of dirs) {
       await fs.ensureDir(path.join(projectPath, "src", dir));
     }
 
+    // Template variables
+    const variables = {
+      moduleName,
+      ModuleName,
+      MODULE_NAME,
+      ext,
+    };
+
+    // Create interface (TypeScript only)
+    if (isTs) {
+      const interfaceTemplate = getTemplatePath("interface.ts", "modules");
+      const interfacePath = path.join(projectPath, `src/interfaces/${moduleName}.interface.${ext}`);
+      await generateFromTemplate(interfaceTemplate, interfacePath, variables);
+    }
+
     // Create controller
-    await createController(projectPath, moduleName, ModuleName, ext);
+    const controllerTemplate = getTemplatePath(
+      isTs ? "controller.ts" : "controller.js",
+      "modules"
+    );
+    const controllerPath = path.join(projectPath, `src/controllers/${moduleName}.controller.${ext}`);
+    await generateFromTemplate(controllerTemplate, controllerPath, variables);
 
     // Create service
-    await createService(projectPath, moduleName, ModuleName, ext);
+    const serviceTemplate = getTemplatePath(
+      isTs ? "service.ts" : "service.js",
+      "modules"
+    );
+    const servicePath = path.join(projectPath, `src/services/${moduleName}.service.${ext}`);
+    await generateFromTemplate(serviceTemplate, servicePath, variables);
 
-    // Create model
-    await createModel(projectPath, moduleName, ModuleName, ext, isTs);
+    // Create model (choose based on database)
+    let modelTemplate;
+    if (useMongo) {
+      modelTemplate = getTemplatePath(
+        isTs ? "model-mongodb.ts" : "model-mongodb.js",
+        "modules"
+      );
+    } else if (usePrisma) {
+      modelTemplate = getTemplatePath(
+        isTs ? "model-prisma.ts" : "model-prisma.js",
+        "modules"
+      );
+    } else {
+      modelTemplate = getTemplatePath(
+        isTs ? "model-basic.ts" : "model-basic.js",
+        "modules"
+      );
+    }
+    const modelPath = path.join(projectPath, `src/models/${moduleName}.model.${ext}`);
+    await generateFromTemplate(modelTemplate, modelPath, variables);
 
     // Create routes
-    await createRoutes(projectPath, moduleName, ModuleName, ext);
+    const routesTemplate = getTemplatePath(
+      isTs ? "routes.ts" : "routes.js",
+      "modules"
+    );
+    const routesPath = path.join(projectPath, `src/routes/${moduleName}.routes.${ext}`);
+    await generateFromTemplate(routesTemplate, routesPath, variables);
 
     // Update routes/index.js to include new route
     await updateRoutesIndex(projectPath, moduleName, ext);
 
     console.log(chalk.green(`\n✔ Module "${ModuleName}" created successfully!`));
     console.log(chalk.cyan(`\n📁 Files created:`));
+    if (isTs) {
+      console.log(chalk.white(`   - src/interfaces/${moduleName}.interface.${ext}`));
+    }
     console.log(chalk.white(`   - src/controllers/${moduleName}.controller.${ext}`));
     console.log(chalk.white(`   - src/services/${moduleName}.service.${ext}`));
     console.log(chalk.white(`   - src/models/${moduleName}.model.${ext}`));
@@ -56,269 +117,13 @@ export default async function addCommand(name) {
     console.log(chalk.yellow(`\n📝 Route registered at: /api/${moduleName}s\n`));
   } catch (error) {
     console.error(chalk.red(`✖ Error: ${error.message}`));
+    console.error(chalk.red(error.stack));
     process.exit(1);
   }
 }
 
 function capitalizeFirst(str) {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-}
-
-async function createController(projectPath, moduleName, ModuleName, ext) {
-  const content = `import * as ${moduleName}Service from "../services/${moduleName}.service.${ext}";
-import { sendResponse, sendError } from "../utils/response.${ext}";
-
-export const get${ModuleName}s = async (req, res) => {
-  try {
-    const ${moduleName}s = await ${moduleName}Service.getAll${ModuleName}s();
-    return sendResponse(res, 200, "${ModuleName}s retrieved successfully", ${moduleName}s);
-  } catch (error) {
-    return sendError(res, 500, error.message);
-  }
-};
-
-export const get${ModuleName}ById = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const ${moduleName} = await ${moduleName}Service.get${ModuleName}ById(id);
-    if (!${moduleName}) {
-      return sendError(res, 404, "${ModuleName} not found");
-    }
-    return sendResponse(res, 200, "${ModuleName} retrieved successfully", ${moduleName});
-  } catch (error) {
-    return sendError(res, 500, error.message);
-  }
-};
-
-export const create${ModuleName} = async (req, res) => {
-  try {
-    const ${moduleName} = await ${moduleName}Service.create${ModuleName}(req.body);
-    return sendResponse(res, 201, "${ModuleName} created successfully", ${moduleName});
-  } catch (error) {
-    return sendError(res, 400, error.message);
-  }
-};
-
-export const update${ModuleName} = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const ${moduleName} = await ${moduleName}Service.update${ModuleName}(id, req.body);
-    if (!${moduleName}) {
-      return sendError(res, 404, "${ModuleName} not found");
-    }
-    return sendResponse(res, 200, "${ModuleName} updated successfully", ${moduleName});
-  } catch (error) {
-    return sendError(res, 400, error.message);
-  }
-};
-
-export const delete${ModuleName} = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const deleted = await ${moduleName}Service.delete${ModuleName}(id);
-    if (!deleted) {
-      return sendError(res, 404, "${ModuleName} not found");
-    }
-    return sendResponse(res, 200, "${ModuleName} deleted successfully");
-  } catch (error) {
-    return sendError(res, 500, error.message);
-  }
-};
-`;
-  await fs.writeFile(
-    path.join(projectPath, `src/controllers/${moduleName}.controller.${ext}`),
-    content
-  );
-}
-
-async function createService(projectPath, moduleName, ModuleName, ext) {
-  const content = `import * as ${moduleName}Model from "../models/${moduleName}.model.${ext}";
-
-export const getAll${ModuleName}s = async () => {
-  return await ${moduleName}Model.findAll();
-};
-
-export const get${ModuleName}ById = async (id) => {
-  return await ${moduleName}Model.findById(id);
-};
-
-export const create${ModuleName} = async (data) => {
-  return await ${moduleName}Model.create(data);
-};
-
-export const update${ModuleName} = async (id, data) => {
-  return await ${moduleName}Model.update(id, data);
-};
-
-export const delete${ModuleName} = async (id) => {
-  return await ${moduleName}Model.remove(id);
-};
-`;
-  await fs.writeFile(
-    path.join(projectPath, `src/services/${moduleName}.service.${ext}`),
-    content
-  );
-}
-
-async function createModel(projectPath, moduleName, ModuleName, ext, isTs) {
-  // Check if using MongoDB or Prisma
-  const xacosConfigPath = path.join(projectPath, "xacos.json");
-  let useMongo = false;
-  let usePrisma = false;
-
-  try {
-    const config = await fs.readJSON(xacosConfigPath);
-    useMongo = config.mongodb || false;
-    usePrisma = config.prisma || false;
-  } catch (error) {
-    // Default to basic model
-  }
-
-  if (useMongo) {
-    const content = `import mongoose from "mongoose";
-
-const ${ModuleName}Schema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: true,
-    },
-    // Add more fields as needed
-  },
-  {
-    timestamps: true,
-  }
-);
-
-export const ${ModuleName} = mongoose.model("${ModuleName}", ${ModuleName}Schema);
-
-export const findAll = async () => {
-  return await ${ModuleName}.find();
-};
-
-export const findById = async (id) => {
-  return await ${ModuleName}.findById(id);
-};
-
-export const create = async (data) => {
-  return await ${ModuleName}.create(data);
-};
-
-export const update = async (id, data) => {
-  return await ${ModuleName}.findByIdAndUpdate(id, data, { new: true });
-};
-
-export const remove = async (id) => {
-  return await ${ModuleName}.findByIdAndDelete(id);
-};
-`;
-    await fs.writeFile(
-      path.join(projectPath, `src/models/${moduleName}.model.${ext}`),
-      content
-    );
-  } else if (usePrisma) {
-    const content = `import { prisma } from "../config/db.${ext}";
-
-export const findAll = async () => {
-  return await prisma.${moduleName}.findMany();
-};
-
-export const findById = async (id) => {
-  return await prisma.${moduleName}.findUnique({
-    where: { id: parseInt(id) },
-  });
-};
-
-export const create = async (data) => {
-  return await prisma.${moduleName}.create({
-    data,
-  });
-};
-
-export const update = async (id, data) => {
-  return await prisma.${moduleName}.update({
-    where: { id: parseInt(id) },
-    data,
-  });
-};
-
-export const remove = async (id) => {
-  return await prisma.${moduleName}.delete({
-    where: { id: parseInt(id) },
-  });
-};
-`;
-    await fs.writeFile(
-      path.join(projectPath, `src/models/${moduleName}.model.${ext}`),
-      content
-    );
-  } else {
-    // Basic in-memory model
-    const content = `// In-memory storage (replace with actual database)
-let ${moduleName}s = [];
-let nextId = 1;
-
-export const findAll = async () => {
-  return ${moduleName}s;
-};
-
-export const findById = async (id) => {
-  return ${moduleName}s.find((item) => item.id === id);
-};
-
-export const create = async (data) => {
-  const new${ModuleName} = {
-    id: nextId++,
-    ...data,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  };
-  ${moduleName}s.push(new${ModuleName});
-  return new${ModuleName};
-};
-
-export const update = async (id, data) => {
-  const index = ${moduleName}s.findIndex((item) => item.id === id);
-  if (index === -1) return null;
-  ${moduleName}s[index] = {
-    ...${moduleName}s[index],
-    ...data,
-    updatedAt: new Date(),
-  };
-  return ${moduleName}s[index];
-};
-
-export const remove = async (id) => {
-  const index = ${moduleName}s.findIndex((item) => item.id === id);
-  if (index === -1) return null;
-  return ${moduleName}s.splice(index, 1)[0];
-};
-`;
-    await fs.writeFile(
-      path.join(projectPath, `src/models/${moduleName}.model.${ext}`),
-      content
-    );
-  }
-}
-
-async function createRoutes(projectPath, moduleName, ModuleName, ext) {
-  const content = `import { Router } from "express";
-import * as controller from "../controllers/${moduleName}.controller.${ext}";
-
-const router = Router();
-
-router.get("/", controller.get${ModuleName}s);
-router.get("/:id", controller.get${ModuleName}ById);
-router.post("/", controller.create${ModuleName});
-router.put("/:id", controller.update${ModuleName});
-router.delete("/:id", controller.delete${ModuleName});
-
-export default router;
-`;
-  await fs.writeFile(
-    path.join(projectPath, `src/routes/${moduleName}.routes.${ext}`),
-    content
-  );
 }
 
 async function updateRoutesIndex(projectPath, moduleName, ext) {
@@ -379,4 +184,3 @@ export default router;
     await fs.writeFile(indexPath, newContent);
   }
 }
-
