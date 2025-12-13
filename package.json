@@ -1,6 +1,6 @@
 {
   "name": "xacos",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Professional backend scaffolding CLI - Laravel Artisan for Node.js",
   "main": "bin/cli.js",
   "type": "module",
