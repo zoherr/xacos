@@ -1,6 +1,6 @@
-# Xacos CLI
+# 📦 Xacos CLI
 
-**Professional backend scaffolding CLI - Laravel Artisan for Node.js**
+**Backend scaffolding CLI -  for Node.js**
 
 Xacos is a powerful CLI tool that helps you scaffold production-ready Node.js backend projects with Express.js, following industry best practices and professional folder structures.
 
