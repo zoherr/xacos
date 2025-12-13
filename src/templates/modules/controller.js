@@ -1,0 +1,60 @@
+import * as {{moduleName}}Service from "../services/{{moduleName}}.service.{{ext}}";
+import { sendResponse, sendError } from "../utils/response.{{ext}}";
+
+export const get{{ModuleName}}s = async (req, res) => {
+  try {
+    const {{moduleName}}s = await {{moduleName}}Service.getAll{{ModuleName}}s();
+    return sendResponse(res, 200, "{{ModuleName}}s retrieved successfully", {{moduleName}}s);
+  } catch (error) {
+    return sendError(res, 500, error.message);
+  }
+};
+
+export const get{{ModuleName}}ById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {{moduleName}} = await {{moduleName}}Service.get{{ModuleName}}ById(id);
+    if (!{{moduleName}}) {
+      return sendError(res, 404, "{{ModuleName}} not found");
+    }
+    return sendResponse(res, 200, "{{ModuleName}} retrieved successfully", {{moduleName}});
+  } catch (error) {
+    return sendError(res, 500, error.message);
+  }
+};
+
+export const create{{ModuleName}} = async (req, res) => {
+  try {
+    const {{moduleName}} = await {{moduleName}}Service.create{{ModuleName}}(req.body);
+    return sendResponse(res, 201, "{{ModuleName}} created successfully", {{moduleName}});
+  } catch (error) {
+    return sendError(res, 400, error.message);
+  }
+};
+
+export const update{{ModuleName}} = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {{moduleName}} = await {{moduleName}}Service.update{{ModuleName}}(id, req.body);
+    if (!{{moduleName}}) {
+      return sendError(res, 404, "{{ModuleName}} not found");
+    }
+    return sendResponse(res, 200, "{{ModuleName}} updated successfully", {{moduleName}});
+  } catch (error) {
+    return sendError(res, 400, error.message);
+  }
+};
+
+export const delete{{ModuleName}} = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleted = await {{moduleName}}Service.delete{{ModuleName}}(id);
+    if (!deleted) {
+      return sendError(res, 404, "{{ModuleName}} not found");
+    }
+    return sendResponse(res, 200, "{{ModuleName}} deleted successfully");
+  } catch (error) {
+    return sendError(res, 500, error.message);
+  }
+};
+
