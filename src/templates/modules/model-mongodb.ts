@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { I{{ModuleName}}, ICreate{{ModuleName}}, IUpdate{{ModuleName}} } from "../interfaces/{{moduleName}}.interface";
+import { I{{ModuleName}}, ICreate{{ModuleName}}, IUpdate{{ModuleName}} } from "../interfaces/{{moduleName}}.interface.js";
 
 export interface I{{ModuleName}}Document extends I{{ModuleName}}, Document {}
 

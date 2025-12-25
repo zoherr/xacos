@@ -139,9 +139,7 @@ async function updateRoutesIndex(projectPath, moduleName, ext) {
     }
 
     // Add import
-    const importLine = isTs 
-      ? `import ${moduleName}Routes from "./${moduleName}.routes";\n`
-      : `import ${moduleName}Routes from "./${moduleName}.routes.${ext}";\n`;
+    const importLine = `import ${moduleName}Routes from "./${moduleName}.routes.js";\n`;
     
     // Find where to insert (after existing imports, before router definition)
     const routerIndex = content.indexOf("const router");
@@ -170,22 +168,8 @@ async function updateRoutesIndex(projectPath, moduleName, ext) {
     await fs.writeFile(indexPath, content);
   } catch (error) {
     // If file doesn't exist or can't be read, create a new one
-    const newContent = isTs
-      ? `import { Router } from "express";
-import ${moduleName}Routes from "./${moduleName}.routes";
-
-const router = Router();
-
-router.use("/${moduleName}s", ${moduleName}Routes);
-
-router.get("/", (req, res) => {
-  res.json({ message: "API is running" });
-});
-
-export default router;
-`
-      : `import { Router } from "express";
-import ${moduleName}Routes from "./${moduleName}.routes.${ext}";
+    const newContent = `import { Router } from "express";
+import ${moduleName}Routes from "./${moduleName}.routes.js";
 
 const router = Router();
 

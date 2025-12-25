@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import * as {{moduleName}}Service from "../services/{{moduleName}}.service";
-import { sendResponse, sendError } from "../utils/response";
-import { I{{ModuleName}}, ICreate{{ModuleName}}, IUpdate{{ModuleName}} } from "../interfaces/{{moduleName}}.interface";
+import * as {{moduleName}}Service from "../services/{{moduleName}}.service.js";
+import { sendResponse, sendError } from "../utils/response.js";
+import { I{{ModuleName}}, ICreate{{ModuleName}}, IUpdate{{ModuleName}} } from "../interfaces/{{moduleName}}.interface.js";
 
 export const get{{ModuleName}}s = async (req: Request, res: Response): Promise<Response> => {
   try {

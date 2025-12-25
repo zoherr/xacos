@@ -125,7 +125,7 @@ async function createAppFile(projectPath, ext) {
   const content = ext === 'ts' 
     ? `import express, { Application } from "express";
 import cors from "cors";
-import routes from "./routes/index";
+import routes from "./routes/index.js";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -161,8 +161,8 @@ export default app;
 }
 
 async function createServerFile(projectPath, ext) {
-  const content = `import app from "./app";
-import { connectDB } from "./config/db";
+  const content = `import app from "./app.js";
+import { connectDB } from "./config/db.js";
 
 const PORT = process.env.PORT || 4000;
 
@@ -188,7 +188,7 @@ async function createRoutesIndex(projectPath, ext) {
 const router = Router();
 
 // Import routes here
-// import userRoutes from "./user.routes";
+// import userRoutes from "./user.routes.js";
 // router.use("/users", userRoutes);
 
 router.get("/", (req, res) => {

@@ -1,4 +1,4 @@
-import { I{{ModuleName}}, ICreate{{ModuleName}}, IUpdate{{ModuleName}} } from "../interfaces/{{moduleName}}.interface";
+import { I{{ModuleName}}, ICreate{{ModuleName}}, IUpdate{{ModuleName}} } from "../interfaces/{{moduleName}}.interface.js";
 
 // In-memory storage (replace with actual database)
 let {{moduleName}}s: I{{ModuleName}}[] = [];

@@ -1,5 +1,5 @@
-import * as {{moduleName}}Model from "../models/{{moduleName}}.model";
-import { I{{ModuleName}}, ICreate{{ModuleName}}, IUpdate{{ModuleName}} } from "../interfaces/{{moduleName}}.interface";
+import * as {{moduleName}}Model from "../models/{{moduleName}}.model.js";
+import { I{{ModuleName}}, ICreate{{ModuleName}}, IUpdate{{ModuleName}} } from "../interfaces/{{moduleName}}.interface.js";
 
 export const getAll{{ModuleName}}s = async (): Promise<I{{ModuleName}}[]> => {
   return await {{moduleName}}Model.findAll();
