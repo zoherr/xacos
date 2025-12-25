@@ -122,11 +122,25 @@ export default async function initCommand(name, opts) {
 }
 
 async function createAppFile(projectPath, ext) {
-  const content = `import express from "express";
+  const content = ext === 'ts' 
+    ? `import express, { Application } from "express";
 import cors from "cors";
-import routes from "./routes/index.${ext}";
+import routes from "./routes/index";
+import dotenv from "dotenv";
 
-const app = express();
+dotenv.config();
+
+const app: Application = express();`
+    : `import express from "express";
+import cors from "cors";
+import routes from "./routes/index.js";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const app = express();`;
+  
+  const middlewareAndRoutes = `
 
 // Middleware
 app.use(cors());
@@ -143,12 +157,12 @@ app.get("/health", (req, res) => {
 
 export default app;
 `;
-  await fs.writeFile(path.join(projectPath, `src/app.${ext}`), content);
+  await fs.writeFile(path.join(projectPath, `src/app.${ext}`), content + middlewareAndRoutes);
 }
 
 async function createServerFile(projectPath, ext) {
-  const content = `import app from "./app.${ext}";
-import { connectDB } from "./config/db.${ext}";
+  const content = `import app from "./app";
+import { connectDB } from "./config/db";
 
 const PORT = process.env.PORT || 4000;
 
@@ -174,7 +188,7 @@ async function createRoutesIndex(projectPath, ext) {
 const router = Router();
 
 // Import routes here
-// import userRoutes from "./user.routes.${ext}";
+// import userRoutes from "./user.routes";
 // router.use("/users", userRoutes);
 
 router.get("/", (req, res) => {
@@ -244,7 +258,20 @@ export const config = {
 
 async function createUtils(projectPath, ext) {
   // Logger
-  const loggerContent = `export const logger = {
+  const loggerContent = ext === 'ts'
+    ? `export const logger = {
+  info: (message: string, ...args: any[]) => {
+    console.log(\`[INFO] \${new Date().toISOString()} - \${message}\`, ...args);
+  },
+  error: (message: string, ...args: any[]) => {
+    console.error(\`[ERROR] \${new Date().toISOString()} - \${message}\`, ...args);
+  },
+  warn: (message: string, ...args: any[]) => {
+    console.warn(\`[WARN] \${new Date().toISOString()} - \${message}\`, ...args);
+  },
+};
+`
+    : `export const logger = {
   info: (message, ...args) => {
     console.log(\`[INFO] \${new Date().toISOString()} - \${message}\`, ...args);
   },
@@ -259,7 +286,26 @@ async function createUtils(projectPath, ext) {
   await fs.writeFile(path.join(projectPath, `src/utils/logger.${ext}`), loggerContent);
 
   // Response helper
-  const responseContent = `export const sendResponse = (res, statusCode, message, data = null) => {
+  const responseContent = ext === 'ts'
+    ? `import { Response } from "express";
+
+export const sendResponse = (res: Response, statusCode: number, message: string, data: any = null) => {
+  return res.status(statusCode).json({
+    success: statusCode < 400,
+    message,
+    ...(data && { data }),
+  });
+};
+
+export const sendError = (res: Response, statusCode: number, message: string, errors: any = null) => {
+  return res.status(statusCode).json({
+    success: false,
+    message,
+    ...(errors && { errors }),
+  });
+};
+`
+    : `export const sendResponse = (res, statusCode, message, data = null) => {
   return res.status(statusCode).json({
     success: statusCode < 400,
     message,
@@ -332,9 +378,11 @@ async function createPackageJson(projectPath, ext, useMongo, usePrisma, useRedis
 
   if (ext === "ts") {
     devDeps.typescript = "^5.3.3";
+    devDeps["ts-node"] = "^10.9.2";
     devDeps["@types/express"] = "^4.17.21";
     devDeps["@types/node"] = "^20.10.5";
     devDeps["@types/cors"] = "^2.8.17";
+    
     if (useMongo) {
       devDeps["@types/mongoose"] = "^5.11.97";
     }

@@ -1,5 +1,5 @@
-import { prisma } from "../config/db.{{ext}}";
-import { I{{ModuleName}}, ICreate{{ModuleName}}, IUpdate{{ModuleName}} } from "../interfaces/{{moduleName}}.interface.{{ext}}";
+import { prisma } from "../config/db";
+import { I{{ModuleName}}, ICreate{{ModuleName}}, IUpdate{{ModuleName}} } from "../interfaces/{{moduleName}}.interface";
 
 export const findAll = async (): Promise<I{{ModuleName}}[]> => {
   return await prisma.{{moduleName}}.findMany();
