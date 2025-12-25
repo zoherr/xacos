@@ -378,7 +378,7 @@ async function createPackageJson(projectPath, ext, useMongo, usePrisma, useRedis
 
   if (ext === "ts") {
     devDeps.typescript = "^5.3.3";
-    devDeps["ts-node"] = "^10.9.2";
+    devDeps.tsx = "^4.7.0";
     devDeps["@types/express"] = "^4.17.21";
     devDeps["@types/node"] = "^20.10.5";
     devDeps["@types/cors"] = "^2.8.17";
@@ -400,7 +400,7 @@ async function createPackageJson(projectPath, ext, useMongo, usePrisma, useRedis
 
   const scripts = {
     start: ext === "ts" ? "node dist/server.js" : "node src/server.js",
-    dev: ext === "ts" ? "nodemon --exec ts-node src/server.ts" : "nodemon src/server.js",
+    dev: ext === "ts" ? "tsx watch src/server.ts" : "nodemon src/server.js",
   };
 
   if (ext === "ts") {
