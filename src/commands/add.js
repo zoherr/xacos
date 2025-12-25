@@ -2,12 +2,15 @@ import fs from "fs-extra";
 import path from "path";
 import { fileURLToPath } from "url";
 import chalk from "chalk";
-import { generateFromTemplate, getTemplatePath } from "../utils/templateEngine.js";
+import {
+  generateFromTemplate,
+  getTemplatePath,
+} from "../utils/templateEngine.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export default async function addCommand(name) {
+export default async function addCommand(name, opts = {}) {
   const moduleName = name.toLowerCase();
   const ModuleName = capitalizeFirst(name);
   const MODULE_NAME = name.toUpperCase();
@@ -15,11 +18,13 @@ export default async function addCommand(name) {
   const projectPath = process.cwd();
   const xacosConfigPath = path.join(projectPath, "xacos.json");
 
-  // Check if we're in a xacos project
   let isTs = false;
   let useMongo = false;
   let usePrisma = false;
-  
+  const useCrud = opts.crud || false;
+  const useEvents = opts.events || false;
+  const fields = opts.fields || null;
+
   try {
     const config = await fs.readJSON(xacosConfigPath);
     isTs = config.ts || false;
@@ -37,7 +42,10 @@ export default async function addCommand(name) {
     if (isTs) {
       dirs.push("interfaces");
     }
-    
+    if (useEvents) {
+      dirs.push("events");
+    }
+
     for (const dir of dirs) {
       await fs.ensureDir(path.join(projectPath, "src", dir));
     }
@@ -53,24 +61,33 @@ export default async function addCommand(name) {
     // Create interface (TypeScript only)
     if (isTs) {
       const interfaceTemplate = getTemplatePath("interface.ts", "modules");
-      const interfacePath = path.join(projectPath, `src/interfaces/${moduleName}.interface.${ext}`);
+      const interfacePath = path.join(
+        projectPath,
+        `src/interfaces/${moduleName}.interface.${ext}`,
+      );
       await generateFromTemplate(interfaceTemplate, interfacePath, variables);
     }
 
     // Create controller
     const controllerTemplate = getTemplatePath(
       isTs ? "controller.ts" : "controller.js",
-      "modules"
+      "modules",
     );
-    const controllerPath = path.join(projectPath, `src/controllers/${moduleName}.controller.${ext}`);
+    const controllerPath = path.join(
+      projectPath,
+      `src/controllers/${moduleName}.controller.${ext}`,
+    );
     await generateFromTemplate(controllerTemplate, controllerPath, variables);
 
     // Create service
     const serviceTemplate = getTemplatePath(
       isTs ? "service.ts" : "service.js",
-      "modules"
+      "modules",
     );
-    const servicePath = path.join(projectPath, `src/services/${moduleName}.service.${ext}`);
+    const servicePath = path.join(
+      projectPath,
+      `src/services/${moduleName}.service.${ext}`,
+    );
     await generateFromTemplate(serviceTemplate, servicePath, variables);
 
     // Create model (choose based on database)
@@ -78,43 +95,70 @@ export default async function addCommand(name) {
     if (useMongo) {
       modelTemplate = getTemplatePath(
         isTs ? "model-mongodb.ts" : "model-mongodb.js",
-        "modules"
+        "modules",
       );
     } else if (usePrisma) {
       modelTemplate = getTemplatePath(
         isTs ? "model-prisma.ts" : "model-prisma.js",
-        "modules"
+        "modules",
       );
     } else {
       modelTemplate = getTemplatePath(
         isTs ? "model-basic.ts" : "model-basic.js",
-        "modules"
+        "modules",
       );
     }
-    const modelPath = path.join(projectPath, `src/models/${moduleName}.model.${ext}`);
+    const modelPath = path.join(
+      projectPath,
+      `src/models/${moduleName}.model.${ext}`,
+    );
     await generateFromTemplate(modelTemplate, modelPath, variables);
 
     // Create routes
     const routesTemplate = getTemplatePath(
       isTs ? "routes.ts" : "routes.js",
-      "modules"
+      "modules",
     );
-    const routesPath = path.join(projectPath, `src/routes/${moduleName}.routes.${ext}`);
+    const routesPath = path.join(
+      projectPath,
+      `src/routes/${moduleName}.routes.${ext}`,
+    );
     await generateFromTemplate(routesTemplate, routesPath, variables);
+
+    // Create events if --events flag is set
+    if (useEvents) {
+      await createEventFiles(projectPath, moduleName, ModuleName, ext);
+    }
 
     // Update routes/index.js to include new route
     await updateRoutesIndex(projectPath, moduleName, ext);
 
-    console.log(chalk.green(`\n✔ Module "${ModuleName}" created successfully!`));
+    console.log(
+      chalk.green(`\n✔ Module "${ModuleName}" created successfully!`),
+    );
     console.log(chalk.cyan(`\n📁 Files created:`));
     if (isTs) {
-      console.log(chalk.white(`   - src/interfaces/${moduleName}.interface.${ext}`));
+      console.log(
+        chalk.white(`   - src/interfaces/${moduleName}.interface.${ext}`),
+      );
     }
-    console.log(chalk.white(`   - src/controllers/${moduleName}.controller.${ext}`));
+    console.log(
+      chalk.white(`   - src/controllers/${moduleName}.controller.${ext}`),
+    );
     console.log(chalk.white(`   - src/services/${moduleName}.service.${ext}`));
     console.log(chalk.white(`   - src/models/${moduleName}.model.${ext}`));
     console.log(chalk.white(`   - src/routes/${moduleName}.routes.${ext}`));
-    console.log(chalk.yellow(`\n📝 Route registered at: /api/${moduleName}s\n`));
+    if (useEvents) {
+      console.log(chalk.white(`   - src/events/${moduleName}.created.${ext}`));
+      console.log(chalk.white(`   - src/events/${moduleName}.updated.${ext}`));
+      console.log(chalk.white(`   - src/events/${moduleName}.deleted.${ext}`));
+    }
+    if (fields) {
+      console.log(chalk.yellow(`\n📝 Fields: ${fields}`));
+    }
+    console.log(
+      chalk.yellow(`\n📝 Route registered at: /api/${moduleName}s\n`),
+    );
   } catch (error) {
     console.error(chalk.red(`✖ Error: ${error.message}`));
     console.error(chalk.red(error.stack));
@@ -126,25 +170,69 @@ function capitalizeFirst(str) {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 
+async function createEventFiles(projectPath, moduleName, ModuleName, ext) {
+  const eventsDir = path.join(projectPath, "src/events");
+  await fs.ensureDir(eventsDir);
+
+  const events = ["created", "updated", "deleted"];
+
+  for (const event of events) {
+    const eventPath = path.join(eventsDir, `${moduleName}.${event}.${ext}`);
+    const content = ext === "ts" 
+      ? generateTypeScriptEvent(moduleName, ModuleName, event)
+      : generateJavaScriptEvent(moduleName, ModuleName, event);
+    await fs.writeFile(eventPath, content);
+  }
+}
+
+function generateTypeScriptEvent(moduleName, ModuleName, event) {
+  const EventName = `${ModuleName}${capitalizeFirst(event)}Event`;
+  const EventConst = `${moduleName}${capitalizeFirst(event)}`;
+  return `import { defineEvent } from "@xacos/events";
+
+export interface ${EventName} {
+  ${moduleName}Id: string;
+  // Add more fields as needed
+  // Example: timestamp: Date;
+  // Example: userId: string;
+}
+
+export const ${EventConst} = defineEvent<${EventName}>("${moduleName}.${event}");
+`;
+}
+
+function generateJavaScriptEvent(moduleName, ModuleName, event) {
+  const EventConst = `${moduleName}${capitalizeFirst(event)}`;
+  return `import { defineEvent } from "@xacos/events";
+
+export const ${EventConst} = defineEvent("${moduleName}.${event}");
+`;
+}
+
 async function updateRoutesIndex(projectPath, moduleName, ext) {
   const indexPath = path.join(projectPath, `src/routes/index.${ext}`);
-  
+
   try {
     let content = await fs.readFile(indexPath, "utf-8");
-    
+
     // Check if route already exists
     if (content.includes(`${moduleName}Routes`)) {
-      console.log(chalk.yellow(`⚠ Route for ${moduleName} already exists in index.${ext}`));
+      console.log(
+        chalk.yellow(
+          `⚠ Route for ${moduleName} already exists in index.${ext}`,
+        ),
+      );
       return;
     }
 
     // Add import
     const importLine = `import ${moduleName}Routes from "./${moduleName}.routes.${ext}";\n`;
-    
+
     // Find where to insert (after existing imports, before router definition)
     const routerIndex = content.indexOf("const router");
     if (routerIndex !== -1) {
-      content = content.slice(0, routerIndex) + importLine + content.slice(routerIndex);
+      content =
+        content.slice(0, routerIndex) + importLine + content.slice(routerIndex);
     } else {
       // If no router found, add at the beginning
       content = importLine + content;
@@ -152,16 +240,22 @@ async function updateRoutesIndex(projectPath, moduleName, ext) {
 
     // Add route registration
     const routeLine = `router.use("/${moduleName}s", ${moduleName}Routes);\n`;
-    
+
     // Find the router.get("/") line and add before it
     const apiRouteIndex = content.indexOf('router.get("/"');
     if (apiRouteIndex !== -1) {
-      content = content.slice(0, apiRouteIndex) + routeLine + content.slice(apiRouteIndex);
+      content =
+        content.slice(0, apiRouteIndex) +
+        routeLine +
+        content.slice(apiRouteIndex);
     } else {
-      // Add before export
+      
       const exportIndex = content.indexOf("export default");
       if (exportIndex !== -1) {
-        content = content.slice(0, exportIndex) + routeLine + content.slice(exportIndex);
+        content =
+          content.slice(0, exportIndex) +
+          routeLine +
+          content.slice(exportIndex);
       }
     }
 

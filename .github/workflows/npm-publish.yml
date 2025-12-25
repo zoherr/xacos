@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - main
-    # Optional: only publish when package.json version changes
-    # paths:
-    #   - "my-package/package.json"
 
 jobs:
   publish:

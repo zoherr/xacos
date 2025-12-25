@@ -7,8 +7,9 @@ export const get{{ModuleName}}s = async (req: Request, res: Response): Promise<R
   try {
     const {{moduleName}}s: I{{ModuleName}}[] = await {{moduleName}}Service.getAll{{ModuleName}}s();
     return sendResponse(res, 200, "{{ModuleName}}s retrieved successfully", {{moduleName}}s);
-  } catch (error: any) {
-    return sendError(res, 500, error.message);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "An error occurred";
+    return sendError(res, 500, message);
   }
 };
 
@@ -20,8 +21,9 @@ export const get{{ModuleName}}ById = async (req: Request, res: Response): Promis
       return sendError(res, 404, "{{ModuleName}} not found");
     }
     return sendResponse(res, 200, "{{ModuleName}} retrieved successfully", {{moduleName}});
-  } catch (error: any) {
-    return sendError(res, 500, error.message);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "An error occurred";
+    return sendError(res, 500, message);
   }
 };
 
@@ -29,8 +31,9 @@ export const create{{ModuleName}} = async (req: Request<{}, {}, ICreate{{ModuleN
   try {
     const {{moduleName}}: I{{ModuleName}} = await {{moduleName}}Service.create{{ModuleName}}(req.body);
     return sendResponse(res, 201, "{{ModuleName}} created successfully", {{moduleName}});
-  } catch (error: any) {
-    return sendError(res, 400, error.message);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "An error occurred";
+    return sendError(res, 400, message);
   }
 };
 
@@ -42,8 +45,9 @@ export const update{{ModuleName}} = async (req: Request<{ id: string }, {}, IUpd
       return sendError(res, 404, "{{ModuleName}} not found");
     }
     return sendResponse(res, 200, "{{ModuleName}} updated successfully", {{moduleName}});
-  } catch (error: any) {
-    return sendError(res, 400, error.message);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "An error occurred";
+    return sendError(res, 400, message);
   }
 };
 
@@ -55,8 +59,9 @@ export const delete{{ModuleName}} = async (req: Request, res: Response): Promise
       return sendError(res, 404, "{{ModuleName}} not found");
     }
     return sendResponse(res, 200, "{{ModuleName}} deleted successfully");
-  } catch (error: any) {
-    return sendError(res, 500, error.message);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "An error occurred";
+    return sendError(res, 500, message);
   }
 };
 

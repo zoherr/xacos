@@ -1,8 +1,17 @@
-# 📦 Xacos CLI
+# 🚀 Xacos OS 2.0
 
-**Backend scaffolding CLI -  for Node.js**
+**Next-Generation Backend Development Platform for Node.js**
 
-Xacos is a powerful CLI tool that helps you scaffold production-ready Node.js backend projects with Express.js, following industry best practices and professional folder structures.
+Xacos OS is a powerful CLI tool that helps you build production-ready Node.js backend projects with Express.js, following industry best practices.
+
+## 🎯 What is Xacos?
+
+Xacos helps you:
+- **Scaffold** professional backend projects
+- **Generate** modules, controllers, services automatically
+- **Manage** events and pipelines
+- **Deploy** with infrastructure as code
+- **Monitor** your applications
 
 ## 🚀 Installation
 
@@ -25,8 +34,14 @@ npx xacos <command>
 Creates a new backend project with a professional folder structure.
 
 ```bash
-npx xacos init my-backend --js --mongodb
-npx xacos init my-backend --ts --prisma
+# JavaScript project
+npx xacos init my-api --js --mongodb
+
+# TypeScript project
+npx xacos init my-api --ts --prisma
+
+# With multiple features
+npx xacos init my-api --ts --prisma --redis --docker
 ```
 
 **Options:**
@@ -40,28 +55,148 @@ npx xacos init my-backend --ts --prisma
 - `--docker` - Include Docker files
 - `--git-action` - Include GitHub Actions CI/CD
 
-**Example:**
-```bash
-npx xacos init api-server --ts --prisma --redis --docker
-```
+---
 
 ### `add <name>` - Add a new module
 
 Creates a complete module with controller, service, model, and routes.
 
 ```bash
+# Basic module
 npx xacos add Users
-npx xacos add notifications
-npx xacos add products
+
+# With options
+npx xacos add Invoice --fields "amount:number,status:string" --crud --events
 ```
 
-This command generates:
+**Options:**
+- `--fields` - Define model fields (format: `name:type,name2:type`)
+- `--crud` - Generate full CRUD operations
+- `--events` - Generate event emitters/subscribers
+
+**Generates:**
 - `src/controllers/{name}.controller.js`
 - `src/services/{name}.service.js`
 - `src/models/{name}.model.js`
 - `src/routes/{name}.routes.js`
+- `src/events/{name}.*.ts` (if `--events`)
 
-And automatically registers the route in `src/routes/index.js`.
+---
+
+### `create:flow <name>` - Create a pipeline
+
+Creates a typed, composable pipeline for event-driven workflows.
+
+```bash
+npx xacos create:flow user.signup
+npx xacos create:flow order.process
+```
+
+**Generates:**
+- `src/flows/{name}.flow.ts` - Pipeline definition
+
+---
+
+### `add:adapter <type> <name>` - Add an adapter
+
+Adds a vendor-agnostic adapter for databases, mailers, queues, etc.
+
+```bash
+npx xacos add:adapter mailer resend
+npx xacos add:adapter db prisma
+npx xacos add:adapter queue bullmq
+```
+
+**Adapter Types:**
+- `db` - Database (prisma, mongoose)
+- `mailer` - Email (smtp, resend, ses)
+- `queue` - Queue (bullmq, rabbitmq)
+- `storage` - Storage (s3, local)
+
+---
+
+### `switch <type> <adapter>` - Switch adapter
+
+Switch between adapters at runtime.
+
+```bash
+npx xacos switch mailer smtp
+npx xacos switch db mongoose
+```
+
+---
+
+### `events:list` - List all events
+
+Lists all registered events in your system.
+
+```bash
+npx xacos events:list
+```
+
+---
+
+### `events:graph` - Visualize event graph
+
+Generates a visual graph of event dependencies.
+
+```bash
+npx xacos events:graph
+```
+
+---
+
+### `plugin install <name>` - Install plugin
+
+Installs a Xacos plugin.
+
+```bash
+npx xacos plugin install auth-jwt
+npx xacos plugin install stripe
+```
+
+---
+
+### `plugin create <name>` - Create plugin
+
+Scaffolds a new plugin.
+
+```bash
+npx xacos plugin create my-plugin
+```
+
+---
+
+### `explain <path>` - Explain code
+
+AI-powered code explanation.
+
+```bash
+npx xacos explain src/services/invoice.service.ts
+```
+
+---
+
+### `monitor` - Show observability dashboard
+
+Displays real-time metrics and observability data.
+
+```bash
+npx xacos monitor
+```
+
+---
+
+### `deploy` - Deploy infrastructure
+
+Auto-generates and deploys infrastructure as code.
+
+```bash
+npx xacos deploy --platform docker
+npx xacos deploy --platform k8s
+```
+
+---
 
 ### `create:redis` - Create Redis utility
 
@@ -71,7 +206,7 @@ Sets up Redis client with helper functions.
 npx xacos create:redis
 ```
 
-Creates `src/utils/redis.js` with connection, caching helpers, and error handling.
+---
 
 ### `create:prisma` - Create Prisma setup
 
@@ -81,9 +216,7 @@ Sets up Prisma ORM with schema and database configuration.
 npx xacos create:prisma
 ```
 
-Creates:
-- `prisma/schema.prisma`
-- `src/config/db.js` (Prisma client)
+---
 
 ### `create:ws` - Create native WebSocket setup
 
@@ -93,7 +226,7 @@ Sets up native WebSocket server.
 npx xacos create:ws
 ```
 
-Creates `src/sockets/index.js` with WebSocket server configuration.
+---
 
 ### `create:socket.io` - Create Socket.io setup
 
@@ -103,7 +236,7 @@ Sets up Socket.io server.
 npx xacos create:socket.io
 ```
 
-Creates `src/sockets/index.js` with Socket.io server and room management.
+---
 
 ### `create:message-queue` - Create message queue setup
 
@@ -113,7 +246,7 @@ Sets up BullMQ for job processing.
 npx xacos create:message-queue
 ```
 
-Creates `src/queues/index.js` with example email queue and worker.
+---
 
 ### `create:pub-sub` - Create pub/sub setup
 
@@ -123,9 +256,7 @@ Sets up event-driven pub/sub system.
 npx xacos create:pub-sub
 ```
 
-Creates:
-- `src/utils/pubsub.js` - Event emitter wrapper
-- `src/subscribers/index.js` - Example subscribers
+---
 
 ### `make:docker` - Create Docker files
 
@@ -135,12 +266,7 @@ Creates Dockerfile and docker-compose.yml.
 npx xacos make:docker
 ```
 
-Creates:
-- `docker/Dockerfile`
-- `docker/docker-compose.yml`
-- `.dockerignore`
-
-Automatically configures services based on your project (MongoDB, Redis, PostgreSQL).
+---
 
 ### `make:git-action` - Create GitHub Actions CI/CD
 
@@ -150,11 +276,7 @@ Creates GitHub Actions workflow for CI/CD.
 npx xacos make:git-action
 ```
 
-Creates `.github/workflows/ci.yml` with:
-- Node.js setup
-- Dependency caching
-- Linting, testing, building
-- Prisma migrations (if using Prisma)
+---
 
 ## 📁 Project Structure
 
@@ -175,8 +297,9 @@ my-backend/
 │   ├── models/             # Data models
 │   ├── middlewares/        # Custom middlewares
 │   ├── utils/              # Utility functions
-│   │   ├── logger.js
-│   │   └── response.js
+│   ├── flows/              # Pipelines
+│   ├── events/             # Event definitions
+│   ├── adapters/           # Adapter implementations
 │   ├── sockets/            # WebSocket/Socket.io
 │   ├── queues/             # Message queues
 │   └── subscribers/        # Event subscribers
@@ -190,6 +313,8 @@ my-backend/
 ├── README.md
 └── xacos.json              # CLI metadata
 ```
+
+---
 
 ## 🎯 Quick Start
 
@@ -214,32 +339,174 @@ my-backend/
    npm run dev
    ```
 
-## 📝 Example Workflow
+---
+
+## 📝 Examples
+
+### JavaScript Single Project
 
 ```bash
 # 1. Initialize project
-npx xacos init blog-api --ts --prisma --redis
+npx xacos init my-api --js --mongodb --redis
 
-# 2. Add modules
-cd blog-api
-npx xacos add Posts
-npx xacos add Comments
-npx xacos add Users
+# 2. Navigate to project
+cd my-api
 
-# 3. Add features
-npx xacos create:message-queue
-npx xacos create:pub-sub
-
-# 4. Setup deployment
-npx xacos make:docker
-npx xacos make:git-action
-
-# 5. Install and run
+# 3. Install dependencies
 npm install
-npx prisma generate
-npx prisma migrate dev
+
+# 4. Add modules
+npx xacos add Users --crud
+npx xacos add Products --crud --events
+npx xacos add Orders --crud --events
+
+# 5. Add features
+npx xacos create:message-queue
+npx xacos add:adapter mailer resend
+
+# 6. Start development
 npm run dev
 ```
+
+### TypeScript Single Project
+
+```bash
+# 1. Initialize project
+npx xacos init my-api --ts --prisma --redis
+
+# 2. Navigate to project
+cd my-api
+
+# 3. Install dependencies
+npm install
+
+# 4. Setup Prisma
+npx prisma generate
+npx prisma migrate dev
+
+# 5. Add modules
+npx xacos add Users --crud --events
+npx xacos add Products --crud --events
+npx xacos add Orders --crud --events
+
+# 6. Add features
+npx xacos create:flow order.process
+npx xacos add:adapter mailer resend
+npx xacos create:message-queue
+
+# 7. Build and start
+npm run build
+npm start
+```
+
+### JavaScript Monorepo
+
+```bash
+# 1. Initialize monorepo
+npx xacos init my-org --js
+
+# 2. Navigate to monorepo
+cd my-org
+
+# 3. Install dependencies
+npm install
+
+# 4. Add services
+cd apps/api
+npx xacos add Users --crud
+npx xacos add Products --crud
+
+cd ../worker
+npx xacos create:message-queue
+
+# 5. Start all services
+cd ../..
+npm run dev
+```
+
+### TypeScript Monorepo
+
+```bash
+# 1. Initialize monorepo
+npx xacos init my-org --ts
+
+# 2. Navigate to monorepo
+cd my-org
+
+# 3. Install dependencies
+npm install
+
+# 4. Setup shared packages
+cd packages/database
+npx xacos create:prisma
+
+# 5. Add services
+cd ../../apps/api
+npx xacos add Users --crud --events
+npx xacos add Products --crud --events
+npx xacos create:flow order.process
+
+cd ../worker
+npx xacos create:message-queue
+
+# 6. Build and start
+cd ../..
+npm run build
+npm start
+```
+
+---
+
+## 📄 Understanding xacos.json
+
+The `xacos.json` file is the configuration file that Xacos uses to track your project settings and metadata. It's automatically created when you initialize a project.
+
+### What is xacos.json?
+
+`xacos.json` serves as the source of truth for your project configuration. It stores:
+- Project language (TypeScript/JavaScript)
+- Database configuration (MongoDB/Prisma)
+- Installed adapters and plugins
+- Active adapter selections
+- Feature flags (Redis, WebSocket, etc.)
+
+### Example xacos.json
+
+```json
+{
+  "ts": true,
+  "mongodb": false,
+  "prisma": true,
+  "redis": true,
+  "ws": false,
+  "socketIo": false,
+  "adapters": {
+    "db": ["prisma"],
+    "mailer": ["resend"],
+    "queue": ["bullmq"]
+  },
+  "activeAdapters": {
+    "db": "prisma",
+    "mailer": "resend"
+  },
+  "plugins": ["auth-jwt", "stripe"]
+}
+```
+
+### How Xacos Uses xacos.json
+
+When you run Xacos commands, it reads `xacos.json` to:
+- Determine if TypeScript or JavaScript is being used
+- Know which database adapter is configured
+- Track installed adapters and plugins
+- Generate code with the correct syntax and structure
+- Maintain consistency across your project
+
+### Monorepo Configuration
+
+In a monorepo, each service can have its own `xacos.json` file, or you can have a single root `xacos.json` that applies to all services. This allows you to manage configurations at different levels of your monorepo.
+
+---
 
 ## 🔧 Features
 
@@ -250,9 +517,15 @@ npm run dev
 - ✅ **Caching** - Redis integration
 - ✅ **Job Queues** - BullMQ for background jobs
 - ✅ **Event System** - Pub/Sub for event-driven architecture
+- ✅ **Pipelines** - Code-first workflows
+- ✅ **Adapters** - Vendor-agnostic adapters
+- ✅ **Plugins** - Extensible plugin system
+- ✅ **Observability** - Built-in monitoring
 - ✅ **Docker Ready** - Docker and docker-compose setup
 - ✅ **CI/CD** - GitHub Actions workflows
 - ✅ **Auto-wiring** - Routes automatically registered
+
+---
 
 ## 📚 Module Structure
 
@@ -277,6 +550,8 @@ When you run `npx xacos add Users`, you get:
 - RESTful routes
 - Auto-registered in `routes/index.js`
 
+---
+
 ## 🛠️ Tech Stack
 
 - **Express.js** - Web framework
@@ -286,14 +561,21 @@ When you run `npx xacos add Users`, you get:
 - **BullMQ** - Job queue (optional)
 - **Socket.io** - Real-time communication (optional)
 - **WebSocket** - Native WebSocket (optional)
+- **TypeScript** - Type safety
+
+---
 
 ## 📄 License
 
 MIT
 
+---
+
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
+
+---
 
 ## 📧 Support
 
@@ -302,4 +584,3 @@ For issues and feature requests, please use the GitHub issue tracker.
 ---
 
 **Built with ❤️ for the Node.js community**
-
