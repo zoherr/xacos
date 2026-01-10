@@ -50,9 +50,9 @@ npx xacos init api-server --ts --prisma --redis --docker
 Creates a complete module with controller, service, model, and routes.
 
 ```bash
-npx xacos add Users
-npx xacos add notifications
-npx xacos add products
+npx xacos add User
+npx xacos add notification
+npx xacos add product
 ```
 
 This command generates:
@@ -201,7 +201,7 @@ my-backend/
 2. **Add a module:**
    ```bash
    cd my-api
-   npx xacos add Users
+   npx xacos add User
    ```
 
 3. **Install dependencies:**
