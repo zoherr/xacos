@@ -1,0 +1,31 @@
+{
+  "name": "@xaocs/server",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "dependencies": {
+    "@xaocs/compiler": "workspace:*",
+    "@xaocs/core": "workspace:*",
+    "@xaocs/shared": "workspace:*",
+    "fastify": "^4.28.1",
+    "vite": "^5.x"
+
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.3",
+    "bun-types": "^1.3.12"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "bun test src",
+    "type-check": "tsc --noEmit"
+  }
+}
