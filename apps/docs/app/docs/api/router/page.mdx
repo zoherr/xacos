@@ -1,0 +1,58 @@
+# XRouter
+
+`XRouter` is the core routing class in XAOCS. E.g., it provides a powerful, fluent API for defining routes, attaching middleware, and enforcing Zod schema validation.
+
+## Defining Routes
+
+`XRouter` supports all standard HTTP methods: `get`, `post`, `put`, `patch`, and `delete`.
+
+```typescript
+import { XRouter } from '@xacos/core';
+
+export const router = new XRouter();
+
+router.get('/', async (req, res) => res.send('GET'));
+router.post('/', async (req, res) => res.send('POST'));
+router.put('/:id', async (req, res) => res.send('PUT'));
+router.delete('/:id', async (req, res) => res.send('DELETE'));
+```
+
+## Attaching Middleware
+
+You can attach middleware to individual routes or globally across the entire router instance using `use()`.
+
+```typescript
+import { XRouter } from '@xacos/core';
+import { requireAuth } from '../app/middlewares/auth.middleware';
+
+export const router = new XRouter();
+
+// Router-level middleware (applies to all routes below it)
+router.use(requireAuth);
+
+router.get('/profile', async (req, res) => {
+  return res.json({ user: req.user });
+});
+```
+
+## Route-Level Schema Validation
+
+`XRouter` natively integrates with `@xacos/validation`. You can pass a Zod schema definition before your route handler to enable automatic request validation.
+
+```typescript
+import { XRouter } from '@xacos/core';
+import { v } from '@xacos/validation';
+
+export const router = new XRouter();
+
+router.post('/register', { schema: {
+  body: v.object({
+    name: v.string().min(2),
+    email: v.string().email(),
+    password: v.string().min(8),
+  })
+}}, async (req, res) => {
+  // req.body is fully typed and validated
+  return res.status(201).json({ success: true });
+});
+```

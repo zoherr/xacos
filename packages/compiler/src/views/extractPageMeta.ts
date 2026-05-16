@@ -18,3 +18,4 @@ export function extractPageMeta(mod: Record<string, unknown>): PageMeta {
   return result;
 
 }
+

@@ -48,10 +48,10 @@ export class MigrationRunner {
 
   private async ensureMigrationsTable(): Promise<void> {
     const knex = getKnex();
-    const exists = await knex.schema.hasTable("xaocs_migrations");
+    const exists = await knex.schema.hasTable("xacos_migrations");
     if (exists) return;
 
-    await knex.schema.createTable("xaocs_migrations", (table) => {
+    await knex.schema.createTable("xacos_migrations", (table) => {
       table.increments("id").primary();
       table.string("name", 255).notNullable();
       table.integer("batch").notNullable();
@@ -62,7 +62,7 @@ export class MigrationRunner {
   async getPending(migrationsDir: string): Promise<string[]> {
     await this.ensureMigrationsTable();
     const knex = getKnex();
-    const ranRows = (await knex.select<{ name: string }>("name").from("xaocs_migrations")) as unknown as Array<{
+    const ranRows = (await knex.select<{ name: string }>("name").from("xacos_migrations")) as unknown as Array<{
       name: string;
     }>;
     const ran = new Set(ranRows.map((row) => row.name));
@@ -86,7 +86,7 @@ export class MigrationRunner {
     const pending = await this.getPending(migrationsDir);
     if (pending.length === 0) return;
 
-    const lastBatchRow = await knex("xaocs_migrations").max<{ b: number | string | null }>({ b: "batch" }).first();
+    const lastBatchRow = await knex("xacos_migrations").max<{ b: number | string | null }>({ b: "batch" }).first();
     const batch = Number(lastBatchRow?.b ?? 0) + 1;
 
     for (const file of pending) {
@@ -99,18 +99,18 @@ export class MigrationRunner {
 
       const migration = new MigrationClass();
       await migration.up(this.schema);
-      await knex("xaocs_migrations").insert({ name: file, batch, ran_at: knex.fn.now() });
+      await knex("xacos_migrations").insert({ name: file, batch, ran_at: knex.fn.now() });
     }
   }
 
   async rollback(migrationsDir: string): Promise<void> {
     await this.ensureMigrationsTable();
     const knex = getKnex();
-    const lastBatchRow = await knex("xaocs_migrations").max<{ b: number | string | null }>({ b: "batch" }).first();
+    const lastBatchRow = await knex("xacos_migrations").max<{ b: number | string | null }>({ b: "batch" }).first();
     const lastBatch = Number(lastBatchRow?.b ?? 0);
     if (!lastBatch) return;
 
-    const rows = (await knex("xaocs_migrations").where("batch", lastBatch).orderBy("id", "desc")) as Array<{
+    const rows = (await knex("xacos_migrations").where("batch", lastBatch).orderBy("id", "desc")) as Array<{
       id: number | string;
       name: string;
     }>;
@@ -126,7 +126,7 @@ export class MigrationRunner {
 
       const migration = new MigrationClass();
       await migration.down(schema);
-      await knex("xaocs_migrations").where("id", row.id as number | string).del();
+      await knex("xacos_migrations").where("id", row.id as number | string).del();
     }
   }
 
@@ -140,4 +140,32 @@ export class MigrationRunner {
 
     await this.run(migrationsDir);
   }
+
+  async status(migrationsDir: string): Promise<Array<{ name: string; ran: boolean; batch?: number | undefined }>> {
+    await this.ensureMigrationsTable();
+    const knex = getKnex();
+    const ranRows = (await knex.select<{ name: string; batch: number }>("name", "batch").from("xacos_migrations")) as unknown as Array<{
+      name: string;
+      batch: number;
+    }>;
+    const ranMap = new Map(ranRows.map((row) => [row.name, row.batch]));
+
+    let files: string[];
+    try {
+      files = readdirSync(migrationsDir);
+    } catch {
+      files = [];
+    }
+
+    const migrationFiles = files
+      .filter((file) => file.endsWith(".ts") || file.endsWith(".js"))
+      .sort((a, b) => a.localeCompare(b));
+
+    return migrationFiles.map((file) => ({
+      name: file,
+      ran: ranMap.has(file),
+      batch: ranMap.get(file),
+    }));
+  }
 }
+

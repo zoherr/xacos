@@ -31,3 +31,4 @@ describe('extractPageMeta', () => {
     expect(meta.description).toBeUndefined();
   });
 });
+

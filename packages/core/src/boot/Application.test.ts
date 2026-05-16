@@ -9,7 +9,7 @@ describe("Application boot", () => {
   it("boots providers and discovers services", async () => {
     const app = new Application();
 
-    const servicesDir = mkdtempSync(join(tmpdir(), "xaocs-services-"));
+    const servicesDir = mkdtempSync(join(tmpdir(), "xacos-services-"));
     const serviceFile = join(servicesDir, "PingService.js");
 
     writeFileSync(
@@ -33,7 +33,7 @@ describe("Application boot", () => {
 
   it("discovers middlewares into the registry", async () => {
     const app = new Application();
-    const middlewaresDir = mkdtempSync(join(tmpdir(), "xaocs-mw-"));
+    const middlewaresDir = mkdtempSync(join(tmpdir(), "xacos-mw-"));
     const mwFile = join(middlewaresDir, "auth.middleware.js");
 
     writeFileSync(
@@ -54,3 +54,4 @@ describe("Application boot", () => {
     }
   });
 });
+

@@ -12,16 +12,17 @@ export function createViteConfig(viewsDir: string, root: string): UserConfig {
     resolve: {
       alias: {
         '@views': resolve(viewsDir),
-        '@app': resolve('./app'),
-        '@api': resolve('./api'),
-        '@db': resolve('./database'),
+        '@app': resolve(root, 'app'),
+        '@api': resolve(root, 'api'),
+        '@db': resolve(root, 'database'),
       },
     },
     build: {
-      outDir: resolve('./.xaocs/client'),
+      outDir: resolve('./.xacos/client'),
       rollupOptions: {
         input: {}, // filled dynamically per page in later sprints
       },
     },
   });
 }
+

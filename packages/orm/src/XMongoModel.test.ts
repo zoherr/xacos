@@ -13,3 +13,4 @@ describe("XMongoModel", () => {
     expect(() => MissingModelName.model).toThrow("modelName");
   });
 });
+

@@ -6,7 +6,7 @@ import mongoose, {
   type UpdateQuery,
   Types,
 } from "mongoose";
-import type { PaginatedResult } from "@xaocs/shared";
+import type { PaginatedResult } from "@xacos/shared";
 
 type MongoDoc = Record<string, unknown>;
 
@@ -116,3 +116,4 @@ export abstract class XMongoModel {
 }
 
 export default XMongoModel;
+

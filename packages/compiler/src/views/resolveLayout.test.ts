@@ -32,3 +32,4 @@ describe('resolveLayout', () => {
     expect(path).toContain('admin.tsx');
   });
 });
+

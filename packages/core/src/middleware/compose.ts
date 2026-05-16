@@ -1,4 +1,4 @@
-import type { XMiddleware, XRequest, XResponse } from "@xaocs/shared";
+import type { XMiddleware, XRequest, XResponse } from "@xacos/shared";
 
 export function compose(middlewares: readonly XMiddleware[]) {
   return async function pipeline(req: XRequest, res: XResponse): Promise<void> {
@@ -21,3 +21,4 @@ export function compose(middlewares: readonly XMiddleware[]) {
     await dispatch(0);
   };
 }
+

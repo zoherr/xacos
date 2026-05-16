@@ -1,0 +1,42 @@
+# IoC Container (`XContainer`)
+
+The `XContainer` is the heart of the XAOCS framework. E.g., it manages dependency injection, service lifecycle, and auto-discovery across your entire application.
+
+## Binding Services
+
+You can register services in the container using either `bind` (creates a new instance every time) or `singleton` (caches the instance after the first instantiation).
+
+```typescript
+import { app } from '@xacos/core';
+
+// Transient binding
+app.bind('PaymentService', () => new PaymentService());
+
+// Singleton binding
+app.singleton('DatabaseConnection', () => new DatabaseConnection());
+```
+
+## Resolving Dependencies
+
+To resolve a service from the container, use the `make` method:
+
+```typescript
+const paymentService = app.make<PaymentService>('PaymentService');
+```
+
+## Auto-Discovery
+
+XAOCS eliminates manual wiring by automatically discovering and registering services located in `app/services/`. Any class exported with a name ending in `Service` is registered as a singleton automatically during application boot.
+
+```typescript
+// app/services/UserService.ts
+export class UserService {
+  static inject = ['MailService']; // Constructor dependencies auto-resolved
+
+  constructor(private mailService: MailService) {}
+
+  async sendWelcomeEmail(email: string) {
+    await this.mailService.send(email, 'Welcome to XAOCS!');
+  }
+}
+```

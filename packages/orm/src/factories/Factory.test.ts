@@ -15,3 +15,4 @@ describe('Factory', () => {
     expect(items).toHaveLength(0);
   });
 });
+

@@ -6,3 +6,4 @@ import { ViewScanner, type ViewRoute } from '../scanner/ViewScanner';
 export function scanViews(viewsDir: string): ViewRoute[] {
   return new ViewScanner(viewsDir).scan();
 }
+

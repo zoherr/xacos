@@ -1,4 +1,4 @@
-import type { XRequest, XResponse } from "@xaocs/shared";
+import type { XRequest, XResponse } from "@xacos/shared";
 
 export abstract class XController {
   protected ok(res: XResponse, data: unknown) {
@@ -29,3 +29,4 @@ export abstract class XController {
     return res.status(500).json({ success: false, error: message });
   }
 }
+

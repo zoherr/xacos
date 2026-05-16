@@ -1,6 +1,6 @@
 import { existsSync, readdirSync } from "node:fs";
 import { join, resolve } from "node:path";
-import type { XMiddleware } from "@xaocs/shared";
+import type { XMiddleware } from "@xacos/shared";
 import { middlewareRegistry } from "./MiddlewareRegistry";
 
 export async function discoverMiddlewares(dir: string): Promise<void> {
@@ -26,3 +26,4 @@ export async function discoverMiddlewares(dir: string): Promise<void> {
     }
   }
 }
+

@@ -12,7 +12,7 @@ export function buildMongoUri(): string {
   const password = process.env["DB_PASSWORD"] ?? "";
   const host = process.env["DB_HOST"] ?? "localhost";
   const port = process.env["DB_PORT"] ?? "27017";
-  const database = process.env["DB_DATABASE"] ?? "xaocs";
+  const database = process.env["DB_DATABASE"] ?? "xacos";
 
   if (user) {
     const u = encodeURIComponent(user);
@@ -22,3 +22,4 @@ export function buildMongoUri(): string {
 
   return `mongodb://${host}:${port}/${database}`;
 }
+

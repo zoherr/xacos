@@ -31,8 +31,14 @@ export type ColumnOptions = Readonly<{
   default?: unknown;
 }>;
 
-type WithRelations = { __xaocsRelations?: RelationMeta[] };
-type WithColumns = { __xaocsColumns?: Map<string, ColumnOptions> };
+type WithRelations = { __xacosRelations?: RelationMeta[] };
+type WithColumns = { __xacosColumns?: Map<string, ColumnOptions> };
+
+type StandardDecoratorContext = {
+  kind: string;
+  name: string | symbol;
+  addInitializer?: (initializer: () => void) => void;
+};
 
 function constructorFromTarget(target: object | undefined): object {
   if (!target || typeof target !== "object") {
@@ -45,10 +51,19 @@ function constructorFromTarget(target: object | undefined): object {
   return ctor;
 }
 
+function isStandardDecoratorContext(value: unknown): value is StandardDecoratorContext {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "kind" in value &&
+    "name" in value
+  );
+}
+
 function pushRelation(constructor: object, meta: RelationMeta): void {
   const ctor = constructor as WithRelations;
-  if (!ctor.__xaocsRelations) ctor.__xaocsRelations = [];
-  ctor.__xaocsRelations.push(meta);
+  if (!ctor.__xacosRelations) ctor.__xacosRelations = [];
+  ctor.__xacosRelations.push(meta);
 }
 
 /** Register relation metadata when runtime decorators receive no prototype (e.g. some Bun/TS field transforms). */
@@ -63,8 +78,8 @@ export function registerColumnMeta(constructor: object, propertyKey: string, opt
 
 function ensureColumnMap(constructor: object): Map<string, ColumnOptions> {
   const ctor = constructor as WithColumns;
-  if (!ctor.__xaocsColumns) ctor.__xaocsColumns = new Map();
-  return ctor.__xaocsColumns;
+  if (!ctor.__xacosColumns) ctor.__xacosColumns = new Map();
+  return ctor.__xacosColumns;
 }
 
 export function HasMany(related: () => ModelConstructor, foreignKey: string) {
@@ -100,9 +115,23 @@ export function BelongsToMany(related: () => ModelConstructor, pivotTable: strin
 }
 
 export function Column(options: ColumnOptions = {}) {
-  return (target: object | undefined, propertyKey: string | symbol): void => {
-    const key = String(propertyKey);
-    const ctor = constructorFromTarget(target);
+  return (targetOrInitialValue: object | undefined, propertyKeyOrContext: string | symbol | StandardDecoratorContext): void => {
+    if (isStandardDecoratorContext(propertyKeyOrContext)) {
+      const context = propertyKeyOrContext;
+      if (context.kind !== "field" && context.kind !== "accessor") {
+        return;
+      }
+
+      const key = String(context.name);
+      context.addInitializer?.(function (this: object) {
+        const ctor = constructorFromTarget(this);
+        ensureColumnMap(ctor).set(key, options);
+      });
+      return;
+    }
+
+    const key = String(propertyKeyOrContext);
+    const ctor = constructorFromTarget(targetOrInitialValue);
     ensureColumnMap(ctor).set(key, options);
   };
 }
@@ -110,7 +139,7 @@ export function Column(options: ColumnOptions = {}) {
 export function getColumnOptions(constructor: object, propertyKey: string): ColumnOptions | undefined {
   let current: object | null = constructor;
   while (current) {
-    const map = (current as WithColumns).__xaocsColumns;
+    const map = (current as WithColumns).__xacosColumns;
     const hit = map?.get(propertyKey);
     if (hit) return hit;
     current = Object.getPrototypeOf(current);
@@ -122,9 +151,10 @@ export function getRelations(ctor: object): RelationMeta[] {
   const collected: RelationMeta[] = [];
   let current: object | null = ctor;
   while (current) {
-    const own = (current as WithRelations).__xaocsRelations ?? [];
+    const own = (current as WithRelations).__xacosRelations ?? [];
     collected.push(...own);
     current = Object.getPrototypeOf(current);
   }
   return collected;
 }
+

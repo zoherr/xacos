@@ -2,13 +2,15 @@ import { describe, expect, it } from "bun:test";
 import { defineConfig } from "./defineConfig";
 
 describe("defineConfig", () => {
-  it("returns exact config object", () => {
+  it("returns config with defaults and overrides", () => {
     const cfg = defineConfig({
-      app: { name: "XAOCS", env: "test", port: 3000 },
-      providers: [],
+      port: 3000,
+      api: { dir: './custom-api' }
     });
 
-    expect(cfg.app?.name).toBe("XAOCS");
-    expect(cfg.app?.port).toBe(3000);
+    expect(cfg.port).toBe(3000);
+    expect(cfg.api?.dir).toBe('./custom-api');
+    expect(cfg.views?.dir).toBe('./views'); // default
   });
 });
+

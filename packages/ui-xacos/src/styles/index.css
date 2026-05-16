@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  :root {
+    --xacos-bg: #0f0f0f;
+    --xacos-surface: #1a1a1a;
+    --xacos-border: #2a2a2a;
+    --xacos-text: #e5e5e5;
+    --xacos-muted: #888888;
+    --xacos-primary: #3b82f6;
+    --xacos-primary-hover: #2563eb;
+  }
+}
+

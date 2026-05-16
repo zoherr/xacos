@@ -17,3 +17,4 @@ export class Schema {
     return getKnex().schema.hasTable(name);
   }
 }
+

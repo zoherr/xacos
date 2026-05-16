@@ -42,6 +42,7 @@ describe("RequestAdapter", () => {
     adapted.status(201).json({ ok: true });
 
     expect(statusCode).toBe(201);
-    expect(payload as { ok: boolean }).toEqual({ ok: true });
+    expect((adapted as any)._payload).toEqual({ ok: true });
   });
 });
+

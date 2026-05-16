@@ -1,4 +1,4 @@
-import type { XMiddleware } from "@xaocs/shared";
+import type { XMiddleware } from "@xacos/shared";
 
 class GlobalMiddlewareRegistry {
   private readonly middlewares: XMiddleware[] = [];
@@ -17,3 +17,4 @@ class GlobalMiddlewareRegistry {
 }
 
 export const globalMiddlewareRegistry = new GlobalMiddlewareRegistry();
+

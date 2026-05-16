@@ -1,16 +1,26 @@
 import { describe, expect, it } from "bun:test";
-import type { XRequest, XResponse } from "@xaocs/shared";
+import type { XRequest, XResponse } from "@xacos/shared";
+import { z } from "zod";
 import { XRouter } from "./XRouter";
 
 function createReq(): XRequest {
-  return {
+  const req = {
     params: {},
     query: {},
     body: {},
     headers: {},
-    app: { make: <T>(_key: string) => ({}) as T },
-  };
+    cookies: {},
+    app: {
+      make: <T>(_key: string) => ({} as T),
+    },
+    validate: (schema: any) => schema.parse({}),
+    file: async (_name: string) => undefined,
+    files: async (_name?: string) => [],
+  } as XRequest;
+
+  return req;
 }
+
 
 function createRes(): XResponse {
   let self!: XResponse;
@@ -29,7 +39,7 @@ describe("XRouter", () => {
   it("registers route definitions", async () => {
     const router = new XRouter();
 
-    router.get("/", async (_req, _res) => {});
+    router.get("/", async (_req: XRequest, _res: XResponse) => {});
 
     expect(router.routes.length).toBe(1);
     expect(router.routes[0]?.method).toBe("GET");
@@ -39,7 +49,7 @@ describe("XRouter", () => {
     const router = new XRouter();
 
     router.group("/admin", (r) => {
-      r.get("/", async (_req, _res) => {});
+      r.get("/", async (_req: XRequest, _res: XResponse) => {});
     });
 
     expect(router.routes[0]?.path).toBe("/admin/");
@@ -49,7 +59,7 @@ describe("XRouter", () => {
     const router = new XRouter();
     let seen = false;
 
-    router.post("/", async (req, res) => {
+    router.post("/", async (req: XRequest, res: XResponse) => {
       const _ = req.params;
       res.status(201).json({ ok: true });
       seen = true;
@@ -58,4 +68,16 @@ describe("XRouter", () => {
     await router.routes[0]?.handler(createReq(), createRes());
     expect(seen).toBe(true);
   });
+
+  it("stores optional route schema attached before handler", () => {
+    const router = new XRouter();
+    const bodySchema = z.object({ foo: z.string() });
+
+    router.post("/", { schema: { body: bodySchema } }, async (_req: XRequest, res: XResponse) => {
+      res.status(204).send();
+    });
+
+    expect(router.routes[0]?.schema?.body).toBe(bodySchema);
+  });
 });
+

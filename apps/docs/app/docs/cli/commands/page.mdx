@@ -1,0 +1,79 @@
+# CLI Commands (`@xacos/cli`)
+
+XAOCS includes a powerful, built-in command-line interface powered by `cac`. E.g., it provides comprehensive tooling for development, database migrations, seeding, and scaffolding.
+
+## Usage
+
+You can run CLI commands using `bunx xacos <command>` or via your project's package scripts.
+
+## Command Reference
+
+### Development & Production
+
+```bash
+# Start the development server with HMR and live reload
+xacos dev
+
+# Build the application for production (bundles views and compiles server)
+xacos build
+
+# Start the production server
+xacos start
+```
+
+### Database Migrations & Seeding
+
+```bash
+# Run all pending database migrations
+xacos migrate
+
+# Rollback the last migration batch
+xacos migrate rollback
+
+# Reset the database (drop all tables) and re-run all migrations
+xacos migrate fresh
+
+# View the status of all migrations
+xacos migrate status
+
+# Run database seeders
+xacos db:seed
+```
+
+### Generators (`add` & `make`)
+
+```bash
+# Generate a new Knex-backed XModel class in database/models/
+xacos add model User
+
+# Generate a new middleware class in app/middlewares/
+xacos add middleware AuthMiddleware
+
+# Generate a new service class in app/services/
+xacos add service PaymentService
+
+# Generate a new controller class in app/controllers/
+xacos add controller UserController
+
+# Generate a new API route file in api/
+xacos add api orders
+
+# Generate a new database migration file in database/migrations/
+xacos make migration create_users_table
+
+# Generate a new database seeder file in database/seeders/
+xacos make seeder UserSeeder
+```
+
+### Diagnostics & Inspection
+
+```bash
+# List all registered API routes and View routes
+xacos routes
+
+# Open an interactive REPL with full application context loaded
+xacos tinker
+
+# Display framework and environment diagnostic information
+xacos info
+```

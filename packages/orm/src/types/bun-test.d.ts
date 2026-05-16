@@ -5,3 +5,4 @@ declare module 'bun:test' {
   export function beforeAll(fn: () => Promise<void> | void): void;
   export function afterAll(fn: () => Promise<void> | void): void;
 }
+

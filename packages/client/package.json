@@ -1,0 +1,34 @@
+{
+  "name": "@xacos/client",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "dependencies": {
+    "@xacos/shared": "workspace:*",
+    "react": "^19.x",
+    "react-dom": "^19.x",
+    "socket.io-client": "^4.8.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19.x",
+    "@types/react-dom": "^19.x",
+    "typescript": "^5.x"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "bun test",
+    "type-check": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": "^19.x"
+  }
+}
+

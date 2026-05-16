@@ -1,0 +1,80 @@
+# Ecosystem Packages
+
+XAOCS provides a rich suite of modular, enterprise-ready packages to handle common backend and frontend requirements. E.g., each package is designed to integrate seamlessly into the `XContainer` and configuration system.
+
+## `@xacos/mail`
+
+A multi-driver mail delivery package supporting SMTP, Amazon SES, Mailgun, Postmark, and Resend.
+
+```typescript
+import { app } from '@xacos/core';
+import { MailManager } from '@xacos/mail';
+
+const mailer = app.make<MailManager>('MailManager');
+await mailer.send('user@example.com', 'Welcome!', { template: 'welcome' });
+```
+
+## `@xacos/cache`
+
+A high-performance caching abstraction supporting in-memory caching and distributed Redis backends.
+
+```typescript
+import { app } from '@xacos/core';
+import { CacheManager } from '@xacos/cache';
+
+const cache = app.make<CacheManager>('CacheManager');
+const data = await cache.remember('users.list', 3600, async () => {
+  return await fetchUsersFromDb();
+});
+```
+
+## `@xacos/storage`
+
+A robust file storage package supporting local filesystem storage and Amazon S3 (or S3-compatible endpoints like MinIO).
+
+```typescript
+import { app } from '@xacos/core';
+import { StorageManager } from '@xacos/storage';
+
+const storage = app.make<StorageManager>('StorageManager');
+await storage.put('avatars/1.png', buffer);
+const url = await storage.getUrl('avatars/1.png');
+```
+
+## `@xacos/queue`
+
+A Redis-backed, BullMQ-powered background job queue for handling asynchronous processing.
+
+```typescript
+import { dispatch } from '@xacos/queue';
+import { SendEmailJob } from '../app/jobs/SendEmailJob';
+
+// Dispatch a job to the background queue
+await dispatch(new SendEmailJob({ userId: 1 }));
+```
+
+## `@xacos/events`
+
+A real-time WebSocket broadcasting package powered by Socket.IO.
+
+```typescript
+import { XEvents } from '@xacos/events';
+
+// Broadcast an event to all connected clients
+XEvents.emit('post.created', { id: 1, title: 'Hello World' });
+```
+
+## `@xacos/validation`
+
+A Zod-powered validation layer with structured, field-level error formatting.
+
+```typescript
+import { v, validate } from '@xacos/validation';
+
+const schema = v.object({ email: v.string().email() });
+const validData = validate(req.body, schema); // Throws ValidationError on failure
+```
+
+## `@xacos/ui`
+
+A Tailwind-powered React component library with premium dark-mode primitives E.g. `<Button>`, `<Input>`, `<Card>`, `<Modal>`, `<Table>`, `<Navbar>`.

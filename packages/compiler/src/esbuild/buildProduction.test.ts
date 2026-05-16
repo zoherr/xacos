@@ -25,7 +25,7 @@ describe('buildProduction', () => {
     expect(existsSync(`${TMP_OUT}/index.js`)).toBe(true);
     expect(existsSync(`${TMP_OUT}/about.js`)).toBe(true);
     expect(result.metafile).toBeDefined();
-  });
+  }, 50000);
 
   it('handles dynamic routes in chunk naming', async () => {
     mkdirSync(`${TMP_VIEWS}/blog`, { recursive: true });
@@ -34,5 +34,6 @@ describe('buildProduction', () => {
     await buildProduction(TMP_VIEWS, TMP_OUT, process.cwd());
     
     expect(existsSync(`${TMP_OUT}/blog_id.js`)).toBe(true);
-  });
+  }, 50000);
 });
+

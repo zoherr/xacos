@@ -12,3 +12,4 @@ describe("globalMiddlewareRegistry", () => {
     expect(globalMiddlewareRegistry.getAll().length).toBe(start + 1);
   });
 });
+

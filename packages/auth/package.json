@@ -1,0 +1,36 @@
+{
+  "name": "@xacos/auth",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "dependencies": {
+    "@xacos/core": "workspace:*",
+    "@xacos/orm": "workspace:*",
+    "@xacos/shared": "workspace:*",
+    "@xacos/config": "workspace:*",
+    "@xacos/client": "workspace:*",
+    "bcryptjs": "^2.4.3",
+
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.5",
+    "@types/react": "^19.2.14",
+    "typescript": "^5.x"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "bun test",
+    "type-check": "tsc --noEmit"
+  }
+}
+

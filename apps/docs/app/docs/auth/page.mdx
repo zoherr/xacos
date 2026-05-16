@@ -1,0 +1,53 @@
+# Authentication (`@xacos/auth`)
+
+XAOCS provides a fully integrated, secure, cookie-based authentication package out of the box. E.g., it handles user registration, password hashing, JWT generation, and session management automatically.
+
+## Overview
+
+The `@xacos/auth` package includes:
+- A pre-configured `User` model with hidden password fields.
+- `AuthService` for handling login, registration, and token verification.
+- `authenticate` middleware for protecting API routes.
+
+## Protecting API Routes
+
+To secure your API endpoints, attach the `authenticate` middleware to your router:
+
+```typescript
+// api/protected.api.ts
+import { XRouter } from '@xacos/core';
+import { authenticate } from '@xacos/auth';
+
+export const router = new XRouter();
+
+// Apply auth middleware to all routes in this file
+router.use(authenticate);
+
+router.get('/me', async (req, res) => {
+  // req.user is fully populated and verified
+  return res.json({ user: req.user });
+});
+```
+
+## Client-Side Authentication
+
+On the frontend, use the `useAuth` hook provided by `@xacos/client` to manage authentication state seamlessly:
+
+```tsx
+import React from 'react';
+import { useAuth } from '@xacos/client';
+
+export function UserProfile() {
+  const { user, logout, loading } = useAuth();
+
+  if (loading) return <div>Loading...</div>;
+  if (!user) return <div>Please log in.</div>;
+
+  return (
+    <div>
+      <h1>Welcome, {user.name}</h1>
+      <button onClick={logout}>Log Out</button>
+    </div>
+  );
+}
+```

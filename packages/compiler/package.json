@@ -1,5 +1,5 @@
 {
-  "name": "@xaocs/compiler",
+  "name": "@xacos/compiler",
   "version": "0.0.1",
   "type": "module",
   "main": "./dist/index.js",
@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "@vitejs/plugin-react": "^4.x",
-    "@xaocs/config": "workspace:*",
-    "@xaocs/shared": "workspace:*",
+    "@xacos/config": "workspace:*",
+    "@xacos/shared": "workspace:*",
     "esbuild": "^0.21.x",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
@@ -27,7 +27,8 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
-    "test": "bun test",
+    "test": "bun test src",
     "type-check": "tsc --noEmit"
   }
 }
+

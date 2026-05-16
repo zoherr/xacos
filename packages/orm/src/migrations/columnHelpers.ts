@@ -1,10 +1,10 @@
 import type { Knex } from "knex";
 
-/** Augmented table builder: use `xaocsTimestamps()` / `xaocsSoftDeletes()` to avoid clashing with Knex's `timestamps()`. */
+/** Augmented table builder: use `xacosTimestamps()` / `xacosSoftDeletes()` to avoid clashing with Knex's `timestamps()`. */
 export type XCreateTableBuilder = Knex.CreateTableBuilder & {
   id(): void;
-  xaocsTimestamps(): void;
-  xaocsSoftDeletes(): void;
+  xacosTimestamps(): void;
+  xacosSoftDeletes(): void;
 };
 
 export function augmentTable(table: Knex.CreateTableBuilder, knex: Knex): XCreateTableBuilder {
@@ -14,14 +14,15 @@ export function augmentTable(table: Knex.CreateTableBuilder, knex: Knex): XCreat
     table.bigIncrements("id").primary();
   };
 
-  extended.xaocsTimestamps = () => {
+  extended.xacosTimestamps = () => {
     table.timestamp("created_at").defaultTo(knex.fn.now()).notNullable();
     table.timestamp("updated_at").defaultTo(knex.fn.now()).notNullable();
   };
 
-  extended.xaocsSoftDeletes = () => {
+  extended.xacosSoftDeletes = () => {
     table.timestamp("deleted_at").nullable();
   };
 
   return extended;
 }
+

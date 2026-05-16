@@ -30,3 +30,4 @@ export function scanApiFiles(apiDir: string, prefix = "/api"): ApiRouteFile[] {
       };
     });
 }
+

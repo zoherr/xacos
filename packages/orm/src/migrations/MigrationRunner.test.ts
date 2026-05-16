@@ -27,6 +27,7 @@ describe("MigrationRunner", () => {
 
     await runner.fresh(fixturesDir);
     expect(await knex.schema.hasTable("migration_test")).toBe(true);
-    expect(await knex.schema.hasTable("xaocs_migrations")).toBe(true);
+    expect(await knex.schema.hasTable("xacos_migrations")).toBe(true);
   });
 });
+

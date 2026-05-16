@@ -5,6 +5,7 @@ export interface ViewRoute {
   path: string;        // URL path, e.g., "/users/:id"
   urlPattern: string;  // Alias for path, used in production bundling
   filePath: string;    // Absolute file path
+  chunkName: string;   // Sanitized name for JS chunk
 }
 
 
@@ -38,6 +39,7 @@ export class ViewScanner {
           path,
           urlPattern: path,
           filePath: fullPath,
+          chunkName: this.deriveChunkName(path),
         });
       }
 
@@ -58,4 +60,13 @@ export class ViewScanner {
 
     return rel.startsWith('/') ? rel : '/' + rel;
   }
+
+  private deriveChunkName(urlPattern: string): string {
+    return urlPattern
+      .replace(/^\//, '')
+      .replace(/\//g, '_')
+      .replace(/:/g, '')
+      .replace(/[^a-zA-Z0-9_]/g, '') || 'index';
+  }
 }
+

@@ -1,0 +1,40 @@
+{
+  "name": "@xacos/cli",
+  "version": "0.0.1",
+  "type": "module",
+  "bin": {
+    "xacos": "./dist/bin/xacos.js"
+  },
+
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "dependencies": {
+    "@xacos/config": "workspace:*",
+    "@xacos/compiler": "workspace:*",
+    "@xacos/core": "workspace:*",
+
+    "@xacos/orm": "workspace:*",
+    "@xacos/server": "workspace:*",
+    "@xacos/queue": "workspace:*",
+
+    "chalk": "^5.6.2",
+    "commander": "^14.0.3",
+    "ora": "^9.4.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.x"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "bun test",
+    "type-check": "tsc --noEmit"
+  }
+}
+

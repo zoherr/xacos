@@ -1,4 +1,4 @@
-import type { XMiddleware } from "@xaocs/shared";
+import type { XMiddleware } from "@xacos/shared";
 
 class MiddlewareRegistry {
   private readonly map = new Map<string, XMiddleware>();
@@ -25,3 +25,4 @@ class MiddlewareRegistry {
 }
 
 export const middlewareRegistry = new MiddlewareRegistry();
+

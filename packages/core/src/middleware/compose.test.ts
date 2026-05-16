@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import type { XRequest, XResponse } from "@xaocs/shared";
+import type { XRequest, XResponse } from "@xacos/shared";
 import { compose } from "./compose";
 
 describe("compose", () => {
@@ -52,3 +52,4 @@ function createResponse(): XResponse {
 
   return self;
 }
+

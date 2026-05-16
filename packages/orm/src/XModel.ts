@@ -1,5 +1,5 @@
 import type { Knex } from "knex";
-import type { PaginatedResult } from "@xaocs/shared";
+import type { PaginatedResult } from "@xacos/shared";
 import { getColumnOptions, getRelations, type ModelConstructor, type RelationMeta } from "./decorators";
 import { getKnex } from "./connection/db";
 
@@ -290,3 +290,4 @@ export abstract class XModel {
 }
 
 export default XModel;
+

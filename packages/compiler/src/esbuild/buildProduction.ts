@@ -23,13 +23,7 @@ export async function buildProduction(
   // Build entry points map: chunk name → file path
   const entryPoints: Record<string, string> = {};
   for (const view of views) {
-    // Derive chunk name from URL: /blog/:id → blog_id
-    const chunkName = view.urlPattern
-      .replace(/^\//, '')
-      .replace(/\//g, '_')
-      .replace(/:/g, '')
-      .replace(/[^a-zA-Z0-9_]/g, '') || 'index';
-    entryPoints[chunkName] = view.filePath;
+    entryPoints[view.chunkName] = view.filePath;
   }
 
   const result = await esbuild.build({
@@ -40,13 +34,13 @@ export async function buildProduction(
     outdir: outPath,
     metafile: true,
     minify: true,
-    sourcemap: false,
+    sourcemap: process.env['APP_ENV'] !== 'production' ? 'inline' : false,
     jsx: 'automatic',
     jsxImportSource: 'react',
     define: {
       'process.env.NODE_ENV': '"production"',
     },
-    external: [],        // bundle everything including React
+    external: ['react', 'react-dom'], // bundle everything except React core to ensure blazing fast builds
     alias: {
       '@views': resolve(viewsDir),
       '@app': resolve(root, 'app'),
@@ -60,3 +54,4 @@ export async function buildProduction(
     metafile: result.metafile!,
   };
 }
+

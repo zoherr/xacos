@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify';
-import { createViteConfig, ViewScanner } from '@xaocs/compiler';
+import { createViteConfig, ViewScanner } from '@xacos/compiler';
 
 import { createServer as createViteServer, type InlineConfig } from 'vite';
 
@@ -26,7 +26,7 @@ export async function mountViteDev(
         // In dev mode, we still let Vite handle the HTML shell usually, 
         // but for a true SSR opt-in, we might want to render the component here.
         // For now, following the sprint goal: render to string if ssr=true.
-        const { renderSSR } = await import('@xaocs/compiler');
+        const { renderSSR } = await import('@xacos/compiler');
         const { html, meta } = await renderSSR(route.filePath, {
           params: request.params as Record<string, string>,
           query: request.query as Record<string, string>,
@@ -87,3 +87,4 @@ export async function mountViteDev(
     await vite.close();
   });
 }
+

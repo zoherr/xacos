@@ -6,7 +6,7 @@ export default class TestMigration001 extends Migration {
     await schema.createTable("migration_test", (table) => {
       table.id();
       table.string("label", 255);
-      table.xaocsTimestamps();
+      table.xacosTimestamps();
     });
   }
 
@@ -14,3 +14,4 @@ export default class TestMigration001 extends Migration {
     await schema.dropTable("migration_test");
   }
 }
+

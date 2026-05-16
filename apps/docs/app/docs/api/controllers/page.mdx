@@ -1,0 +1,47 @@
+# Controllers (`XController`)
+
+While you can write inline route handlers in your `*.api.ts` files, XAOCS encourages moving complex business logic into dedicated Controller classes. E.g., this keeps your route definitions thin and highly scannable.
+
+## Creating a Controller
+
+Controllers live in the `app/controllers/` directory and extend the base `XController` class, which provides powerful response helpers.
+
+```typescript
+// app/controllers/UserController.ts
+import { XController } from '@xacos/core';
+import { UserService } from '../services/UserService';
+
+export class UserController extends XController {
+  static inject = ['UserService']; // Auto-inject dependencies
+
+  constructor(private userService: UserService) {
+    super();
+  }
+
+  async index(req: XRequest, res: XResponse) {
+    const users = await this.userService.getAllUsers();
+    return this.json(res, { users });
+  }
+
+  async show(req: XRequest, res: XResponse) {
+    const user = await this.userService.getUserById(Number(req.params.id));
+    return this.json(res, { user });
+  }
+}
+```
+
+## Wiring Controllers to Routes
+
+In your `*.api.ts` file, you can instantiate or resolve your controller from the container and bind its methods to route endpoints.
+
+```typescript
+// api/user.api.ts
+import { XRouter, app } from '@xacos/core';
+import { UserController } from '../app/controllers/UserController';
+
+export const router = new XRouter();
+const controller = app.make<UserController>('UserController');
+
+router.get('/', (req, res) => controller.index(req, res));
+router.get('/:id', (req, res) => controller.show(req, res));
+```

@@ -9,3 +9,4 @@ export abstract class ServiceProvider {
     // Optional lifecycle hook for subclasses.
   }
 }
+

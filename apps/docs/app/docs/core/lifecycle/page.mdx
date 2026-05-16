@@ -1,0 +1,32 @@
+# Boot Lifecycle
+
+XAOCS follows a highly structured, predictable boot sequence managed by the `Application` class. E.g., understanding this lifecycle allows you to hook into the initialization process cleanly.
+
+## The Boot Sequence
+
+When your application starts, the `Application.boot()` method executes the following stages in strict order:
+
+1. **Provider Registration**: All user-defined `ServiceProvider` classes are instantiated, and their `register()` methods are called. E.g., this is where container bindings are established.
+2. **Service Auto-Discovery**: XAOCS scans the `app/services/` directory and registers all discovered service classes as singletons in the `XContainer`.
+3. **Middleware Auto-Discovery**: XAOCS scans the `app/middlewares/` directory and registers all discovered middleware classes in the `GlobalMiddlewareRegistry`.
+4. **Provider Booting**: The `boot()` method of each registered `ServiceProvider` is called. E.g., this is where services can safely consume other container bindings.
+5. **Route Mounting**: Fastify is initialized, and all API routes (`api/`) and View routes (`views/`) are scanned and mounted onto the server instance.
+
+## Custom Service Providers
+
+You can create custom service providers to extend the framework's capabilities during boot:
+
+```typescript
+import { ServiceProvider } from '@xacos/core';
+
+export class CustomProvider extends ServiceProvider {
+  register() {
+    this.app.singleton('CustomLogger', () => new CustomLogger());
+  }
+
+  boot() {
+    const logger = this.app.make<CustomLogger>('CustomLogger');
+    logger.info('CustomProvider booted successfully.');
+  }
+}
+```

@@ -31,3 +31,4 @@ describe("XContainer", () => {
     expect(() => container.make("Missing")).toThrow();
   });
 });
+

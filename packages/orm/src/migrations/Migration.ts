@@ -5,3 +5,4 @@ export abstract class Migration {
 
   abstract down(schema: Schema): Promise<void>;
 }
+

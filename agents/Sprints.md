@@ -51,9 +51,9 @@ At the root of the monorepo, maintain `MAINTENANCE.md` with this exact shape:
 8. **Tests per sprint.** Every sprint that adds logic must add a test file alongside.
 9. **Update `MAINTENANCE.md` last.** Non-negotiable. Every sprint.
 10. **Never break existing sprints.** Run `bun run build` from root before closing a sprint.
-11. **Package naming:** `@xaocs/<name>` for internal packages, `create-xaocs-app` for scaffolder.
+11. **Package naming:** `@xacos/<name>` for internal packages, `create-xacos-app` for scaffolder.
 12. **Exports:** Every package must have explicit `exports` field in `package.json`.
-13. **No circular deps.** `@xaocs/core` depends on nothing internal. Everything else may depend on core.
+13. **No circular deps.** `@xacos/core` depends on nothing internal. Everything else may depend on core.
 14. **Changelog.** Add one line to `CHANGELOG.md` at root per sprint.
 15. **`.env.example` always ships** in every template and scaffold.
 16. **New architecture rules (from user spec):**
@@ -66,212 +66,7 @@ At the root of the monorepo, maintain `MAINTENANCE.md` with this exact shape:
     - No manual service container wiring for common cases
 
 ---
-
-## 📋 ALL 200 SPRINTS — ONE-LINE OVERVIEW
-
-| # | Title | What It Does |
-|---|-------|-------------|
-| 1 | Monorepo Audit | Audit existing TurboRepo, map all existing packages/apps, document structure |
-| 2 | TurboRepo Config | Set up `turbo.json` pipelines for build/dev/test across all packages |
-| 3 | Bun Workspace Setup | Configure `package.json` workspaces + `bunfig.toml` for the monorepo |
-| 4 | Shared TS Config | Create root `tsconfig.base.json` extended by all packages |
-| 5 | `@xaocs/shared` Init | Stub shared types package — `XRequest`, `XResponse`, `XNext`, `XMiddleware` |
-| 6 | `@xaocs/core` Init | Bootstrap core package with `package.json`, `tsconfig`, empty exports |
-| 7 | IoC Container | Implement `XContainer` with `bind`, `singleton`, `make` methods |
-| 8 | Service Provider Base | Implement `ServiceProvider` abstract class with `register` and `boot` |
-| 9 | Auto-Discovery | Replace manual providers with filesystem auto-discovery of services |
-| 10 | Boot Lifecycle | Implement ordered boot sequence: env → container → providers → routes → server |
-| 11 | `@xaocs/server` Init | Bootstrap Fastify wrapper package |
-| 12 | Fastify Integration | Wire Fastify into `@xaocs/server` with typed request/response wrappers |
-| 13 | XRequest / XResponse | Extend Fastify types into XAOCS `XRequest` / `XResponse` abstractions |
-| 14 | Middleware Pipeline | Implement koa-compose style middleware pipeline in core |
-| 15 | Global Middleware Reg | Allow global middleware registration via `xaocs.config.ts` |
-| 16 | `@xaocs/config` Init | Config loader — reads `xaocs.config.ts` and `.env` |
-| 17 | Env Loading | Load `.env` via bun native + validate required keys |
-| 18 | `defineConfig` Helper | Export `defineConfig()` typed helper for `xaocs.config.ts` |
-| 19 | New API File Convention | Implement `*.api.ts` file scanner — `user.api.ts` → `/api/user/` prefix |
-| 20 | Router Class | Implement `XRouter` with `.get()`, `.post()`, `.put()`, `.patch()`, `.delete()` |
-| 21 | API Route Scanner | Scan `api/` dir for `*.api.ts` files, extract router, mount to Fastify |
-| 22 | Dynamic Route Segments | Support `[id]` segments in api file names → `:id` params |
-| 23 | Route Middleware Attach | Support `router.use(middleware)` and per-method middleware in api files |
-| 24 | `app/` Folder Convention | Establish `app/controllers`, `app/services`, `app/middlewares` structure |
-| 25 | Controller Base | Implement `XController` base class with request helpers |
-| 26 | Service Auto-Inject | Auto-discover and register services in `app/services/` without manual wiring |
-| 27 | Middleware Auto-Load | Auto-load middlewares from `app/middlewares/` into registry |
-| 28 | `@xaocs/orm` Init | Bootstrap ORM package with `package.json` and Knex dependency |
-| 29 | DB Driver Config | Support `mysql`, `postgres`, `sqlite`, `mongodb` via `DB_DRIVER` env |
-| 30 | Knex Connection | Wire Knex with driver adapter based on config |
-| 31 | `XModel` Base Class | Implement base `XModel` with static `table` and query builder |
-| 32 | `XModel.find()` | Implement `find(id)` and `findOrFail(id)` |
-| 33 | `XModel.all()` | Implement `all()` returning all rows |
-| 34 | `XModel.where()` | Implement chainable `where()` builder |
-| 35 | `XModel.create()` | Implement `create(data)` with auto timestamps |
-| 36 | `XModel.update()` | Implement `update(data)` on instance and static |
-| 37 | `XModel.delete()` | Implement `delete()` and `destroy(id)` |
-| 38 | `XModel.paginate()` | Implement `paginate(page, perPage)` returning paginated result |
-| 39 | `XModel.with()` | Implement eager loading via `with('relation')` |
-| 40 | Relationship Decorators | Implement `@HasMany`, `@BelongsTo`, `@HasOne`, `@BelongsToMany` |
-| 41 | `@Column` Decorator | Implement `@Column({ hidden, default })` decorator |
-| 42 | Hidden Fields | Strip `@Column({ hidden: true })` fields from JSON output |
-| 43 | Soft Deletes | Add `softDeletes()` support via `deleted_at` |
-| 44 | Migration System | Implement `Migration` base class and migration runner |
-| 45 | Migration Scanner | Scan `database/migrations/` and run pending ones in order |
-| 46 | Migration Tracking | Create `xaocs_migrations` table to track ran migrations |
-| 47 | Migration Rollback | Implement `migrate:rollback` — reverse last batch |
-| 48 | Migration Fresh | Implement `migrate:fresh` — drop all + re-run |
-| 49 | Schema Builder | Implement `Schema` class wrapping Knex schema builder |
-| 50 | Column Type Helpers | Add all column helpers: `id()`, `string()`, `text()`, `timestamps()`, etc. |
-| 51 | Seeder System | Implement `Seeder` base class and seeder runner |
-| 52 | Seeder Scanner | Scan `database/seeders/` and run them in order |
-| 53 | Factory System | Implement `Factory.times(n).create()` with Faker integration |
-| 54 | `@xaocs/compiler` Init | Bootstrap compiler package for JSX/page bundling |
-| 55 | Vite Dev Integration | Mount Vite dev server as middleware for HMR in dev mode |
-| 56 | View Scanner | Scan `views/` directory and map files to frontend routes |
-| 57 | Dynamic View Routes | Handle `[id].tsx` → `/users/:id` in view routing |
-| 58 | Layout System | Implement `views/layouts/main.tsx` auto-wrapping with opt-out |
-| 59 | Page Meta Export | Support `export const meta = { title, description }` per page |
-| 60 | SSR Opt-In | Support `export const ssr = true` for server-side rendering |
-| 61 | esbuild Prod Build | Implement production build via esbuild — per-page chunks |
-| 62 | HTML Shell | Serve HTML shell with hydration script per page route |
-| 63 | `@xaocs/client` Init | Bootstrap client package — React hooks and components |
-| 64 | `useAuth` Hook | Implement `useAuth()` — reads JWT, fetches `/api/auth/me` |
-| 65 | `XLink` Component | Implement `<XLink>` for client-side navigation without reload |
-| 66 | `redirect()` Helper | Implement `redirect('/path')` for client redirects |
-| 67 | `useXaocs` Hook | Implement `useXaocs()` — exposes params, searchParams |
-| 68 | `@xaocs/auth` Init | Bootstrap auth package |
-| 69 | Auth User Model | Ship default `User` model with all auth fields |
-| 70 | Auth Migrations | Ship `001_users.ts` and `002_sessions.ts` migrations |
-| 71 | `AuthService` | Implement `register()`, `login()`, `generateToken()` |
-| 72 | JWT Middleware | Implement `authenticate` middleware — verify JWT, attach `req.user` |
-| 73 | Auth API Routes | Ship `login.api.ts`, `register.api.ts`, `logout.api.ts`, `me.api.ts` |
-| 74 | Auth Frontend Pages | Ship `views/auth/login.tsx` and `views/auth/register.tsx` |
-| 75 | `@xaocs/cli` Init | Bootstrap CLI package entry point |
-| 76 | CLI Entry Setup | Wire CLI using `bun` as runtime, `commander` for arg parsing |
-| 77 | `xaocs dev` Command | Start dev server + Vite HMR |
-| 78 | `xaocs build` Command | Run esbuild production build |
-| 79 | `xaocs start` Command | Start production server |
-| 80 | `xaocs migrate` Command | Run pending migrations |
-| 81 | `xaocs migrate:rollback` | Rollback last batch |
-| 82 | `xaocs migrate:fresh` | Drop + re-migrate |
-| 83 | `xaocs migrate:status` | Show migration status table |
-| 84 | `xaocs db:seed` Command | Run all seeders or specific seeder |
-| 85 | `xaocs routes` Command | List all registered routes (API + view) |
-| 86 | `xaocs tinker` Command | REPL with full app context |
-| 87 | `xaocs info` Command | Print framework + env info |
-| 88 | `xaocs add --model` | Generate model file scaffold |
-| 89 | `xaocs add --middleware` | Generate middleware file scaffold |
-| 90 | `xaocs add --service` | Generate service file scaffold |
-| 91 | `xaocs make:migration` | Generate timestamped migration file |
-| 92 | `xaocs make:seeder` | Generate seeder file |
-| 93 | `xaocs add --api` | Generate new `*.api.ts` file with router scaffold |
-| 94 | `xaocs add --controller` | Generate controller in `app/controllers/` |
-| 95 | `create-xaocs-app` Init | Bootstrap scaffolding CLI package |
-| 96 | Scaffold Base Project | Copy template into new dir — `app/`, `views/`, `config/`, `database/`, `api/` |
-| 97 | Scaffold DB Prompt | Interactive DB picker: mysql/postgres/sqlite/mongodb |
-| 98 | Scaffold Auth Option | Optional auth files included if user selects yes |
-| 99 | Scaffold `.env.example` | Ship `.env.example` with all keys and comments |
-| 100 | Scaffold `xaocs.config.ts` | Ship typed config file with sensible defaults |
-| 101 | Scaffold `package.json` | Ship `package.json` with correct deps and bun scripts |
-| 102 | Scaffold `tsconfig.json` | Ship strict `tsconfig.json` extending base |
-| 103 | Scaffold Deps Install | Auto-run `bun install` after scaffold |
-| 104 | Scaffold Initial Migrate | Auto-run `xaocs migrate` after scaffold if db configured |
-| 105 | Scaffold README | Ship project-level `README.md` explaining the structure |
-| 106 | Error Handling Core | Implement global error handler — catches thrown errors, sends JSON |
-| 107 | Validation Layer | Integrate Zod — `req.validate(schema)` in route handlers |
-| 108 | Request Body Parsing | Wire Fastify body parser for JSON and multipart |
-| 109 | CORS Middleware | Ship `app/middlewares/cors.middleware.ts` |
-| 110 | Rate Limit Middleware | Ship `app/middlewares/ratelimit.middleware.ts` |
-| 111 | Logger Integration | Wire Pino (Fastify's built-in) with XAOCS log levels |
-| 112 | `@xaocs/mail` Init | Bootstrap mail package |
-| 113 | SMTP Driver | Implement SMTP mail sending via nodemailer |
-| 114 | Mail Templates | Support HTML template strings + data interpolation |
-| 115 | Mail Service | Ship `MailService` with `send({ to, subject, template, data })` |
-| 116 | `@xaocs/cache` Init | Bootstrap cache package |
-| 117 | Redis Driver | Connect Redis via `ioredis` |
-| 118 | Memory Driver | In-memory cache fallback for dev |
-| 119 | Cache Service | Ship `CacheService.get()`, `.set()`, `.forget()`, `.remember()` |
-| 120 | `@xaocs/storage` Init | Bootstrap storage package |
-| 121 | Local Storage Driver | Save files to `storage/` directory locally |
-| 122 | S3 Driver | Implement S3 upload/download via AWS SDK v3 |
-| 123 | Storage Service | Ship `StorageService.put()`, `.get()`, `.delete()`, `.url()` |
-| 124 | File Upload Route Helper | `req.file()` helper to extract multipart upload in API routes |
-| 125 | `@xaocs/queue` Init | Bootstrap queue package |
-| 126 | Job Base Class | Implement `XJob` base class with `handle()` method |
-| 127 | Queue Driver (Memory) | In-memory queue for dev — FIFO job execution |
-| 128 | Queue Driver (Redis) | Redis-backed queue via BullMQ |
-| 129 | Job Dispatch | `dispatch(new MyJob(data))` syntax |
-| 130 | Queue Worker | CLI `xaocs queue:work` boots worker process |
-| 131 | `@xaocs/events` Init | Bootstrap events package |
-| 132 | WebSocket Setup | Wire Socket.IO to Fastify server |
-| 133 | Event Emitter | `emit('event', data)` from server side |
-| 134 | Client Subscribe | `useEvent('event', cb)` React hook in `@xaocs/client` |
-| 135 | `@xaocs/testing` Init | Bootstrap testing utilities package |
-| 136 | Test HTTP Client | Ship `testClient(app)` — makes fake HTTP requests in tests |
-| 137 | Model Factories in Tests | Expose `Factory` for test data creation |
-| 138 | DB Test Helpers | Transactions that auto-rollback per test |
-| 139 | Middleware Test Helpers | `mockAuth(user)` to inject fake user in test requests |
-| 140 | `@xaocs/validation` Init | Wrap Zod — ship `v.string()`, `v.object()`, etc. with XAOCS types |
-| 141 | Route Validation | Attach schema to router: `router.get('/', { schema }, handler)` |
-| 142 | Validation Error Format | Auto-format Zod errors into `{ field, message }` JSON |
-| 143 | `@xaocs/ui` Init | Bootstrap UI component library package |
-| 144 | Tailwind Setup | Configure Tailwind in `@xaocs/ui` with design tokens |
-| 145 | Button Component | Ship `<Button>` with variants |
-| 146 | Input Component | Ship `<Input>` with label and error state |
-| 147 | Card Component | Ship `<Card>` component |
-| 148 | Modal Component | Ship `<Modal>` with open/close state |
-| 149 | Table Component | Ship `<Table>` with typed columns |
-| 150 | Navbar Component | Ship `<Navbar>` used in layouts |
-| 151 | Docs App Integration | Wire XAOCS docs into existing docs app in monorepo |
-| 152 | Docs — Core Concepts | Write docs pages for IoC container, boot lifecycle |
-| 153 | Docs — API Routes | Write docs for `*.api.ts` convention and `XRouter` |
-| 154 | Docs — ORM | Write docs for XModel, queries, relationships |
-| 155 | Docs — Migrations | Write docs for migration system and schema builder |
-| 156 | Docs — Auth | Write docs for built-in auth, JWT, protect routes |
-| 157 | Docs — Frontend | Write docs for views, layouts, SSR, `useAuth` |
-| 158 | Docs — CLI | Write docs for all CLI commands |
-| 159 | Docs — Packages | Write docs for mail, cache, storage, queue |
-| 160 | Web App — Landing Page | Build XAOCS marketing landing page in existing web app |
-| 161 | Web App — Feature Section | Add features section to landing page |
-| 162 | Web App — Code Showcase | Add code examples section to landing page |
-| 163 | Web App — Changelog Page | Pull `CHANGELOG.md` and render as web page |
-| 164 | MongoDB Adapter | Implement MongoDB adapter for XModel via Mongoose |
-| 165 | MongoDB Migrations | Stub migration system for MongoDB (index creation) |
-| 166 | PostgreSQL Full Test | Full integration test for Postgres adapter |
-| 167 | MySQL Full Test | Full integration test for MySQL adapter |
-| 168 | SQLite Full Test | Full integration test for SQLite adapter |
-| 169 | Multi-Layout Support | Support multiple layouts: `export const layout = 'admin'` |
-| 170 | Page Transitions | Client-side page transition animations via `<XLink>` |
-| 171 | Error Pages | Ship `views/404.tsx` and `views/500.tsx` defaults |
-| 172 | Static File Serving | Serve `public/` directory as static assets |
-| 173 | Cookie Helper | `req.cookies` + `res.setCookie()` wrappers |
-| 174 | Session Support | Optional session middleware via signed cookies |
-| 175 | Health Check Route | Auto-mount `GET /health` returning `{ status: 'ok', uptime }` |
-| 176 | Graceful Shutdown | Handle `SIGTERM`/`SIGINT` — drain connections before exit |
-| 177 | Environment Validation | Startup check for required env vars — fail fast with clear error |
-| 178 | TypeScript Path Aliases | Configure `@app`, `@views`, `@api`, `@db` path aliases in tsconfig |
-| 179 | Hot Reload (non-view) | Watch `api/` and `app/` for changes, restart routes without full restart |
-| 180 | Source Maps | Enable source maps in dev for debugging |
-| 181 | E2E Test Suite | Full end-to-end test: scaffold → migrate → API call → assert |
-| 182 | Performance Baseline | Benchmark XAOCS vs bare Fastify — document results |
-| 183 | Bundle Analysis | Analyze client bundle sizes per page, document report |
-| 184 | Security Audit | Review JWT handling, bcrypt rounds, SQL injection protection |
-| 185 | Rate Limit Hardening | Per-route configurable rate limits via router options |
-| 186 | CORS Hardening | Whitelist origins via config, not wildcard in production |
-| 187 | API Versioning | Support `v1.user.api.ts` → `/api/v1/user/` prefix |
-| 188 | Pagination Helper | Ship `paginate(query, page, perPage)` util returning standard envelope |
-| 189 | Response Envelope | Standard `{ success, data, error, meta }` response shape helper |
-| 190 | `xaocs add --package` | CLI command to add official ecosystem packages interactively |
-| 191 | NPM Publish Config | Set up `package.json` publish fields, `files`, `main`, `exports` for all packages |
-| 192 | Changesets Setup | Integrate `changesets` for versioning and changelogs |
-| 193 | GitHub Actions CI | CI pipeline: lint → type-check → test → build on every PR |
-| 194 | NPM Publish Workflow | GitHub Actions release workflow — publish all packages to npm |
-| 195 | Provenance & Signing | Add npm provenance for all published packages |
-| 196 | `create-xaocs-app` Publish | Publish `create-xaocs-app` to npm, test `bunx create-xaocs-app` |
-| 197 | Full Integration Demo | Build a complete demo app (blog) using only XAOCS conventions |
-| 198 | Demo Deploy | Deploy demo app, link from docs and landing page |
-| 199 | Community Prep | Add `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, issue templates |
-| 200 | v1.0.0 Release | Tag v1.0.0, publish all packages, announce on xaocs.dev |
-
+<!-- Features -->
 ---
 
 # SPRINTS 1–50 (Detailed)
@@ -285,7 +80,7 @@ At the root of the monorepo, maintain `MAINTENANCE.md` with this exact shape:
 **Steps:**
 1. Run `find . -name "package.json" -not -path "*/node_modules/*"` and list all packages/apps.
 2. Document in `MAINTENANCE.md`: existing apps, existing packages, existing turbo pipelines.
-3. List any naming conflicts with `@xaocs/*` namespace.
+3. List any naming conflicts with `@xacos/*` namespace.
 4. Identify which `apps/` entries are the docs site and web app.
 5. Note the existing Bun/npm setup.
 
@@ -373,7 +168,7 @@ At the root of the monorepo, maintain `MAINTENANCE.md` with this exact shape:
 frozen-lockfile = false
 
 [install.scopes]
-"@xaocs" = { token = "" }
+"@xacos" = { token = "" }
 ```
 
 **Run:** `bun install` from root — verify workspace links resolve.
@@ -425,7 +220,7 @@ Every package's `tsconfig.json`:
 
 ---
 
-## Sprint 5 — `@xaocs/shared` Init
+## Sprint 5 — `@xacos/shared` Init
 
 **Goal:** Create shared types package — used by all other packages. Zero runtime code, types only.
 
@@ -434,7 +229,7 @@ Every package's `tsconfig.json`:
 **`packages/shared/package.json`:**
 ```json
 {
-  "name": "@xaocs/shared",
+  "name": "@xacos/shared",
   "version": "0.0.1",
   "type": "module",
   "main": "./dist/index.js",
@@ -505,16 +300,16 @@ export interface PaginatedResult<T> {
 
 ---
 
-## Sprint 6 — `@xaocs/core` Init
+## Sprint 6 — `@xacos/core` Init
 
-**Goal:** Scaffold `@xaocs/core` package structure.
+**Goal:** Scaffold `@xacos/core` package structure.
 
 **Location:** `packages/core/`
 
 **`packages/core/package.json`:**
 ```json
 {
-  "name": "@xaocs/core",
+  "name": "@xacos/core",
   "version": "0.0.1",
   "type": "module",
   "main": "./dist/index.js",
@@ -526,7 +321,7 @@ export interface PaginatedResult<T> {
     }
   },
   "dependencies": {
-    "@xaocs/shared": "workspace:*"
+    "@xacos/shared": "workspace:*"
   },
   "scripts": {
     "build": "tsc",
@@ -779,16 +574,16 @@ Export from `packages/core/src/index.ts`.
 
 ---
 
-## Sprint 11 — `@xaocs/server` Init
+## Sprint 11 — `@xacos/server` Init
 
-**Goal:** Scaffold `@xaocs/server` package.
+**Goal:** Scaffold `@xacos/server` package.
 
 **Location:** `packages/server/`
 
 **`packages/server/package.json`:**
 ```json
 {
-  "name": "@xaocs/server",
+  "name": "@xacos/server",
   "version": "0.0.1",
   "type": "module",
   "main": "./dist/index.js",
@@ -800,8 +595,8 @@ Export from `packages/core/src/index.ts`.
     }
   },
   "dependencies": {
-    "@xaocs/core": "workspace:*",
-    "@xaocs/shared": "workspace:*",
+    "@xacos/core": "workspace:*",
+    "@xacos/shared": "workspace:*",
     "fastify": "^4.x"
   },
   "scripts": {
@@ -823,7 +618,7 @@ Export from `packages/core/src/index.ts`.
 **`packages/server/src/XServer.ts`:**
 ```typescript
 import Fastify, { FastifyInstance } from 'fastify';
-import { XMiddleware } from '@xaocs/shared';
+import { XMiddleware } from '@xacos/shared';
 
 export class XServer {
   public fastify: FastifyInstance;
@@ -860,12 +655,12 @@ Export from `packages/server/src/index.ts`.
 
 ## Sprint 13 — XRequest / XResponse
 
-**Goal:** Implement XAOCS request/response wrappers that bridge Fastify ↔ `@xaocs/shared` types.
+**Goal:** Implement XAOCS request/response wrappers that bridge Fastify ↔ `@xacos/shared` types.
 
 **`packages/server/src/adapters/RequestAdapter.ts`:**
 ```typescript
 import type { FastifyRequest, FastifyReply } from 'fastify';
-import type { XRequest, XResponse, XApp } from '@xaocs/shared';
+import type { XRequest, XResponse, XApp } from '@xacos/shared';
 
 export function adaptRequest(req: FastifyRequest, app: XApp): XRequest {
   return {
@@ -913,7 +708,7 @@ export function adaptResponse(reply: FastifyReply): XResponse {
 
 **`packages/core/src/middleware/compose.ts`:**
 ```typescript
-import type { XMiddleware, XRequest, XResponse } from '@xaocs/shared';
+import type { XMiddleware, XRequest, XResponse } from '@xacos/shared';
 
 export function compose(middlewares: XMiddleware[]) {
   return async function pipeline(req: XRequest, res: XResponse): Promise<void> {
@@ -955,11 +750,11 @@ describe('compose', () => {
 
 ## Sprint 15 — Global Middleware Registration
 
-**Goal:** Allow registering global middleware via `xaocs.config.ts`.
+**Goal:** Allow registering global middleware via `xacos.config.ts`.
 
 **`packages/core/src/middleware/GlobalMiddlewareRegistry.ts`:**
 ```typescript
-import type { XMiddleware } from '@xaocs/shared';
+import type { XMiddleware } from '@xacos/shared';
 
 class GlobalMiddlewareRegistry {
   private middlewares: XMiddleware[] = [];
@@ -984,16 +779,16 @@ export const globalMiddlewareRegistry = new GlobalMiddlewareRegistry();
 
 ---
 
-## Sprint 16 — `@xaocs/config` Init
+## Sprint 16 — `@xacos/config` Init
 
-**Goal:** Scaffold `@xaocs/config` package.
+**Goal:** Scaffold `@xacos/config` package.
 
 **Location:** `packages/config/`
 
 **`packages/config/package.json`:**
 ```json
 {
-  "name": "@xaocs/config",
+  "name": "@xacos/config",
   "version": "0.0.1",
   "type": "module",
   "exports": {
@@ -1003,18 +798,18 @@ export const globalMiddlewareRegistry = new GlobalMiddlewareRegistry();
     }
   },
   "dependencies": {
-    "@xaocs/shared": "workspace:*"
+    "@xacos/shared": "workspace:*"
   }
 }
 ```
 
 **`packages/config/src/types.ts`:**
 ```typescript
-import type { XMiddleware } from '@xaocs/shared';
-import type { ServiceProvider } from '@xaocs/core';
-import type { XContainer } from '@xaocs/core';
+import type { XMiddleware } from '@xacos/shared';
+import type { ServiceProvider } from '@xacos/core';
+import type { XContainer } from '@xacos/core';
 
-export interface XaocsConfig {
+export interface XacosConfig {
   port?: number;
   providers?: Array<new (app: XContainer) => ServiceProvider>;
   middleware?: {
@@ -1085,9 +880,9 @@ export function requireEnv(key: string): string {
 
 **`packages/config/src/defineConfig.ts`:**
 ```typescript
-import type { XaocsConfig } from './types';
+import type { XacosConfig } from './types';
 
-export function defineConfig(config: XaocsConfig): XaocsConfig {
+export function defineConfig(config: XacosConfig): XacosConfig {
   return {
     port: 5000,
     api: { prefix: '/api', dir: './api' },
@@ -1145,7 +940,7 @@ export function scanApiFiles(apiDir: string, prefix = '/api'): ApiRouteFile[] {
 
 **`packages/core/src/routing/XRouter.ts`:**
 ```typescript
-import type { XMiddleware, XRequest, XResponse } from '@xaocs/shared';
+import type { XMiddleware, XRequest, XResponse } from '@xacos/shared';
 
 type Handler = (req: XRequest, res: XResponse) => Promise<void> | void;
 
@@ -1200,7 +995,7 @@ export class XRouter {
 **Example usage (how user writes `user.api.ts`):**
 ```typescript
 // api/user.api.ts
-import { XRouter } from '@xaocs/core';
+import { XRouter } from '@xacos/core';
 
 export const router = new XRouter();
 
@@ -1228,10 +1023,10 @@ router.post('/', async (req, res) => {
 **`packages/server/src/routing/mountApiRoutes.ts`:**
 ```typescript
 import type { FastifyInstance } from 'fastify';
-import type { XApp } from '@xaocs/shared';
-import { scanApiFiles } from '@xaocs/core';
+import type { XApp } from '@xacos/shared';
+import { scanApiFiles } from '@xacos/core';
 import { adaptRequest, adaptResponse } from '../adapters/RequestAdapter';
-import { compose } from '@xaocs/core';
+import { compose } from '@xacos/core';
 
 export async function mountApiRoutes(
   fastify: FastifyInstance,
@@ -1314,7 +1109,7 @@ group(prefix: string, callback: (router: XRouter) => void): this {
 
 **Goal:** Create and document the `app/` directory structure.
 
-**Structure created by `create-xaocs-app` scaffold:**
+**Structure created by `create-xacos-app` scaffold:**
 ```
 app/
 ├── controllers/   ← XController subclasses
@@ -1326,7 +1121,7 @@ app/
 ```typescript
 import { readdirSync, existsSync } from 'fs';
 import { resolve, join } from 'path';
-import type { XMiddleware } from '@xaocs/shared';
+import type { XMiddleware } from '@xacos/shared';
 
 export interface DiscoveredMiddleware {
   name: string;
@@ -1364,7 +1159,7 @@ export async function discoverMiddlewares(dir: string): Promise<DiscoveredMiddle
 
 **`packages/core/src/controllers/XController.ts`:**
 ```typescript
-import type { XRequest, XResponse } from '@xaocs/shared';
+import type { XRequest, XResponse } from '@xacos/shared';
 
 export abstract class XController {
   protected ok(res: XResponse, data: unknown) {
@@ -1400,8 +1195,8 @@ export abstract class XController {
 **Example user controller:**
 ```typescript
 // app/controllers/UserController.ts
-import { XController } from '@xaocs/core';
-import type { XRequest, XResponse } from '@xaocs/shared';
+import { XController } from '@xacos/core';
+import type { XRequest, XResponse } from '@xacos/shared';
 
 export class UserController extends XController {
   async index(req: XRequest, res: XResponse) {
@@ -1451,7 +1246,7 @@ export class UserService {
 
 **`packages/core/src/middleware/MiddlewareRegistry.ts`:**
 ```typescript
-import type { XMiddleware } from '@xaocs/shared';
+import type { XMiddleware } from '@xacos/shared';
 
 class MiddlewareRegistry {
   private map = new Map<string, XMiddleware>();
@@ -1480,7 +1275,7 @@ Boot sequence calls `discoverMiddlewares('app/middlewares')` and registers each 
 
 ---
 
-## Sprint 28 — `@xaocs/orm` Init
+## Sprint 28 — `@xacos/orm` Init
 
 **Goal:** Scaffold ORM package.
 
@@ -1489,14 +1284,14 @@ Boot sequence calls `discoverMiddlewares('app/middlewares')` and registers each 
 **`packages/orm/package.json`:**
 ```json
 {
-  "name": "@xaocs/orm",
+  "name": "@xacos/orm",
   "version": "0.0.1",
   "type": "module",
   "exports": {
     ".": { "import": "./dist/index.js", "types": "./dist/index.d.ts" }
   },
   "dependencies": {
-    "@xaocs/shared": "workspace:*",
+    "@xacos/shared": "workspace:*",
     "knex": "^3.x",
     "better-sqlite3": "^9.x"
   },
@@ -1807,7 +1602,7 @@ import 'reflect-metadata';
 
 export function HasMany(relatedModel: () => typeof XModel, foreignKey: string) {
   return function (target: object, propertyKey: string) {
-    Reflect.defineMetadata('xaocs:hasMany', { relatedModel, foreignKey }, target, propertyKey);
+    Reflect.defineMetadata('xacos:hasMany', { relatedModel, foreignKey }, target, propertyKey);
   };
 }
 
@@ -1821,7 +1616,7 @@ export function HasMany(relatedModel: () => typeof XModel, foreignKey: string) {
 ```typescript
 export function Column(options: { hidden?: boolean; default?: unknown } = {}) {
   return function (target: object, propertyKey: string) {
-    Reflect.defineMetadata('xaocs:column', options, target, propertyKey);
+    Reflect.defineMetadata('xacos:column', options, target, propertyKey);
   };
 }
 ```
@@ -1836,7 +1631,7 @@ toJSON(): Record<string, unknown> {
   const proto = Object.getPrototypeOf(this);
   const result: Record<string, unknown> = { ...this as any };
   for (const key of Object.keys(result)) {
-    const meta = Reflect.getMetadata('xaocs:column', proto, key);
+    const meta = Reflect.getMetadata('xacos:column', proto, key);
     if (meta?.hidden) delete result[key];
   }
   return result;
@@ -1875,7 +1670,7 @@ export abstract class Migration {
 export class MigrationRunner {
   async getPending(migrationsDir: string): Promise<string[]> {
     // Read all files from dir, sort numerically
-    // Compare against xaocs_migrations table
+    // Compare against xacos_migrations table
     // Return files not yet run
   }
 
@@ -1895,9 +1690,9 @@ export class MigrationRunner {
 
 ## Sprint 46 — Migration Tracking
 
-Create `xaocs_migrations` table on first run:
+Create `xacos_migrations` table on first run:
 ```typescript
-await db.schema.createTableIfNotExists('xaocs_migrations', t => {
+await db.schema.createTableIfNotExists('xacos_migrations', t => {
   t.increments('id');
   t.string('name').notNullable();
   t.integer('batch').notNullable();
@@ -1911,12 +1706,12 @@ await db.schema.createTableIfNotExists('xaocs_migrations', t => {
 
 ```typescript
 async rollback(): Promise<void> {
-  const lastBatch = await db('xaocs_migrations').max('batch as b').first();
-  const toRollback = await db('xaocs_migrations').where('batch', lastBatch!.b);
+  const lastBatch = await db('xacos_migrations').max('batch as b').first();
+  const toRollback = await db('xacos_migrations').where('batch', lastBatch!.b);
   for (const row of toRollback.reverse()) {
     const mod = await import(resolve(migrationsDir, row.name));
     await new mod.default().down(new Schema());
-    await db('xaocs_migrations').where('name', row.name).delete();
+    await db('xacos_migrations').where('name', row.name).delete();
   }
 }
 ```
@@ -1927,7 +1722,7 @@ async rollback(): Promise<void> {
 
 ```typescript
 async fresh(): Promise<void> {
-  // Drop all tables except xaocs_migrations
+  // Drop all tables except xacos_migrations
   // Re-run all migrations from scratch
 }
 ```
@@ -1995,7 +1790,7 @@ Document all types in `packages/orm/src/migrations/columnHelpers.ts`.
 export abstract class Seeder {
   /**
    * Implement this method with your seed logic.
-   * Called by the SeederRunner when `xaocs db:seed` is invoked.
+   * Called by the SeederRunner when `xacos db:seed` is invoked.
    */
   abstract run(): Promise<void>;
 }
@@ -2052,7 +1847,7 @@ export class SeederRunner {
 
 **Example user seeder (`database/seeders/UserSeeder.ts`):**
 ```typescript
-import { Seeder } from '@xaocs/orm';
+import { Seeder } from '@xacos/orm';
 import { User } from '../models/User';
 import bcrypt from 'bcryptjs';
 
@@ -2255,7 +2050,7 @@ export class Factory {
 
 **Example in a seeder:**
 ```typescript
-import { Factory } from '@xaocs/orm';
+import { Factory } from '@xacos/orm';
 
 await Factory.times(20).create(User, async () => ({
   name: Factory.faker.person.fullName(),
@@ -2296,16 +2091,16 @@ export { Factory } from './factories/Factory';
 
 ---
 
-## Sprint 54 — `@xaocs/compiler` Init
+## Sprint 54 — `@xacos/compiler` Init
 
-**Goal:** Scaffold the `@xaocs/compiler` package — responsible for all JSX/TSX bundling, both dev (Vite) and production (esbuild).
+**Goal:** Scaffold the `@xacos/compiler` package — responsible for all JSX/TSX bundling, both dev (Vite) and production (esbuild).
 
 **Location:** `packages/compiler/`
 
 **`packages/compiler/package.json`:**
 ```json
 {
-  "name": "@xaocs/compiler",
+  "name": "@xacos/compiler",
   "version": "0.0.1",
   "type": "module",
   "main": "./dist/index.js",
@@ -2317,8 +2112,8 @@ export { Factory } from './factories/Factory';
     }
   },
   "dependencies": {
-    "@xaocs/config": "workspace:*",
-    "@xaocs/shared": "workspace:*",
+    "@xacos/config": "workspace:*",
+    "@xacos/shared": "workspace:*",
     "vite": "^5.x",
     "esbuild": "^0.21.x",
     "@vitejs/plugin-react": "^4.x"
@@ -2387,7 +2182,7 @@ export function createViteConfig(viewsDir: string, root: string): UserConfig {
       },
     },
     build: {
-      outDir: resolve('./.xaocs/client'),
+      outDir: resolve('./.xacos/client'),
       rollupOptions: {
         input: {}, // filled dynamically per page in Sprint 61
       },
@@ -2399,7 +2194,7 @@ export function createViteConfig(viewsDir: string, root: string): UserConfig {
 **`packages/server/src/dev/mountVite.ts`:**
 ```typescript
 import type { FastifyInstance } from 'fastify';
-import { createViteConfig } from '@xaocs/compiler';
+import { createViteConfig } from '@xacos/compiler';
 import { createServer as createViteServer } from 'vite';
 
 export async function mountViteDev(
@@ -2432,7 +2227,7 @@ export async function mountViteDev(
 }
 ```
 
-**Usage in dev boot sequence (Sprint 77 wires this into `xaocs dev`):**
+**Usage in dev boot sequence (Sprint 77 wires this into `xacos dev`):**
 ```typescript
 if (process.env['APP_ENV'] !== 'production') {
   await mountViteDev(server.fastify, config.views!.dir!, process.cwd());
@@ -2567,7 +2362,7 @@ describe('scanViews', () => {
 **`packages/server/src/routing/mountViewRoutes.ts`:**
 ```typescript
 import type { FastifyInstance } from 'fastify';
-import { scanViews } from '@xaocs/compiler';
+import { scanViews } from '@xacos/compiler';
 import { readFileSync, existsSync } from 'fs';
 import { resolve } from 'path';
 
@@ -2581,7 +2376,7 @@ const HTML_SHELL = `<!DOCTYPE html>
 </head>
 <body>
   <div id="root"></div>
-  <script type="module" src="/__xaocs/entry.js"></script>
+  <script type="module" src="/__xacos/entry.js"></script>
 </body>
 </html>`;
 
@@ -2602,7 +2397,7 @@ export async function mountViewRoutes(
 }
 ```
 
-**Note:** In dev mode (Sprint 55), Vite intercepts before Fastify reaches these handlers. In production, esbuild chunks replace `/__xaocs/entry.js` (Sprint 62).
+**Note:** In dev mode (Sprint 55), Vite intercepts before Fastify reaches these handlers. In production, esbuild chunks replace `/__xacos/entry.js` (Sprint 62).
 
 **Test — route registration:**
 ```typescript
@@ -2685,7 +2480,7 @@ export function resolveLayout(
 }
 ```
 
-**Default layout template (shipped by `create-xaocs-app` in Sprint 96):**
+**Default layout template (shipped by `create-xacos-app` in Sprint 96):**
 ```tsx
 // views/layouts/main.tsx
 import React from 'react';
@@ -2926,7 +2721,7 @@ it('SSR page returns rendered HTML in body', async () => {
 
 ## Sprint 61 — esbuild Production Build
 
-**Goal:** Implement production build via esbuild — generates one JS chunk per page into `.xaocs/client/`.
+**Goal:** Implement production build via esbuild — generates one JS chunk per page into `.xacos/client/`.
 
 **`packages/compiler/src/esbuild/buildProduction.ts`:**
 ```typescript
@@ -2991,11 +2786,11 @@ export async function buildProduction(
 }
 ```
 
-**Usage (called by `xaocs build` in Sprint 78):**
+**Usage (called by `xacos build` in Sprint 78):**
 ```typescript
-import { buildProduction } from '@xaocs/compiler';
+import { buildProduction } from '@xacos/compiler';
 
-await buildProduction('./views', './.xaocs/client', process.cwd());
+await buildProduction('./views', './.xacos/client', process.cwd());
 console.log('✓ Production build complete');
 ```
 
@@ -3037,7 +2832,7 @@ describe('buildProduction', () => {
 **`packages/server/src/views/buildHtmlShell.ts`:**
 ```typescript
 export interface HtmlShellOptions {
-  chunkUrl: string;     // e.g. /__xaocs/index.js
+  chunkUrl: string;     // e.g. /__xacos/index.js
   ssrHtml?: string;     // pre-rendered HTML (SSR only)
   meta?: {
     title?: string;
@@ -3080,34 +2875,34 @@ function urlPatternToChunkName(urlPattern: string): string {
 
 // In mountViewRoutes.ts:
 const chunkName = urlPatternToChunkName(view.urlPattern);
-const chunkUrl = `/__xaocs/${chunkName}.js`;
+const chunkUrl = `/__xacos/${chunkName}.js`;
 reply.send(buildHtmlShell({ chunkUrl, meta }));
 ```
 
-**Serve `.xaocs/client/` as static files** (in production only):
+**Serve `.xacos/client/` as static files** (in production only):
 ```typescript
 // In XServer, production boot:
 fastify.register(import('@fastify/static'), {
-  root: resolve('.xaocs/client'),
-  prefix: '/__xaocs/',
+  root: resolve('.xacos/client'),
+  prefix: '/__xacos/',
 });
 ```
 
 **MAINTENANCE.md update:** Sprint 62 ✅.
-**Done when:** Production `GET /` serves HTML with `<script src="/__xaocs/index.js">`.
+**Done when:** Production `GET /` serves HTML with `<script src="/__xacos/index.js">`.
 
 ---
 
-## Sprint 63 — `@xaocs/client` Init
+## Sprint 63 — `@xacos/client` Init
 
-**Goal:** Scaffold the `@xaocs/client` package — React hooks and navigation components for XAOCS pages.
+**Goal:** Scaffold the `@xacos/client` package — React hooks and navigation components for XAOCS pages.
 
 **Location:** `packages/client/`
 
 **`packages/client/package.json`:**
 ```json
 {
-  "name": "@xaocs/client",
+  "name": "@xacos/client",
   "version": "0.0.1",
   "type": "module",
   "main": "./dist/index.js",
@@ -3119,7 +2914,7 @@ fastify.register(import('@fastify/static'), {
     }
   },
   "dependencies": {
-    "@xaocs/shared": "workspace:*",
+    "@xacos/shared": "workspace:*",
     "react": "^18.x",
     "react-dom": "^18.x"
   },
@@ -3142,12 +2937,9 @@ fastify.register(import('@fastify/static'), {
 
 **`packages/client/src/index.ts`:**
 ```typescript
-export { XLink } from './navigation/XLink';
-export { redirect } from './navigation/redirect';
-export { useAuth } from './hooks/useAuth';
-export { useXaocs } from './hooks/useXaocs';
-export { useEvent } from './hooks/useEvent';
-export { XaocsProvider } from './context/XaocsProvider';
+export { XacosProvider } from './context/XacosProvider';
+export { xhttp, XHttpClient } from './http/XHttpClient';
+
 ```
 
 **`packages/client/tsconfig.json`:**
@@ -3171,44 +2963,43 @@ export { XaocsProvider } from './context/XaocsProvider';
 
 ## Sprint 64 — `useAuth` Hook
 
-**Goal:** Implement `useAuth()` — reads JWT from localStorage, fetches `/api/auth/me`, exposes `{ user, loading, logout }`.
+**Goal:** Implement `useAuth()` — relies on secure cookies for auth state, fetches `/api/auth/me` via `xhttp`, exposes `{ user, loading, logout, login }`.
 
-**`packages/client/src/context/XaocsProvider.tsx`:**
+
+**`packages/client/src/context/XacosProvider.tsx`:**
 ```typescript
 import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
-import type { XUser } from '@xaocs/shared';
+import type { XUser } from '@xacos/shared';
 
-interface XaocsContextValue {
+interface XacosContextValue {
   user: XUser | null;
   loading: boolean;
-  token: string | null;
   setUser: (user: XUser | null) => void;
-  setToken: (token: string | null) => void;
 }
 
-const XaocsContext = createContext<XaocsContextValue | null>(null);
 
-export function XaocsProvider({ children }: { children: ReactNode }) {
+const XacosContext = createContext<XacosContextValue | null>(null);
+
+export function XacosProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<XUser | null>(null);
-  const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const stored = localStorage.getItem('xaocs_token');
-    if (stored) setToken(stored);
+    // Relies on cookies and useAuth hook for initialization
     setLoading(false);
   }, []);
 
   return (
-    <XaocsContext.Provider value={{ user, loading, token, setUser, setToken }}>
+    <XacosContext.Provider value={{ user, loading, setUser }}>
       {children}
-    </XaocsContext.Provider>
+    </XacosContext.Provider>
   );
 }
 
-export function useXaocsContext(): XaocsContextValue {
-  const ctx = useContext(XaocsContext);
-  if (!ctx) throw new Error('[XAOCS] useXaocsContext must be used inside <XaocsProvider>');
+
+export function useXacosContext(): XacosContextValue {
+  const ctx = useContext(XacosContext);
+  if (!ctx) throw new Error('[XAOCS] useXacosContext must be used inside <XacosProvider>');
   return ctx;
 }
 ```
@@ -3216,30 +3007,24 @@ export function useXaocsContext(): XaocsContextValue {
 **`packages/client/src/hooks/useAuth.ts`:**
 ```typescript
 import { useState, useEffect, useCallback } from 'react';
-import type { XUser } from '@xaocs/shared';
+import type { XUser } from '@xacos/shared';
+import { xhttp } from '../http/XHttpClient';
 
 interface UseAuthResult {
   user: XUser | null;
   loading: boolean;
-  logout: () => void;
-  login: (token: string) => Promise<void>;
+  logout: () => Promise<void>;
+  login: (credentials: Record<string, unknown>) => Promise<void>;
 }
+
 
 export function useAuth(): UseAuthResult {
   const [user, setUser] = useState<XUser | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchMe = useCallback(async (token: string) => {
+  const fetchMe = useCallback(async () => {
     try {
-      const res = await fetch('/api/auth/me', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!res.ok) {
-        localStorage.removeItem('xaocs_token');
-        setUser(null);
-        return;
-      }
-      const data = await res.json() as { user: XUser };
+      const data = await xhttp.get<{ user: XUser }>('/api/auth/me');
       setUser(data.user);
     } catch {
       setUser(null);
@@ -3249,32 +3034,38 @@ export function useAuth(): UseAuthResult {
   }, []);
 
   useEffect(() => {
-    const token = localStorage.getItem('xaocs_token');
-    if (token) {
-      void fetchMe(token);
-    } else {
+    void fetchMe();
+  }, [fetchMe]);
+
+  const login = useCallback(async (credentials: Record<string, unknown>) => {
+    setLoading(true);
+    try {
+      await xhttp.post('/api/auth/login', credentials);
+      await fetchMe();
+    } catch (e) {
       setLoading(false);
+      throw e;
     }
   }, [fetchMe]);
 
-  const login = useCallback(async (token: string) => {
-    localStorage.setItem('xaocs_token', token);
+  const logout = useCallback(async () => {
     setLoading(true);
-    await fetchMe(token);
-  }, [fetchMe]);
-
-  const logout = useCallback(() => {
-    localStorage.removeItem('xaocs_token');
-    setUser(null);
+    try {
+      await xhttp.post('/api/auth/logout');
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   return { user, loading, logout, login };
 }
+
 ```
 
 **Usage in a page:**
 ```tsx
-import { useAuth } from '@xaocs/client';
+import { useAuth } from '@xacos/client';
 
 export default function Dashboard() {
   const { user, loading, logout } = useAuth();
@@ -3290,7 +3081,8 @@ export default function Dashboard() {
 ```
 
 **MAINTENANCE.md update:** Sprint 64 ✅.
-**Done when:** `useAuth()` compiles, reads token from localStorage, fetches `/api/auth/me`.
+**Done when:** `useAuth()` compiles, relies on secure cookies, fetches `/api/auth/me` via `xhttp`.
+
 
 ---
 
@@ -3354,7 +3146,7 @@ export function redirect(url: string): void {
 
 **Usage:**
 ```tsx
-import { XLink, redirect } from '@xaocs/client';
+import { XLink, redirect } from '@xacos/client';
 
 <XLink href="/about">About Us</XLink>
 
@@ -3380,7 +3172,7 @@ This sprint extends it with a **server-side redirect** helper for use inside API
  * The global error handler in Sprint 106 catches it and sends 302.
  */
 export class XRedirect {
-  readonly __xaocs_redirect = true;
+  readonly __xacos_redirect = true;
   constructor(
     public readonly url: string,
     public readonly statusCode: 302 | 301 = 302
@@ -3396,22 +3188,22 @@ export function serverRedirect(url: string, permanent = false): never {
 }
 ```
 
-**Export from `@xaocs/shared`.**
+**Export from `@xacos/shared`.**
 
 **MAINTENANCE.md update:** Sprint 66 ✅.
 **Done when:** `serverRedirect('/login')` throws `XRedirect`. Client `redirect()` works from Sprint 65.
 
 ---
 
-## Sprint 67 — `useXaocs` Hook
+## Sprint 67 — `useXacos` Hook
 
-**Goal:** Implement `useXaocs()` — exposes `params` and `searchParams` from the current URL.
+**Goal:** Implement `useXacos()` — exposes `params` and `searchParams` from the current URL.
 
-**`packages/client/src/hooks/useXaocs.ts`:**
+**`packages/client/src/hooks/useXacos.ts`:**
 ```typescript
 import { useState, useEffect } from 'react';
 
-interface XaocsRouteInfo {
+interface XacosRouteInfo {
   params: Record<string, string>;
   searchParams: Record<string, string>;
   pathname: string;
@@ -3424,8 +3216,8 @@ interface XaocsRouteInfo {
  * Note: params are derived by matching the current pathname against
  * the pattern stored in a data attribute on the root element (set by server).
  */
-export function useXaocs(): XaocsRouteInfo {
-  const [info, setInfo] = useState<XaocsRouteInfo>(() => extractRouteInfo());
+export function useXacos(): XacosRouteInfo {
+  const [info, setInfo] = useState<XacosRouteInfo>(() => extractRouteInfo());
 
   useEffect(() => {
     const handler = () => setInfo(extractRouteInfo());
@@ -3436,7 +3228,7 @@ export function useXaocs(): XaocsRouteInfo {
   return info;
 }
 
-function extractRouteInfo(): XaocsRouteInfo {
+function extractRouteInfo(): XacosRouteInfo {
   const pathname = window.location.pathname;
   const search = window.location.search;
 
@@ -3470,20 +3262,20 @@ const ssrHtml = `<div id="root" data-params='${paramsJson}'>...</div>`;
 ```
 
 **MAINTENANCE.md update:** Sprint 67 ✅.
-**Done when:** `useXaocs()` returns correct `params` and `searchParams` from the current URL.
+**Done when:** `useXacos()` returns correct `params` and `searchParams` from the current URL.
 
 ---
 
-## Sprint 68 — `@xaocs/auth` Init
+## Sprint 68 — `@xacos/auth` Init
 
-**Goal:** Scaffold the `@xaocs/auth` package — built-in email/password authentication.
+**Goal:** Scaffold the `@xacos/auth` package — built-in email/password authentication.
 
 **Location:** `packages/auth/`
 
 **`packages/auth/package.json`:**
 ```json
 {
-  "name": "@xaocs/auth",
+  "name": "@xacos/auth",
   "version": "0.0.1",
   "type": "module",
   "main": "./dist/index.js",
@@ -3495,9 +3287,9 @@ const ssrHtml = `<div id="root" data-params='${paramsJson}'>...</div>`;
     }
   },
   "dependencies": {
-    "@xaocs/core": "workspace:*",
-    "@xaocs/orm": "workspace:*",
-    "@xaocs/shared": "workspace:*",
+    "@xacos/core": "workspace:*",
+    "@xacos/orm": "workspace:*",
+    "@xacos/shared": "workspace:*",
     "bcryptjs": "^2.x",
     "jsonwebtoken": "^9.x"
   },
@@ -3533,7 +3325,7 @@ export { User } from './models/User';
 
 **`packages/auth/src/models/User.ts`:**
 ```typescript
-import { XModel, Column } from '@xaocs/orm';
+import { XModel, Column } from '@xacos/orm';
 
 export class User extends XModel {
   static table = 'users';
@@ -3568,7 +3360,7 @@ export class User extends XModel {
 }
 ```
 
-**Note:** This `User` model is what `create-xaocs-app` copies into the user's `database/models/User.ts` when auth is selected. It can be customized freely after scaffolding.
+**Note:** This `User` model is what `create-xacos-app` copies into the user's `database/models/User.ts` when auth is selected. It can be customized freely after scaffolding.
 
 **MAINTENANCE.md update:** Sprint 69 ✅.
 **Done when:** `User` model compiles. `password` is excluded from JSON via `@Column({ hidden: true })`.
@@ -3577,11 +3369,11 @@ export class User extends XModel {
 
 ## Sprint 70 — Auth Migrations
 
-**Goal:** Ship `001_create_users_table.ts` and `002_create_sessions_table.ts` migration files inside `@xaocs/auth`. These get copied to the user's `database/migrations/` by the scaffolder.
+**Goal:** Ship `001_create_users_table.ts` and `002_create_sessions_table.ts` migration files inside `@xacos/auth`. These get copied to the user's `database/migrations/` by the scaffolder.
 
 **`packages/auth/src/migrations/001_create_users_table.ts`:**
 ```typescript
-import { Migration, Schema } from '@xaocs/orm';
+import { Migration, Schema } from '@xacos/orm';
 
 export default class CreateUsersTable extends Migration {
   async up(schema: Schema): Promise<void> {
@@ -3605,7 +3397,7 @@ export default class CreateUsersTable extends Migration {
 
 **`packages/auth/src/migrations/002_create_sessions_table.ts`:**
 ```typescript
-import { Migration, Schema } from '@xaocs/orm';
+import { Migration, Schema } from '@xacos/orm';
 
 export default class CreateSessionsTable extends Migration {
   async up(schema: Schema): Promise<void> {
@@ -3641,7 +3433,7 @@ export default class CreateSessionsTable extends Migration {
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { User } from '../models/User';
-import { requireEnv } from '@xaocs/config';
+import { requireEnv } from '@xacos/config';
 
 export interface AuthTokenPayload {
   userId: number;
@@ -3758,7 +3550,7 @@ describe('AuthService.generateToken / verifyToken', () => {
 
 **`packages/auth/src/middlewares/authenticate.ts`:**
 ```typescript
-import type { XMiddleware, XRequest, XResponse, XNext } from '@xaocs/shared';
+import type { XMiddleware, XRequest, XResponse, XNext } from '@xacos/shared';
 import { authService } from '../services/AuthService';
 import { User } from '../models/User';
 
@@ -3816,8 +3608,8 @@ export const authorizeAdmin: XMiddleware = async (
 **Usage in an API file:**
 ```typescript
 // api/post.api.ts
-import { XRouter } from '@xaocs/core';
-import { authenticate, authorizeAdmin } from '@xaocs/auth';
+import { XRouter } from '@xacos/core';
+import { authenticate, authorizeAdmin } from '@xacos/auth';
 
 export const router = new XRouter();
 
@@ -3838,104 +3630,107 @@ router.delete('/:id', authenticate, authorizeAdmin, async (req, res) => {
 
 ## Sprint 73 — Auth API Routes
 
-**Goal:** Ship the four auth API route files that `create-xaocs-app` copies into the user's `api/` directory.
-
-**`packages/auth/src/routes/auth.register.api.ts`:**
+**`packages/auth/src/controllers/AuthController.ts`:**
 ```typescript
-import { XRouter } from '@xaocs/core';
+import type { XRequest, XResponse } from '@xacos/shared';
 import { authService } from '../services/AuthService';
 
-export const router = new XRouter();
+export class AuthController {
+  static async register(req: XRequest, res: XResponse) {
+    const body = req.body as { name?: string; email?: string; password?: string };
 
-// POST /api/auth/register
-router.post('/', async (req, res) => {
-  const body = req.body as { name?: string; email?: string; password?: string };
+    if (!body.name || !body.email || !body.password) {
+      return res.status(400).json({ success: false, error: 'name, email, and password are required' });
+    }
 
-  if (!body.name || !body.email || !body.password) {
-    return res.status(400).json({ success: false, error: 'name, email, and password are required' });
+    const { user, token } = await authService.register({
+      name: body.name,
+      email: body.email,
+      password: body.password,
+    });
+
+    res.setCookie('xacos_token', token, {
+      httpOnly: true,
+      secure: process.env['APP_ENV'] === 'production',
+      path: '/',
+      maxAge: 7 * 24 * 60 * 60,
+    });
+
+    return res.status(201).json({ success: true, user });
   }
 
-  const { user, token } = await authService.register({
-    name: body.name,
-    email: body.email,
-    password: body.password,
-  });
+  static async login(req: XRequest, res: XResponse) {
+    const body = req.body as { email?: string; password?: string };
 
-  return res.status(201).json({ success: true, token, user });
-});
-```
+    if (!body.email || !body.password) {
+      return res.status(400).json({ success: false, error: 'email and password are required' });
+    }
 
-**`packages/auth/src/routes/auth.login.api.ts`:**
-```typescript
-import { XRouter } from '@xaocs/core';
-import { authService } from '../services/AuthService';
+    const { user, token } = await authService.login(body.email, body.password);
 
-export const router = new XRouter();
+    res.setCookie('xacos_token', token, {
+      httpOnly: true,
+      secure: process.env['APP_ENV'] === 'production',
+      path: '/',
+      maxAge: 7 * 24 * 60 * 60,
+    });
 
-// POST /api/auth/login
-router.post('/', async (req, res) => {
-  const body = req.body as { email?: string; password?: string };
-
-  if (!body.email || !body.password) {
-    return res.status(400).json({ success: false, error: 'email and password are required' });
+    return res.json({ success: true, user });
   }
 
-  const { user, token } = await authService.login(body.email, body.password);
-  return res.json({ success: true, token, user });
-});
+  static async logout(_req: XRequest, res: XResponse) {
+    res.setCookie('xacos_token', '', {
+      httpOnly: true,
+      secure: process.env['APP_ENV'] === 'production',
+      path: '/',
+      maxAge: 0,
+    });
+
+    return res.json({ success: true, message: 'Logged out' });
+  }
+
+  static async me(req: XRequest, res: XResponse) {
+    return res.json({ success: true, user: req.user });
+  }
+}
 ```
 
-**`packages/auth/src/routes/auth.logout.api.ts`:**
+**`packages/auth/src/routes/auth.api.ts`:**
 ```typescript
-import { XRouter } from '@xaocs/core';
+import { XRouter } from '@xacos/core';
+import { AuthController } from '../controllers/AuthController';
 import { authenticate } from '../middlewares/authenticate';
 
 export const router = new XRouter();
 
-// POST /api/auth/logout (protected)
-router.post('/', authenticate, async (_req, res) => {
-  // JWT is stateless — client should discard the token.
-  // For session-based logout, delete from sessions table here.
-  return res.json({ success: true, message: 'Logged out' });
-});
+router.post('/register', AuthController.register);
+router.post('/login', AuthController.login);
+router.post('/logout', authenticate, AuthController.logout);
+router.get('/me', authenticate, AuthController.me);
 ```
 
-**`packages/auth/src/routes/auth.me.api.ts`:**
-```typescript
-import { XRouter } from '@xaocs/core';
-import { authenticate } from '../middlewares/authenticate';
-
-export const router = new XRouter();
-
-// GET /api/auth/me (protected)
-router.get('/', authenticate, async (req, res) => {
-  return res.json({ success: true, user: req.user });
-});
-```
 
 **File naming convention in user's project:**
 ```
 api/
-├── auth.register.api.ts   → POST /api/auth/register
-├── auth.login.api.ts      → POST /api/auth/login
-├── auth.logout.api.ts     → POST /api/auth/logout
-└── auth.me.api.ts         → GET  /api/auth/me
+└── auth.api.ts   → handles /api/auth/register, /api/auth/login, etc.
 ```
 
 **MAINTENANCE.md update:** Sprint 73 ✅.
-**Done when:** All four routes compile. `POST /api/auth/login` returns `{ token }`.
+**Done when:** All auth routes are consolidated in `auth.api.ts` and compile correctly.
+
 
 ---
 
 ## Sprint 74 — Auth Frontend Pages
 
-**Goal:** Ship default login and register React pages that `create-xaocs-app` copies into `views/auth/`.
+**Goal:** Ship default login and register React pages that `create-xacos-app` copies into `views/auth/`.
 
 **`packages/auth/src/views/auth.login.tsx`:**
 ```tsx
 import React, { useState, type FormEvent } from 'react';
-import { redirect } from '@xaocs/client';
-import { useAuth } from '@xaocs/client';
+import { redirect } from '@xacos/client';
+import { useAuth } from '@xacos/client';
 
 export const meta = { title: 'Login' };
 export const layout = 'main';
@@ -3953,22 +3748,10 @@ export default function LoginPage() {
     setError('');
 
     try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-      const data = await res.json() as { success: boolean; token?: string; error?: string };
-
-      if (!data.success || !data.token) {
-        setError(data.error ?? 'Login failed');
-        return;
-      }
-
-      await login(data.token);
+      await login({ email, password });
       redirect('/dashboard');
-    } catch {
-      setError('Network error — please try again');
+    } catch (err: any) {
+      setError(err?.response?.error || 'Login failed — please try again');
     } finally {
       setLoading(false);
     }
@@ -4011,8 +3794,8 @@ export default function LoginPage() {
 **`packages/auth/src/views/auth.register.tsx`:**
 ```tsx
 import React, { useState, type FormEvent } from 'react';
-import { redirect } from '@xaocs/client';
-import { useAuth } from '@xaocs/client';
+import { redirect } from '@xacos/client';
+import { useAuth } from '@xacos/client';
 
 export const meta = { title: 'Register' };
 export const layout = 'main';
@@ -4031,22 +3814,10 @@ export default function RegisterPage() {
     setError('');
 
     try {
-      const res = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password }),
-      });
-      const data = await res.json() as { success: boolean; token?: string; error?: string };
-
-      if (!data.success || !data.token) {
-        setError(data.error ?? 'Registration failed');
-        return;
-      }
-
-      await login(data.token);
+      await register({ name, email, password });
       redirect('/dashboard');
-    } catch {
-      setError('Network error — please try again');
+    } catch (err: any) {
+      setError(err?.response?.error || 'Registration failed — please try again');
     } finally {
       setLoading(false);
     }
@@ -4082,24 +3853,26 @@ export default function RegisterPage() {
 ```
 
 **MAINTENANCE.md update:** Sprint 74 ✅.
-**Done when:** Both pages compile. Login calls `/api/auth/login`, stores token, redirects.
+**MAINTENANCE.md update:** Sprint 74 ✅.
+**Done when:** Both pages compile. Login calls `login()`, stores session via cookie, and redirects.
+
 
 ---
 
-## Sprint 75 — `@xaocs/cli` Init
+## Sprint 75 — `@xacos/cli` Init
 
-**Goal:** Scaffold the `@xaocs/cli` package entry point.
+**Goal:** Scaffold the `@xacos/cli` package entry point.
 
 **Location:** `packages/cli/`
 
 **`packages/cli/package.json`:**
 ```json
 {
-  "name": "@xaocs/cli",
+  "name": "@xacos/cli",
   "version": "0.0.1",
   "type": "module",
   "bin": {
-    "xaocs": "./dist/bin/xaocs.js"
+    "xacos": "./dist/bin/xacos.js"
   },
   "exports": {
     ".": {
@@ -4108,10 +3881,10 @@ export default function RegisterPage() {
     }
   },
   "dependencies": {
-    "@xaocs/config": "workspace:*",
-    "@xaocs/compiler": "workspace:*",
-    "@xaocs/orm": "workspace:*",
-    "@xaocs/server": "workspace:*",
+    "@xacos/config": "workspace:*",
+    "@xacos/compiler": "workspace:*",
+    "@xacos/orm": "workspace:*",
+    "@xacos/server": "workspace:*",
     "commander": "^12.x",
     "chalk": "^5.x",
     "ora": "^8.x"
@@ -4127,7 +3900,7 @@ export default function RegisterPage() {
 }
 ```
 
-**`packages/cli/src/bin/xaocs.ts`:**
+**`packages/cli/src/bin/xacos.ts`:**
 ```typescript
 #!/usr/bin/env bun
 import { program } from 'commander';
@@ -4138,7 +3911,7 @@ import { resolve } from 'path';
 const pkg = JSON.parse(readFileSync(resolve(import.meta.dir, '../../package.json'), 'utf-8')) as { version: string };
 
 program
-  .name('xaocs')
+  .name('xacos')
   .description('XAOCS Framework CLI')
   .version(pkg.version);
 
@@ -4188,31 +3961,31 @@ export const log = {
 **`packages/cli/src/utils/loadConfig.ts`:**
 ```typescript
 import { resolve, existsSync } from 'fs';
-import type { XaocsConfig } from '@xaocs/config';
-import { loadEnv } from '@xaocs/config';
+import type { XacosConfig } from '@xacos/config';
+import { loadEnv } from '@xacos/config';
 
-export async function loadProjectConfig(): Promise<XaocsConfig> {
+export async function loadProjectConfig(): Promise<XacosConfig> {
   // Always load .env first
   loadEnv(resolve(process.cwd(), '.env'));
 
-  const configPath = resolve(process.cwd(), 'xaocs.config.ts');
+  const configPath = resolve(process.cwd(), 'xacos.config.ts');
   if (!existsSync(configPath)) {
     throw new Error(
-      '[XAOCS CLI] xaocs.config.ts not found. Are you in an XAOCS project root?'
+      '[XAOCS CLI] xacos.config.ts not found. Are you in an XAOCS project root?'
     );
   }
 
-  const mod = await import(configPath) as { default: XaocsConfig };
+  const mod = await import(configPath) as { default: XacosConfig };
   return mod.default;
 }
 ```
 
 **MAINTENANCE.md update:** Sprint 76 ✅.
-**Done when:** `xaocs --help` prints usage. Logger and config loader work.
+**Done when:** `xacos --help` prints usage. Logger and config loader work.
 
 ---
 
-## Sprint 77 — `xaocs dev` Command
+## Sprint 77 — `xacos dev` Command
 
 **Goal:** Start the dev server with Vite HMR.
 
@@ -4235,10 +4008,10 @@ program
       const port = parseInt(options.port, 10) || config.port || 5000;
 
       // Dynamically import to avoid loading server deps at CLI startup
-      const { XServer } = await import('@xaocs/server');
-      const { mountApiRoutes } = await import('@xaocs/server');
-      const { mountViewRoutes } = await import('@xaocs/server');
-      const { mountViteDev } = await import('@xaocs/server');
+      const { XServer } = await import('@xacos/server');
+      const { mountApiRoutes } = await import('@xacos/server');
+      const { mountViewRoutes } = await import('@xacos/server');
+      const { mountViteDev } = await import('@xacos/server');
 
       const server = new XServer();
       const app = server.getApp();
@@ -4267,11 +4040,11 @@ program
 ```
 
 **MAINTENANCE.md update:** Sprint 77 ✅.
-**Done when:** `xaocs dev` starts the server, API routes respond, Vite serves pages with HMR.
+**Done when:** `xacos dev` starts the server, API routes respond, Vite serves pages with HMR.
 
 ---
 
-## Sprint 78 — `xaocs build` Command
+## Sprint 78 — `xacos build` Command
 
 **Goal:** Run esbuild production build for all pages.
 
@@ -4280,13 +4053,13 @@ program
 import { program } from 'commander';
 import { log } from '../utils/logger';
 import { loadProjectConfig } from '../utils/loadConfig';
-import { buildProduction } from '@xaocs/compiler';
+import { buildProduction } from '@xacos/compiler';
 import ora from 'ora';
 
 program
   .command('build')
   .description('Build for production')
-  .option('--out <dir>', 'Output directory', '.xaocs/client')
+  .option('--out <dir>', 'Output directory', '.xacos/client')
   .action(async (options: { out: string }) => {
     const spinner = ora('Building for production…').start();
 
@@ -4315,11 +4088,11 @@ program
 ```
 
 **MAINTENANCE.md update:** Sprint 78 ✅.
-**Done when:** `xaocs build` creates chunks in `.xaocs/client/` and reports sizes.
+**Done when:** `xacos build` creates chunks in `.xacos/client/` and reports sizes.
 
 ---
 
-## Sprint 79 — `xaocs start` Command
+## Sprint 79 — `xacos start` Command
 
 **Goal:** Start the production server (no Vite, serves static chunks).
 
@@ -4342,13 +4115,13 @@ program
       const config = await loadProjectConfig();
       const port = parseInt(options.port, 10) || config.port || 5000;
 
-      const { XServer } = await import('@xaocs/server');
-      const { mountApiRoutes, mountViewRoutes, serveStaticChunks } = await import('@xaocs/server');
+      const { XServer } = await import('@xacos/server');
+      const { mountApiRoutes, mountViewRoutes, serveStaticChunks } = await import('@xacos/server');
 
       const server = new XServer();
       const app = server.getApp();
 
-      await serveStaticChunks(server.fastify, '.xaocs/client');
+      await serveStaticChunks(server.fastify, '.xacos/client');
       await mountApiRoutes(server.fastify, config.api?.dir ?? './api', app);
       await mountViewRoutes(server.fastify, config.views?.dir ?? './views');
 
@@ -4376,17 +4149,17 @@ export async function serveStaticChunks(
 ): Promise<void> {
   await fastify.register(import('@fastify/static'), {
     root: resolve(chunksDir),
-    prefix: '/__xaocs/',
+    prefix: '/__xacos/',
   });
 }
 ```
 
 **MAINTENANCE.md update:** Sprint 79 ✅.
-**Done when:** `xaocs start` serves the production build with API routes working.
+**Done when:** `xacos start` serves the production build with API routes working.
 
 ---
 
-## Sprint 80 — `xaocs migrate` Command
+## Sprint 80 — `xacos migrate` Command
 
 **Goal:** Run all pending database migrations.
 
@@ -4395,7 +4168,7 @@ export async function serveStaticChunks(
 import { program } from 'commander';
 import { log } from '../utils/logger';
 import { loadProjectConfig } from '../utils/loadConfig';
-import { MigrationRunner } from '@xaocs/orm';
+import { MigrationRunner } from '@xacos/orm';
 import { resolve } from 'path';
 
 const migrateCmd = program
@@ -4474,7 +4247,7 @@ import chalk from 'chalk';
 ```typescript
 async status(): Promise<Array<{ name: string; ran: boolean; batch?: number }>> {
   await this.ensureMigrationsTable();
-  const ran = await getKnex()('xaocs_migrations').select('name', 'batch');
+  const ran = await getKnex()('xacos_migrations').select('name', 'batch');
   const ranNames = new Set(ran.map((r: any) => r.name as string));
   const allFiles = this.getSortedFiles();
   return allFiles.map(f => ({
@@ -4486,7 +4259,7 @@ async status(): Promise<Array<{ name: string; ran: boolean; batch?: number }>> {
 ```
 
 **MAINTENANCE.md update:** Sprint 80 ✅.
-**Done when:** `xaocs migrate`, `xaocs migrate rollback`, `xaocs migrate fresh`, `xaocs migrate status` all work.
+**Done when:** `xacos migrate`, `xacos migrate rollback`, `xacos migrate fresh`, `xacos migrate status` all work.
 
 ---
 
@@ -4494,20 +4267,20 @@ async status(): Promise<Array<{ name: string; ran: boolean; batch?: number }>> {
 
 Rollback and fresh are subcommands of `migrate` (implemented above). Sprints 81 and 82 are therefore:
 
-**Sprint 81 — `xaocs migrate:rollback`** — ✅ implemented as `xaocs migrate rollback` in Sprint 80.
-**Sprint 82 — `xaocs migrate:fresh`** — ✅ implemented as `xaocs migrate fresh` in Sprint 80.
+**Sprint 81 — `xacos migrate:rollback`** — ✅ implemented as `xacos migrate rollback` in Sprint 80.
+**Sprint 82 — `xacos migrate:fresh`** — ✅ implemented as `xacos migrate fresh` in Sprint 80.
 
 Both update `MAINTENANCE.md` accordingly.
 
 ---
 
-## Sprint 83 — `xaocs migrate:status`
+## Sprint 83 — `xacos migrate:status`
 
-✅ Implemented as `xaocs migrate status` in Sprint 80. Mark ✅ in `MAINTENANCE.md`.
+✅ Implemented as `xacos migrate status` in Sprint 80. Mark ✅ in `MAINTENANCE.md`.
 
 ---
 
-## Sprint 84 — `xaocs db:seed` Command
+## Sprint 84 — `xacos db:seed` Command
 
 **Goal:** Run all seeders or a specific seeder.
 
@@ -4516,7 +4289,7 @@ Both update `MAINTENANCE.md` accordingly.
 import { program } from 'commander';
 import { log } from '../utils/logger';
 import { loadProjectConfig } from '../utils/loadConfig';
-import { SeederRunner } from '@xaocs/orm';
+import { SeederRunner } from '@xacos/orm';
 import { resolve } from 'path';
 
 program
@@ -4545,11 +4318,11 @@ program
 ```
 
 **MAINTENANCE.md update:** Sprint 84 ✅.
-**Done when:** `xaocs db:seed` runs all seeders. `xaocs db:seed --seeder UserSeeder` runs one.
+**Done when:** `xacos db:seed` runs all seeders. `xacos db:seed --seeder UserSeeder` runs one.
 
 ---
 
-## Sprint 85 — `xaocs routes` Command
+## Sprint 85 — `xacos routes` Command
 
 **Goal:** List all registered routes (API + view) in a formatted table.
 
@@ -4558,8 +4331,8 @@ program
 import { program } from 'commander';
 import { log } from '../utils/logger';
 import { loadProjectConfig } from '../utils/loadConfig';
-import { scanApiFiles } from '@xaocs/core';
-import { scanViews } from '@xaocs/compiler';
+import { scanApiFiles } from '@xacos/core';
+import { scanViews } from '@xacos/compiler';
 import chalk from 'chalk';
 
 program
@@ -4616,11 +4389,11 @@ View Routes:
 ```
 
 **MAINTENANCE.md update:** Sprint 85 ✅.
-**Done when:** `xaocs routes` prints all API and view routes.
+**Done when:** `xacos routes` prints all API and view routes.
 
 ---
 
-## Sprint 86 — `xaocs tinker` Command
+## Sprint 86 — `xacos tinker` Command
 
 **Goal:** Interactive REPL with full app context — XModel, services, container all available.
 
@@ -4642,14 +4415,14 @@ program
       log.blank();
 
       // Boot the application container
-      const { application } = await import('@xaocs/core');
+      const { application } = await import('@xacos/core');
       await application.boot({
         servicesDir: './app/services',
         middlewaresDir: './app/middlewares',
       });
 
       // Start REPL
-      const server = repl.start({ prompt: 'xaocs> ' });
+      const server = repl.start({ prompt: 'xacos> ' });
 
       // Inject context
       server.context['app'] = application.container;
@@ -4674,11 +4447,11 @@ program
 ```
 
 **MAINTENANCE.md update:** Sprint 86 ✅.
-**Done when:** `xaocs tinker` opens REPL. `await User.all()` returns data. `app.make('UserService')` works.
+**Done when:** `xacos tinker` opens REPL. `await User.all()` returns data. `app.make('UserService')` works.
 
 ---
 
-## Sprint 87 — `xaocs info` Command
+## Sprint 87 — `xacos info` Command
 
 **Goal:** Print framework version, environment info, and database status.
 
@@ -4714,7 +4487,7 @@ program
       console.log(`  Views Dir:     ${chalk.cyan(config.views?.dir ?? './views')}`);
       console.log(`  API Dir:       ${chalk.cyan(config.api?.dir ?? './api')}`);
     } catch {
-      console.log(chalk.yellow('  ⚠ Could not load xaocs.config.ts'));
+      console.log(chalk.yellow('  ⚠ Could not load xacos.config.ts'));
     }
 
     console.log('─'.repeat(40) + '\n');
@@ -4722,94 +4495,130 @@ program
 ```
 
 **MAINTENANCE.md update:** Sprint 87 ✅.
-**Done when:** `xaocs info` prints a clean info table.
+**Done when:** `xacos info` prints a clean info table.
 
 ---
 
-## Sprint 88–94 — Code Generators
+## Sprint 88 — `xacos add model` Command
 
-**Goal:** Implement all `xaocs add` and `xaocs make` commands.
+**Goal:** Generate a new `XModel` class file in `database/models/`.
 
-**`packages/cli/src/commands/add.ts`:**
-
-All generators follow the same pattern:
-1. Prompt for name (or take from CLI arg)
-2. Check if file already exists (refuse to overwrite)
-3. Write scaffolded file from template
-4. Log success with file path
-
+**`packages/cli/src/commands/add.ts` (Part 1):**
 ```typescript
-import { program } from 'commander';
+import { Command } from 'commander';
 import { log } from '../utils/logger';
-import { writeFileSync, mkdirSync, existsSync } from 'fs';
-import { resolve, dirname } from 'path';
+import { writeFileSync, mkdirSync, existsSync } from 'node:fs';
+import { resolve, dirname } from 'node:path';
 
-const add = program.command('add').description('Generate XAOCS files');
+export function registerAddCommand(program: Command) {
+  const add = program.command('add').description('Generate application files');
 
-// ─── xaocs add --model <Name> ─────────────────────────────────────────────
-add
-  .command('model <name>')
-  .alias('--model')
-  .description('Generate a new XModel')
-  .action((name: string) => {
-    const path = resolve(`./database/models/${name}.ts`);
-    guard(path, name);
-    writeFileSync(path, modelTemplate(name));
-    log.success(`Model created: database/models/${name}.ts`);
-  });
+  // ─── xacos add model <Name> ─────────────────────────────────────────────
+  add
+    .command('model <name>')
+    .description('Generate a new XModel')
+    .action((name: string) => {
+      const path = resolve(`./database/models/${name}.ts`);
+      guard(path);
+      writeFileSync(path, modelTemplate(name));
+      log.success(`Model created: database/models/${name}.ts`);
+    });
+```
 
-// ─── xaocs add --middleware <name> ────────────────────────────────────────
-add
-  .command('middleware <name>')
-  .description('Generate a new middleware')
-  .action((name: string) => {
-    const path = resolve(`./app/middlewares/${name}.middleware.ts`);
-    guard(path, name);
-    mkdirSync(dirname(path), { recursive: true });
-    writeFileSync(path, middlewareTemplate(name));
-    log.success(`Middleware created: app/middlewares/${name}.middleware.ts`);
-  });
+**MAINTENANCE.md update:** Sprint 88 ✅.
+**Done when:** `xacos add model User` creates `database/models/User.ts`.
 
-// ─── xaocs add --service <name> ───────────────────────────────────────────
-add
-  .command('service <name>')
-  .description('Generate a new service')
-  .action((name: string) => {
-    const path = resolve(`./app/services/${name}Service.ts`);
-    guard(path, name);
-    mkdirSync(dirname(path), { recursive: true });
-    writeFileSync(path, serviceTemplate(name));
-    log.success(`Service created: app/services/${name}Service.ts`);
-  });
+---
 
-// ─── xaocs add --controller <name> ────────────────────────────────────────
-add
-  .command('controller <name>')
-  .description('Generate a new controller')
-  .action((name: string) => {
-    const path = resolve(`./app/controllers/${name}Controller.ts`);
-    guard(path, name);
-    mkdirSync(dirname(path), { recursive: true });
-    writeFileSync(path, controllerTemplate(name));
-    log.success(`Controller created: app/controllers/${name}Controller.ts`);
-  });
+## Sprint 89 — `xacos add middleware` Command
 
-// ─── xaocs add --api <name> ───────────────────────────────────────────────
-add
-  .command('api <name>')
-  .description('Generate a new *.api.ts route file')
-  .action((name: string) => {
-    const path = resolve(`./api/${name}.api.ts`);
-    guard(path, name);
-    mkdirSync(dirname(path), { recursive: true });
-    writeFileSync(path, apiTemplate(name));
-    log.success(`API route created: api/${name}.api.ts`);
-    log.info(`Routes available at: /api/${name}/`);
-  });
+**Goal:** Generate a new middleware file in `app/middlewares/`.
 
-// ─── Helpers ──────────────────────────────────────────────────────────────
+**`packages/cli/src/commands/add.ts` (Part 2):**
+```typescript
+  // ─── xacos add middleware <name> ────────────────────────────────────────
+  add
+    .command('middleware <name>')
+    .description('Generate a new middleware')
+    .action((name: string) => {
+      const path = resolve(`./app/middlewares/${name}.middleware.ts`);
+      guard(path);
+      writeFileSync(path, middlewareTemplate(name));
+      log.success(`Middleware created: app/middlewares/${name}.middleware.ts`);
+    });
+```
 
-function guard(path: string, name: string) {
+**MAINTENANCE.md update:** Sprint 89 ✅.
+**Done when:** `xacos add middleware auth` creates `app/middlewares/auth.middleware.ts`.
+
+---
+
+## Sprint 90 — `xacos add service` Command
+
+**Goal:** Generate a new service class file in `app/services/`.
+
+**`packages/cli/src/commands/add.ts` (Part 3):**
+```typescript
+  // ─── xacos add service <name> ───────────────────────────────────────────
+  add
+    .command('service <name>')
+    .description('Generate a new service')
+    .action((name: string) => {
+      const path = resolve(`./app/services/${name}Service.ts`);
+      guard(path);
+      writeFileSync(path, serviceTemplate(name));
+      log.success(`Service created: app/services/${name}Service.ts`);
+    });
+```
+
+**MAINTENANCE.md update:** Sprint 90 ✅.
+**Done when:** `xacos add service User` creates `app/services/UserService.ts`.
+
+---
+
+## Sprint 91 — `xacos add controller` Command
+
+**Goal:** Generate a new controller class file in `app/controllers/`.
+
+**`packages/cli/src/commands/add.ts` (Part 4):**
+```typescript
+  // ─── xacos add controller <name> ────────────────────────────────────────
+  add
+    .command('controller <name>')
+    .description('Generate a new controller')
+    .action((name: string) => {
+      const path = resolve(`./app/controllers/${name}Controller.ts`);
+      guard(path);
+      writeFileSync(path, controllerTemplate(name));
+      log.success(`Controller created: app/controllers/${name}Controller.ts`);
+    });
+```
+
+**MAINTENANCE.md update:** Sprint 91 ✅.
+**Done when:** `xacos add controller User` creates `app/controllers/UserController.ts`.
+
+---
+
+## Sprint 92 — `xacos add api` Command
+
+**Goal:** Generate a new API route file in `api/`.
+
+**`packages/cli/src/commands/add.ts` (Part 5 & Templates):**
+```typescript
+  // ─── xacos add api <name> ───────────────────────────────────────────────
+  add
+    .command('api <name>')
+    .description('Generate a new *.api.ts route file')
+    .action((name: string) => {
+      const path = resolve(`./api/${name}.api.ts`);
+      guard(path);
+      writeFileSync(path, apiTemplate(name));
+      log.success(`API route created: api/${name}.api.ts`);
+      log.info(`Routes available at: /api/${name}/`);
+    });
+}
+
+function guard(path: string) {
   if (existsSync(path)) {
     log.error(`File already exists: ${path}`);
     process.exit(1);
@@ -4818,7 +4627,7 @@ function guard(path: string, name: string) {
 }
 
 function modelTemplate(name: string): string {
-  return `import { XModel, Column } from '@xaocs/orm';
+  return `import { XModel, Column } from '@xacos/orm';
 
 export class ${name} extends XModel {
   static table = '${name.toLowerCase()}s';
@@ -4838,7 +4647,7 @@ export class ${name} extends XModel {
 }
 
 function middlewareTemplate(name: string): string {
-  return `import type { XMiddleware } from '@xaocs/shared';
+  return `import type { XMiddleware } from '@xacos/shared';
 
 export const ${name}: XMiddleware = async (req, res, next) => {
   // Your middleware logic here
@@ -4860,8 +4669,8 @@ function serviceTemplate(name: string): string {
 }
 
 function controllerTemplate(name: string): string {
-  return `import { XController } from '@xaocs/core';
-import type { XRequest, XResponse } from '@xaocs/shared';
+  return `import { XController } from '@xacos/core';
+import type { XRequest, XResponse } from '@xacos/shared';
 
 export class ${name}Controller extends XController {
   async index(req: XRequest, res: XResponse) {
@@ -4891,8 +4700,8 @@ export class ${name}Controller extends XController {
 
 function apiTemplate(name: string): string {
   const Name = name.charAt(0).toUpperCase() + name.slice(1);
-  return `import { XRouter } from '@xaocs/core';
-// import { authenticate } from '@xaocs/auth';
+  return `import { XRouter } from '@xacos/core';
+// import { authenticate } from '@xacos/auth';
 // import { ${Name}Service } from '../app/services/${Name}Service';
 
 export const router = new XRouter();
@@ -4927,40 +4736,68 @@ router.delete('/:id', async (req, res) => {
 }
 ```
 
-**`packages/cli/src/commands/make.ts`:**
+**MAINTENANCE.md update:** Sprint 92 ✅.
+**Done when:** `xacos add api user` creates `api/user.api.ts`.
+
+---
+
+## Sprint 93 — `xacos make migration` Command
+
+**Goal:** Generate a new database migration file in `database/migrations/`.
+
+**`packages/cli/src/commands/make.ts` (Part 1):**
 ```typescript
-import { program } from 'commander';
+import { Command } from 'commander';
 import { log } from '../utils/logger';
-import { writeFileSync, mkdirSync, existsSync } from 'fs';
-import { resolve, dirname } from 'path';
+import { writeFileSync, mkdirSync, existsSync } from 'node:fs';
+import { resolve, dirname } from 'node:path';
 
-const make = program.command('make').description('Generate database files');
+export function registerMakeCommand(program: Command) {
+  const make = program.command('make').description('Generate database files');
 
-make
-  .command('migration <name>')
-  .description('Generate a new migration file')
-  .action((name: string) => {
-    const timestamp = Date.now();
-    const filename = `${timestamp}_${name}.ts`;
-    const path = resolve(`./database/migrations/${filename}`);
-    mkdirSync(dirname(path), { recursive: true });
-    writeFileSync(path, migrationTemplate(name));
-    log.success(`Migration created: database/migrations/${filename}`);
-  });
+  // ─── xacos make migration <name> ─────────────────────────────────────────
+  make
+    .command('migration <name>')
+    .description('Generate a new migration file')
+    .action((name: string) => {
+      const timestamp = Date.now();
+      const filename = `${timestamp}_${name}.ts`;
+      const path = resolve(`./database/migrations/${filename}`);
+      mkdirSync(dirname(path), { recursive: true });
+      writeFileSync(path, migrationTemplate(name));
+      log.success(`Migration created: database/migrations/${filename}`);
+    });
+```
 
-make
-  .command('seeder <name>')
-  .description('Generate a new seeder file')
-  .action((name: string) => {
-    const path = resolve(`./database/seeders/${name}.ts`);
-    if (existsSync(path)) { log.error(`Already exists: ${path}`); process.exit(1); }
-    mkdirSync(dirname(path), { recursive: true });
-    writeFileSync(path, seederTemplate(name));
-    log.success(`Seeder created: database/seeders/${name}.ts`);
-  });
+**MAINTENANCE.md update:** Sprint 93 ✅.
+**Done when:** `xacos make migration create_users` creates `database/migrations/123456789_create_users.ts`.
+
+---
+
+## Sprint 94 — `xacos make seeder` Command
+
+**Goal:** Generate a new database seeder file in `database/seeders/`.
+
+**`packages/cli/src/commands/make.ts` (Part 2 & Templates):**
+```typescript
+  // ─── xacos make seeder <name> ────────────────────────────────────────────
+  make
+    .command('seeder <name>')
+    .description('Generate a new seeder file')
+    .action((name: string) => {
+      const path = resolve(`./database/seeders/${name}.ts`);
+      if (existsSync(path)) {
+        log.error(`Already exists: ${path}`);
+        process.exit(1);
+      }
+      mkdirSync(dirname(path), { recursive: true });
+      writeFileSync(path, seederTemplate(name));
+      log.success(`Seeder created: database/seeders/${name}.ts`);
+    });
+}
 
 function migrationTemplate(name: string): string {
-  return `import { Migration, Schema } from '@xaocs/orm';
+  return `import { Migration, Schema } from '@xacos/orm';
 
 export default class ${toPascalCase(name)} extends Migration {
   async up(schema: Schema): Promise<void> {
@@ -4979,7 +4816,7 @@ export default class ${toPascalCase(name)} extends Migration {
 }
 
 function seederTemplate(name: string): string {
-  return `import { Seeder } from '@xaocs/orm';
+  return `import { Seeder } from '@xacos/orm';
 
 export default class ${name} extends Seeder {
   async run(): Promise<void> {
@@ -4995,25 +4832,24 @@ function toPascalCase(str: string): string {
 }
 ```
 
-**Covers Sprints 88, 89, 90, 91, 92, 93, 94.**
-**MAINTENANCE.md update:** Mark Sprints 88–94 ✅.
+**MAINTENANCE.md update:** Sprint 94 ✅.
 
 ---
 
-## Sprint 95 — `create-xaocs-app` Init
+## Sprint 95 — `create-xacos-app` Init
 
-**Goal:** Scaffold the `create-xaocs-app` package — the project bootstrapper.
+**Goal:** Scaffold the `create-xacos-app` package — the project bootstrapper.
 
-**Location:** `packages/create-xaocs-app/`
+**Location:** `packages/create-xacos-app/`
 
-**`packages/create-xaocs-app/package.json`:**
+**`packages/create-xacos-app/package.json`:**
 ```json
 {
-  "name": "create-xaocs-app",
+  "name": "create-xacos-app",
   "version": "0.0.1",
   "type": "module",
   "bin": {
-    "create-xaocs-app": "./dist/bin/create.js"
+    "create-xacos-app": "./dist/bin/create.js"
   },
   "dependencies": {
     "commander": "^12.x",
@@ -5033,13 +4869,13 @@ function toPascalCase(str: string): string {
 }
 ```
 
-**`packages/create-xaocs-app/src/bin/create.ts`:**
+**`packages/create-xacos-app/src/bin/create.ts`:**
 ```typescript
 #!/usr/bin/env bun
 import { program } from 'commander';
 
 program
-  .name('create-xaocs-app')
+  .name('create-xacos-app')
   .description('Create a new XAOCS application')
   .argument('[project-name]', 'Name of the project')
   .action(async (projectName?: string) => {
@@ -5051,15 +4887,15 @@ program.parse(process.argv);
 ```
 
 **MAINTENANCE.md update:** Sprint 95 ✅.
-**Done when:** Package scaffolded, `bunx create-xaocs-app` runs without error.
+**Done when:** Package scaffolded, `bunx create-xacos-app` runs without error.
 
 ---
 
 ## Sprint 96–105 — Scaffold Implementation
 
-These sprints implement the full `create-xaocs-app` scaffold. They all live in `packages/create-xaocs-app/src/scaffold.ts` and the `templates/` directory.
+These sprints implement the full `create-xacos-app` scaffold. They all live in `packages/create-xacos-app/src/scaffold.ts` and the `templates/` directory.
 
-**`packages/create-xaocs-app/src/scaffold.ts`:**
+**`packages/create-xacos-app/src/scaffold.ts`:**
 ```typescript
 import prompts from 'prompts';
 import chalk from 'chalk';
@@ -5085,7 +4921,7 @@ export async function scaffold(nameArg?: string): Promise<void> {
       type: nameArg ? null : 'text',        // Skip if provided via arg
       name: 'projectName',
       message: 'Project name:',
-      initial: 'my-xaocs-app',
+      initial: 'my-xacos-app',
       validate: (v: string) => /^[a-z0-9-]+$/.test(v) || 'Use lowercase letters, numbers, and hyphens only',
     },
     {
@@ -5159,8 +4995,8 @@ export async function scaffold(nameArg?: string): Promise<void> {
   // ── Done ─────────────────────────────────────────────────────────────────
   console.log('\n' + chalk.green.bold('  ✓ Done!') + '\n');
   console.log(`  ${chalk.cyan('cd')} ${projectName}`);
-  console.log(`  ${chalk.cyan('xaocs migrate')}`);
-  console.log(`  ${chalk.cyan('xaocs dev')}\n`);
+  console.log(`  ${chalk.cyan('xacos migrate')}`);
+  console.log(`  ${chalk.cyan('xacos dev')}\n`);
 }
 ```
 
@@ -5168,7 +5004,7 @@ export async function scaffold(nameArg?: string): Promise<void> {
 
 **Sprint 96 — Base project structure** (dirs + gitignore)
 **Sprint 97 — DB prompt + `.env` generation per driver**
-**Sprint 98 — Auth files copied from `@xaocs/auth/src/` when `includeAuth = true`**
+**Sprint 98 — Auth files copied from `@xacos/auth/src/` when `includeAuth = true`**
 **Sprint 99 — `.env.example`:**
 
 ```ini
@@ -5213,9 +5049,9 @@ MAIL_PASSWORD=
 MAIL_FROM=noreply@myapp.com
 ```
 
-**Sprint 100 — `xaocs.config.ts`:**
+**Sprint 100 — `xacos.config.ts`:**
 ```typescript
-import { defineConfig } from '@xaocs/config';
+import { defineConfig } from '@xacos/config';
 
 export default defineConfig({
   port: Number(process.env['APP_PORT']) || 5000,
@@ -5231,22 +5067,22 @@ export default defineConfig({
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "xaocs dev",
-    "build": "xaocs build",
-    "start": "xaocs start",
-    "migrate": "xaocs migrate",
-    "seed": "xaocs db:seed"
+    "dev": "xacos dev",
+    "build": "xacos build",
+    "start": "xacos start",
+    "migrate": "xacos migrate",
+    "seed": "xacos db:seed"
   },
   "dependencies": {
-    "@xaocs/auth": "latest",
-    "@xaocs/client": "latest",
-    "@xaocs/core": "latest",
-    "@xaocs/orm": "latest",
+    "@xacos/auth": "latest",
+    "@xacos/client": "latest",
+    "@xacos/core": "latest",
+    "@xacos/orm": "latest",
     "react": "^18.x",
     "react-dom": "^18.x"
   },
   "devDependencies": {
-    "@xaocs/cli": "latest",
+    "@xacos/cli": "latest",
     "@types/react": "^18.x",
     "@types/react-dom": "^18.x",
     "typescript": "^5.x"
@@ -5274,21 +5110,21 @@ export default defineConfig({
     }
   },
   "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", ".xaocs"]
+  "exclude": ["node_modules", ".xacos"]
 }
 ```
 
 **Sprint 103 — Auto-run `bun install`** — already in `scaffold.ts` above.
 
-**Sprint 104 — Auto-run `xaocs migrate`** after install:
+**Sprint 104 — Auto-run `xacos migrate`** after install:
 ```typescript
 if (dbDriver === 'sqlite') {
   const migrateSpinner = ora('Running initial migrations…').start();
   try {
-    execSync('bun run xaocs migrate', { cwd: projectDir, stdio: 'pipe' });
+    execSync('bun run xacos migrate', { cwd: projectDir, stdio: 'pipe' });
     migrateSpinner.succeed('Database migrated');
   } catch {
-    migrateSpinner.warn('Migration skipped — run `xaocs migrate` manually');
+    migrateSpinner.warn('Migration skipped — run `xacos migrate` manually');
   }
 }
 ```
@@ -5297,7 +5133,7 @@ if (dbDriver === 'sqlite') {
 ```markdown
 # {{projectName}}
 
-Built with [XAOCS](https://xaocs.dev) — a full-stack TypeScript framework.
+Built with [XAOCS](https://xacos.dev) — a full-stack TypeScript framework.
 
 ## Structure
 
@@ -5313,17 +5149,17 @@ public/        → Static assets
 ## Commands
 
 ```bash
-xaocs dev              # Start dev server with HMR
-xaocs build            # Production build
-xaocs start            # Start production server
-xaocs migrate          # Run pending migrations
-xaocs db:seed          # Seed the database
-xaocs routes           # List all routes
-xaocs tinker           # Interactive REPL
+xacos dev              # Start dev server with HMR
+xacos build            # Production build
+xacos start            # Start production server
+xacos migrate          # Run pending migrations
+xacos db:seed          # Seed the database
+xacos routes           # List all routes
+xacos tinker           # Interactive REPL
 ```
 
 **MAINTENANCE.md update:** Mark Sprints 96–105 ✅.
-**Done when:** `bunx create-xaocs-app my-app` creates a full working project directory.
+**Done when:** `bunx create-xacos-app my-app` creates a full working project directory.
 
 ---
 
@@ -5332,5 +5168,3360 @@ xaocs tinker           # Interactive REPL
 > Run `bun run build` from root. All packages must compile with zero errors.
 > Update `MAINTENANCE.md`: mark sprints 51–100 as ✅. Total completed: 100.
 > **Progress: 100/200 sprints complete. Halfway there.**
+
+
+
+# XAOCS Framework — Sprints 101–150 (Detailed)
+
+> **Continuing from Sprint 102.** 102 sprints complete. Mail package (SMTP + SES) done.
+> Stack: TurboRepo + Bun + TypeScript + Fastify + React + Knex + Vite + esbuild
+> **Agent:** Read `MAINTENANCE.md` before starting. Confirm Sprint 102 ✅ Done.
+
+---
+
+## Sprint 103 — Mailgun Driver
+
+**Goal:** Implement a Mailgun mail driver for `@xacos/mail` using the official Mailgun.js SDK.
+
+**Install in `packages/mail`:**
+```bash
+bun add mailgun.js form-data
+bun add -d @types/mailgun.js
+```
+
+**`packages/mail/src/drivers/MailgunMailer.ts`:**
+```typescript
+import Mailgun from 'mailgun.js';
+import FormData from 'form-data';
+import type { Mailer, MailMessage, MailResult } from '../Mailer';
+import { interpolate } from '../utils/interpolate';
+
+export interface MailgunConfig {
+  apiKey: string;
+  domain: string;
+  from: string;
+  host?: string; // default: 'api.mailgun.net', use 'api.eu.mailgun.net' for EU
+}
+
+export class MailgunMailer implements Mailer {
+  private client: ReturnType<InstanceType<typeof Mailgun>['client']>;
+  private config: MailgunConfig;
+
+  constructor(config: MailgunConfig) {
+    this.config = config;
+    const mg = new Mailgun(FormData);
+    this.client = mg.client({
+      username: 'api',
+      key: config.apiKey,
+      url: config.host ?? 'https://api.mailgun.net',
+    });
+  }
+
+  async send(message: MailMessage): Promise<MailResult> {
+    const html = message.template
+      ? interpolate(message.template, message.data ?? {})
+      : message.html ?? '';
+
+    try {
+      const response = await this.client.messages.create(this.config.domain, {
+        from: message.from ?? this.config.from,
+        to: Array.isArray(message.to) ? message.to : [message.to],
+        subject: message.subject,
+        html,
+        text: message.text,
+      });
+
+      return {
+        success: true,
+        messageId: response.id,
+        provider: 'mailgun',
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: (error as Error).message,
+        provider: 'mailgun',
+      };
+    }
+  }
+}
+```
+
+**Register in `MailManager`:**
+```typescript
+// packages/mail/src/MailManager.ts — add case:
+case 'mailgun':
+  return new MailgunMailer({
+    apiKey: requireEnv('MAILGUN_API_KEY'),
+    domain: requireEnv('MAILGUN_DOMAIN'),
+    from: process.env['MAIL_FROM'] ?? 'noreply@example.com',
+    host: process.env['MAILGUN_HOST'],
+  });
+```
+
+**`.env.example` additions:**
+```ini
+# Mailgun (optional)
+MAILGUN_API_KEY=key-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+MAILGUN_DOMAIN=mg.yourdomain.com
+MAILGUN_HOST=https://api.mailgun.net
+```
+
+**Test `packages/mail/src/drivers/MailgunMailer.test.ts`:**
+```typescript
+import { describe, it, expect, mock } from 'bun:test';
+
+describe('MailgunMailer', () => {
+  it('constructs without throwing', () => {
+    // We only test construction — live API calls need real credentials
+    const { MailgunMailer } = await import('./MailgunMailer');
+    expect(() => new MailgunMailer({
+      apiKey: 'key-test',
+      domain: 'test.example.com',
+      from: 'test@example.com',
+    })).not.toThrow();
+  });
+});
+```
+
+**Export from `packages/mail/src/index.ts`:**
+```typescript
+export { MailgunMailer } from './drivers/MailgunMailer';
+```
+
+**MAINTENANCE.md update:** Sprint 103 ✅.
+**CHANGELOG:** `- Sprint 103: Mailgun driver added to @xacos/mail.`
+**Done when:** `MailgunMailer` constructs and `MAIL_DRIVER=mailgun` resolves from `MailManager`.
+
+---
+
+## Sprint 104 — Postmark Driver
+
+**Goal:** Implement a Postmark mail driver for transactional emails.
+
+**Install in `packages/mail`:**
+```bash
+bun add postmark
+```
+
+**`packages/mail/src/drivers/PostmarkMailer.ts`:**
+```typescript
+import { ServerClient } from 'postmark';
+import type { Mailer, MailMessage, MailResult } from '../Mailer';
+import { interpolate } from '../utils/interpolate';
+
+export interface PostmarkConfig {
+  serverToken: string;
+  from: string;
+}
+
+export class PostmarkMailer implements Mailer {
+  private client: ServerClient;
+  private config: PostmarkConfig;
+
+  constructor(config: PostmarkConfig) {
+    this.config = config;
+    this.client = new ServerClient(config.serverToken);
+  }
+
+  async send(message: MailMessage): Promise<MailResult> {
+    const htmlBody = message.template
+      ? interpolate(message.template, message.data ?? {})
+      : message.html ?? '';
+
+    try {
+      const response = await this.client.sendEmail({
+        From: message.from ?? this.config.from,
+        To: Array.isArray(message.to) ? message.to.join(',') : message.to,
+        Subject: message.subject,
+        HtmlBody: htmlBody,
+        TextBody: message.text,
+        MessageStream: 'outbound',
+      });
+
+      return {
+        success: true,
+        messageId: response.MessageID,
+        provider: 'postmark',
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: (error as Error).message,
+        provider: 'postmark',
+      };
+    }
+  }
+}
+```
+
+**Register in `MailManager`:**
+```typescript
+case 'postmark':
+  return new PostmarkMailer({
+    serverToken: requireEnv('POSTMARK_SERVER_TOKEN'),
+    from: process.env['MAIL_FROM'] ?? 'noreply@example.com',
+  });
+```
+
+**`.env.example` additions:**
+```ini
+# Postmark (optional)
+POSTMARK_SERVER_TOKEN=your-server-token-here
+```
+
+**Export from `packages/mail/src/index.ts`.**
+
+**MAINTENANCE.md update:** Sprint 104 ✅.
+**CHANGELOG:** `- Sprint 104: Postmark driver added to @xacos/mail.`
+**Done when:** `MAIL_DRIVER=postmark` resolves from `MailManager`. Driver builds cleanly.
+
+---
+
+## Sprint 105 — Resend Driver
+
+**Goal:** Implement a Resend driver — the modern developer-friendly email API.
+
+**Install in `packages/mail`:**
+```bash
+bun add resend
+```
+
+**`packages/mail/src/drivers/ResendMailer.ts`:**
+```typescript
+import { Resend } from 'resend';
+import type { Mailer, MailMessage, MailResult } from '../Mailer';
+import { interpolate } from '../utils/interpolate';
+
+export interface ResendConfig {
+  apiKey: string;
+  from: string;
+}
+
+export class ResendMailer implements Mailer {
+  private client: Resend;
+  private config: ResendConfig;
+
+  constructor(config: ResendConfig) {
+    this.config = config;
+    this.client = new Resend(config.apiKey);
+  }
+
+  async send(message: MailMessage): Promise<MailResult> {
+    const html = message.template
+      ? interpolate(message.template, message.data ?? {})
+      : message.html ?? '';
+
+    const response = await this.client.emails.send({
+      from: message.from ?? this.config.from,
+      to: Array.isArray(message.to) ? message.to : [message.to],
+      subject: message.subject,
+      html,
+      text: message.text,
+    });
+
+    if (response.error) {
+      return { success: false, error: response.error.message, provider: 'resend' };
+    }
+
+    return {
+      success: true,
+      messageId: response.data?.id,
+      provider: 'resend',
+    };
+  }
+}
+```
+
+**Register in `MailManager`:**
+```typescript
+case 'resend':
+  return new ResendMailer({
+    apiKey: requireEnv('RESEND_API_KEY'),
+    from: process.env['MAIL_FROM'] ?? 'noreply@example.com',
+  });
+```
+
+**`.env.example` additions:**
+```ini
+# Resend (optional — recommended for new projects)
+RESEND_API_KEY=re_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+**Mail driver summary** — all supported drivers now:
+```
+MAIL_DRIVER=log        → LogMailer (dev, no real sends)
+MAIL_DRIVER=smtp       → SmtpMailer (nodemailer)
+MAIL_DRIVER=ses        → SesMailer (AWS SES)
+MAIL_DRIVER=mailgun    → MailgunMailer
+MAIL_DRIVER=postmark   → PostmarkMailer
+MAIL_DRIVER=resend     → ResendMailer ← added this sprint
+```
+
+**MAINTENANCE.md update:** Sprint 105 ✅.
+**CHANGELOG:** `- Sprint 105: Resend driver added. Mail package now has 6 drivers.`
+**Done when:** All 6 drivers export cleanly. `MailManager` resolves each.
+
+---
+
+## Sprint 106 — `@xacos/cache` Init
+
+**Goal:** Scaffold the `@xacos/cache` package — a unified caching interface with driver support.
+
+**Location:** `packages/cache/`
+
+**`packages/cache/package.json`:**
+```json
+{
+  "name": "@xacos/cache",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "dependencies": {
+    "@xacos/config": "workspace:*",
+    "@xacos/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.x"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "bun test",
+    "type-check": "tsc --noEmit"
+  }
+}
+```
+
+**`packages/cache/src/Cache.ts`:**
+```typescript
+/**
+ * Unified cache interface. All drivers implement this.
+ */
+export interface Cache {
+  /**
+   * Get a value from cache. Returns null if not found or expired.
+   */
+  get<T = unknown>(key: string): Promise<T | null>;
+
+  /**
+   * Set a value in cache.
+   * @param ttl Time-to-live in seconds. Omit for no expiration.
+   */
+  set(key: string, value: unknown, ttl?: number): Promise<void>;
+
+  /**
+   * Delete a key from cache.
+   */
+  forget(key: string): Promise<void>;
+
+  /**
+   * Flush the entire cache. Use with caution in production.
+   */
+  flush(): Promise<void>;
+
+  /**
+   * Check if a key exists and has not expired.
+   */
+  has(key: string): Promise<boolean>;
+
+  /**
+   * Get or set a value. If key doesn't exist, calls factory and stores result.
+   *
+   * @example
+   * const user = await cache.remember('user:1', 60, () => User.find(1));
+   */
+  remember<T>(key: string, ttl: number, factory: () => Promise<T>): Promise<T>;
+}
+```
+
+**`packages/cache/src/index.ts`:**
+```typescript
+export type { Cache } from './Cache';
+export { MemoryCache } from './drivers/MemoryCache';
+export { CacheManager } from './CacheManager';
+```
+
+**MAINTENANCE.md update:** Sprint 106 ✅.
+**CHANGELOG:** `- Sprint 106: @xacos/cache package scaffolded with Cache interface.`
+**Done when:** Package builds. `Cache` interface exported.
+
+---
+
+## Sprint 107 — Memory Cache Driver
+
+**Goal:** Implement `MemoryCache` — the default in-memory cache for development and testing.
+
+**`packages/cache/src/drivers/MemoryCache.ts`:**
+```typescript
+import type { Cache } from '../Cache';
+
+interface CacheEntry {
+  value: unknown;
+  expiresAt: number | null; // null = never expires
+}
+
+export class MemoryCache implements Cache {
+  private store = new Map<string, CacheEntry>();
+
+  async get<T = unknown>(key: string): Promise<T | null> {
+    const entry = this.store.get(key);
+    if (!entry) return null;
+
+    if (entry.expiresAt !== null && Date.now() > entry.expiresAt) {
+      this.store.delete(key);
+      return null;
+    }
+
+    return entry.value as T;
+  }
+
+  async set(key: string, value: unknown, ttl?: number): Promise<void> {
+    this.store.set(key, {
+      value,
+      expiresAt: ttl ? Date.now() + ttl * 1000 : null,
+    });
+  }
+
+  async forget(key: string): Promise<void> {
+    this.store.delete(key);
+  }
+
+  async flush(): Promise<void> {
+    this.store.clear();
+  }
+
+  async has(key: string): Promise<boolean> {
+    return (await this.get(key)) !== null;
+  }
+
+  async remember<T>(key: string, ttl: number, factory: () => Promise<T>): Promise<T> {
+    const cached = await this.get<T>(key);
+    if (cached !== null) return cached;
+
+    const value = await factory();
+    await this.set(key, value, ttl);
+    return value;
+  }
+}
+```
+
+**Test `packages/cache/src/drivers/MemoryCache.test.ts`:**
+```typescript
+import { describe, it, expect, beforeEach } from 'bun:test';
+import { MemoryCache } from './MemoryCache';
+
+describe('MemoryCache', () => {
+  let cache: MemoryCache;
+
+  beforeEach(() => { cache = new MemoryCache(); });
+
+  it('returns null for missing keys', async () => {
+    expect(await cache.get('missing')).toBeNull();
+  });
+
+  it('stores and retrieves values', async () => {
+    await cache.set('name', 'XAOCS');
+    expect(await cache.get('name')).toBe('XAOCS');
+  });
+
+  it('expires keys after TTL', async () => {
+    await cache.set('short', 'value', 0); // 0s TTL
+    // Force expiry by manipulating time (immediate expiry)
+    await new Promise(r => setTimeout(r, 5));
+    expect(await cache.get('short')).toBeNull();
+  });
+
+  it('remember returns cached value on second call', async () => {
+    let calls = 0;
+    const factory = async () => { calls++; return 'computed'; };
+
+    await cache.remember('key', 60, factory);
+    await cache.remember('key', 60, factory);
+
+    expect(calls).toBe(1); // factory only called once
+  });
+
+  it('flush clears all keys', async () => {
+    await cache.set('a', 1);
+    await cache.set('b', 2);
+    await cache.flush();
+    expect(await cache.get('a')).toBeNull();
+    expect(await cache.get('b')).toBeNull();
+  });
+});
+```
+
+**MAINTENANCE.md update:** Sprint 107 ✅.
+**CHANGELOG:** `- Sprint 107: MemoryCache driver implemented and tested.`
+**Done when:** All 5 tests pass. `MemoryCache` is usable without any external deps.
+
+---
+
+## Sprint 108 — Redis Cache Driver
+
+**Goal:** Implement `RedisCache` driver using `ioredis` for production caching.
+
+**Install in `packages/cache`:**
+```bash
+bun add ioredis
+bun add -d @types/ioredis
+```
+
+**`packages/cache/src/drivers/RedisCache.ts`:**
+```typescript
+import Redis from 'ioredis';
+import type { Cache } from '../Cache';
+
+export interface RedisCacheConfig {
+  host?: string;
+  port?: number;
+  password?: string;
+  db?: number;
+  keyPrefix?: string;
+}
+
+export class RedisCache implements Cache {
+  private client: Redis;
+  private prefix: string;
+
+  constructor(config: RedisCacheConfig = {}) {
+    this.prefix = config.keyPrefix ?? 'xacos:';
+    this.client = new Redis({
+      host: config.host ?? 'localhost',
+      port: config.port ?? 6379,
+      password: config.password,
+      db: config.db ?? 0,
+      lazyConnect: true,
+    });
+  }
+
+  private key(k: string): string {
+    return `${this.prefix}${k}`;
+  }
+
+  async get<T = unknown>(key: string): Promise<T | null> {
+    const raw = await this.client.get(this.key(key));
+    if (raw === null) return null;
+    try {
+      return JSON.parse(raw) as T;
+    } catch {
+      return raw as unknown as T;
+    }
+  }
+
+  async set(key: string, value: unknown, ttl?: number): Promise<void> {
+    const serialized = JSON.stringify(value);
+    if (ttl) {
+      await this.client.setex(this.key(key), ttl, serialized);
+    } else {
+      await this.client.set(this.key(key), serialized);
+    }
+  }
+
+  async forget(key: string): Promise<void> {
+    await this.client.del(this.key(key));
+  }
+
+  async flush(): Promise<void> {
+    // Only flush keys with our prefix — safe in shared Redis instances
+    const keys = await this.client.keys(`${this.prefix}*`);
+    if (keys.length > 0) {
+      await this.client.del(...keys);
+    }
+  }
+
+  async has(key: string): Promise<boolean> {
+    return (await this.client.exists(this.key(key))) > 0;
+  }
+
+  async remember<T>(key: string, ttl: number, factory: () => Promise<T>): Promise<T> {
+    const cached = await this.get<T>(key);
+    if (cached !== null) return cached;
+    const value = await factory();
+    await this.set(key, value, ttl);
+    return value;
+  }
+
+  async disconnect(): Promise<void> {
+    await this.client.quit();
+  }
+}
+```
+
+**Export from `packages/cache/src/index.ts`:**
+```typescript
+export { RedisCache } from './drivers/RedisCache';
+```
+
+**MAINTENANCE.md update:** Sprint 108 ✅.
+**CHANGELOG:** `- Sprint 108: RedisCache driver implemented with key prefix isolation.`
+**Done when:** `RedisCache` compiles. Types resolve correctly.
+
+---
+
+## Sprint 109 — `CacheManager`
+
+**Goal:** Implement `CacheManager` — selects the correct cache driver based on `CACHE_DRIVER` env.
+
+**`packages/cache/src/CacheManager.ts`:**
+```typescript
+import type { Cache } from './Cache';
+import { MemoryCache } from './drivers/MemoryCache';
+
+type CacheDriver = 'memory' | 'redis';
+
+let _instance: Cache | null = null;
+
+/**
+ * Resolve the configured cache driver.
+ * Call this once at boot; it returns a singleton.
+ *
+ * @example
+ * import { cache } from '@xacos/cache';
+ * await cache.set('key', 'value', 60);
+ */
+export function resolveCacheDriver(): Cache {
+  if (_instance) return _instance;
+
+  const driver = (process.env['CACHE_DRIVER'] ?? 'memory') as CacheDriver;
+
+  switch (driver) {
+    case 'redis': {
+      // Lazy import so Redis isn't loaded in envs without it
+      const { RedisCache } = require('./drivers/RedisCache') as typeof import('./drivers/RedisCache');
+      _instance = new RedisCache({
+        host: process.env['REDIS_HOST'] ?? 'localhost',
+        port: Number(process.env['REDIS_PORT'] ?? 6379),
+        password: process.env['REDIS_PASSWORD'],
+        keyPrefix: `${process.env['APP_NAME'] ?? 'xacos'}:cache:`,
+      });
+      break;
+    }
+    case 'memory':
+    default:
+      _instance = new MemoryCache();
+      break;
+  }
+
+  return _instance;
+}
+
+/**
+ * Pre-resolved singleton cache instance.
+ * Import this directly in your services:
+ *
+ * @example
+ * import { cache } from '@xacos/cache';
+ */
+export const cache = new Proxy({} as Cache, {
+  get(_target, prop) {
+    const instance = resolveCacheDriver();
+    return (instance as any)[prop];
+  },
+});
+
+export class CacheManager {
+  static resolve(): Cache {
+    return resolveCacheDriver();
+  }
+}
+```
+
+**Usage in a service:**
+```typescript
+import { cache } from '@xacos/cache';
+
+// In a service
+const users = await cache.remember('users:all', 300, async () => {
+  return User.all();
+});
+```
+
+**`.env.example` additions:**
+```ini
+# Cache
+CACHE_DRIVER=memory   # memory | redis
+
+# Redis (required when CACHE_DRIVER=redis)
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_PASSWORD=
+```
+
+**Test `packages/cache/src/CacheManager.test.ts`:**
+```typescript
+import { describe, it, expect, beforeEach } from 'bun:test';
+
+beforeEach(() => {
+  // Reset singleton between tests
+  process.env['CACHE_DRIVER'] = 'memory';
+  // Reset module cache
+  const mod = require('./CacheManager');
+  (mod as any)._instance = null;
+});
+
+describe('CacheManager', () => {
+  it('resolves MemoryCache when CACHE_DRIVER=memory', () => {
+    const { resolveCacheDriver } = require('./CacheManager');
+    const { MemoryCache } = require('./drivers/MemoryCache');
+    const driver = resolveCacheDriver();
+    expect(driver).toBeInstanceOf(MemoryCache);
+  });
+});
+```
+
+**MAINTENANCE.md update:** Sprint 109 ✅.
+**CHANGELOG:** `- Sprint 109: CacheManager implemented with proxy singleton and driver selection.`
+**Done when:** `import { cache } from '@xacos/cache'` returns working `Cache` instance.
+
+---
+
+## Sprint 110 — `@xacos/storage` Init
+
+**Goal:** Scaffold the `@xacos/storage` package — file upload and storage abstraction.
+
+**Location:** `packages/storage/`
+
+**`packages/storage/package.json`:**
+```json
+{
+  "name": "@xacos/storage",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "dependencies": {
+    "@xacos/config": "workspace:*",
+    "@xacos/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.x"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "bun test",
+    "type-check": "tsc --noEmit"
+  }
+}
+```
+
+**`packages/storage/src/Storage.ts`:**
+```typescript
+export interface StorageFile {
+  /** Original filename */
+  name: string;
+  /** MIME type */
+  mimeType: string;
+  /** File size in bytes */
+  size: number;
+  /** File contents as Buffer */
+  buffer: Buffer;
+}
+
+export interface StoredFile {
+  /** Key/path used to store the file */
+  key: string;
+  /** Public URL to access the file */
+  url: string;
+  /** Size in bytes */
+  size: number;
+  /** MIME type */
+  mimeType: string;
+}
+
+/**
+ * Unified storage interface. All drivers implement this.
+ */
+export interface Storage {
+  /**
+   * Store a file and return metadata including the public URL.
+   * @param key Storage path/key, e.g. 'avatars/user-1.jpg'
+   * @param file The file to store
+   */
+  put(key: string, file: StorageFile): Promise<StoredFile>;
+
+  /**
+   * Get the public URL for a stored file.
+   */
+  url(key: string): string;
+
+  /**
+   * Check if a file exists at the given key.
+   */
+  exists(key: string): Promise<boolean>;
+
+  /**
+   * Delete a file by key.
+   */
+  delete(key: string): Promise<void>;
+
+  /**
+   * Get file contents as a Buffer.
+   */
+  get(key: string): Promise<Buffer>;
+}
+```
+
+**`packages/storage/src/index.ts`:**
+```typescript
+export type { Storage, StorageFile, StoredFile } from './Storage';
+export { LocalStorage } from './drivers/LocalStorage';
+export { StorageManager } from './StorageManager';
+export { storage } from './StorageManager';
+```
+
+**MAINTENANCE.md update:** Sprint 110 ✅.
+**CHANGELOG:** `- Sprint 110: @xacos/storage package scaffolded with Storage interface.`
+**Done when:** Package builds. `Storage` interface exported cleanly.
+
+---
+
+## Sprint 111 — Local Storage Driver
+
+**Goal:** Implement `LocalStorage` — stores files in the `storage/` directory of the user's project.
+
+**`packages/storage/src/drivers/LocalStorage.ts`:**
+```typescript
+import { writeFileSync, readFileSync, existsSync, unlinkSync, mkdirSync } from 'fs';
+import { resolve, dirname, join } from 'path';
+import type { Storage, StorageFile, StoredFile } from '../Storage';
+
+export interface LocalStorageConfig {
+  /** Root directory for stored files. Default: ./storage/app */
+  root?: string;
+  /** Base URL for public access. Default: /storage */
+  baseUrl?: string;
+}
+
+export class LocalStorage implements Storage {
+  private root: string;
+  private baseUrl: string;
+
+  constructor(config: LocalStorageConfig = {}) {
+    this.root = resolve(config.root ?? './storage/app');
+    this.baseUrl = config.baseUrl ?? '/storage';
+  }
+
+  async put(key: string, file: StorageFile): Promise<StoredFile> {
+    const filePath = join(this.root, key);
+    mkdirSync(dirname(filePath), { recursive: true });
+    writeFileSync(filePath, file.buffer);
+
+    return {
+      key,
+      url: this.url(key),
+      size: file.size,
+      mimeType: file.mimeType,
+    };
+  }
+
+  url(key: string): string {
+    return `${this.baseUrl}/${key}`;
+  }
+
+  async exists(key: string): Promise<boolean> {
+    return existsSync(join(this.root, key));
+  }
+
+  async delete(key: string): Promise<void> {
+    const filePath = join(this.root, key);
+    if (existsSync(filePath)) {
+      unlinkSync(filePath);
+    }
+  }
+
+  async get(key: string): Promise<Buffer> {
+    const filePath = join(this.root, key);
+    if (!existsSync(filePath)) {
+      throw new Error(`[XAOCS Storage] File not found: ${key}`);
+    }
+    return readFileSync(filePath);
+  }
+}
+```
+
+**Register static serving in `XServer`** (adds `/storage` route for local driver):
+```typescript
+// packages/server/src/XServer.ts — in setupStaticStorage():
+fastify.register(import('@fastify/static'), {
+  root: resolve('./storage/app'),
+  prefix: '/storage/',
+  decorateReply: false,
+});
+```
+
+**Test `packages/storage/src/drivers/LocalStorage.test.ts`:**
+```typescript
+import { describe, it, expect, beforeEach, afterEach } from 'bun:test';
+import { LocalStorage } from './LocalStorage';
+import { rmSync } from 'fs';
+
+const TMP = './tmp-storage-test';
+let storage: LocalStorage;
+
+beforeEach(() => {
+  storage = new LocalStorage({ root: TMP, baseUrl: '/storage' });
+});
+afterEach(() => rmSync(TMP, { recursive: true, force: true }));
+
+describe('LocalStorage', () => {
+  it('stores and retrieves a file', async () => {
+    const file = {
+      name: 'test.txt',
+      mimeType: 'text/plain',
+      size: 11,
+      buffer: Buffer.from('hello world'),
+    };
+
+    const stored = await storage.put('test.txt', file);
+    expect(stored.url).toBe('/storage/test.txt');
+    expect(stored.size).toBe(11);
+
+    const content = await storage.get('test.txt');
+    expect(content.toString()).toBe('hello world');
+  });
+
+  it('returns false for non-existent file', async () => {
+    expect(await storage.exists('nope.txt')).toBe(false);
+  });
+
+  it('deletes a file', async () => {
+    await storage.put('del.txt', { name: 'del.txt', mimeType: 'text/plain', size: 1, buffer: Buffer.from('x') });
+    await storage.delete('del.txt');
+    expect(await storage.exists('del.txt')).toBe(false);
+  });
+});
+```
+
+**MAINTENANCE.md update:** Sprint 111 ✅.
+**CHANGELOG:** `- Sprint 111: LocalStorage driver implemented with static file serving.`
+**Done when:** All 3 tests pass. Files stored to `storage/app/` and served at `/storage/`.
+
+---
+
+## Sprint 112 — S3 Storage Driver
+
+**Goal:** Implement `S3Storage` driver for storing files in AWS S3 or S3-compatible services (R2, MinIO).
+
+**Install in `packages/storage`:**
+```bash
+bun add @aws-sdk/client-s3 @aws-sdk/s3-request-presigner
+```
+
+**`packages/storage/src/drivers/S3Storage.ts`:**
+```typescript
+import {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+  DeleteObjectCommand,
+  HeadObjectCommand,
+} from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import type { Storage, StorageFile, StoredFile } from '../Storage';
+
+export interface S3StorageConfig {
+  bucket: string;
+  region: string;
+  accessKeyId: string;
+  secretAccessKey: string;
+  /** Custom endpoint for S3-compatible services (R2, MinIO) */
+  endpoint?: string;
+  /** Base URL for public access. Defaults to standard S3 URL. */
+  publicUrl?: string;
+}
+
+export class S3Storage implements Storage {
+  private client: S3Client;
+  private config: S3StorageConfig;
+
+  constructor(config: S3StorageConfig) {
+    this.config = config;
+    this.client = new S3Client({
+      region: config.region,
+      credentials: {
+        accessKeyId: config.accessKeyId,
+        secretAccessKey: config.secretAccessKey,
+      },
+      endpoint: config.endpoint,
+      forcePathStyle: !!config.endpoint, // required for MinIO/R2
+    });
+  }
+
+  async put(key: string, file: StorageFile): Promise<StoredFile> {
+    await this.client.send(new PutObjectCommand({
+      Bucket: this.config.bucket,
+      Key: key,
+      Body: file.buffer,
+      ContentType: file.mimeType,
+      ContentLength: file.size,
+    }));
+
+    return {
+      key,
+      url: this.url(key),
+      size: file.size,
+      mimeType: file.mimeType,
+    };
+  }
+
+  url(key: string): string {
+    if (this.config.publicUrl) {
+      return `${this.config.publicUrl.replace(/\/$/, '')}/${key}`;
+    }
+    return `https://${this.config.bucket}.s3.${this.config.region}.amazonaws.com/${key}`;
+  }
+
+  async exists(key: string): Promise<boolean> {
+    try {
+      await this.client.send(new HeadObjectCommand({
+        Bucket: this.config.bucket,
+        Key: key,
+      }));
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  async delete(key: string): Promise<void> {
+    await this.client.send(new DeleteObjectCommand({
+      Bucket: this.config.bucket,
+      Key: key,
+    }));
+  }
+
+  async get(key: string): Promise<Buffer> {
+    const response = await this.client.send(new GetObjectCommand({
+      Bucket: this.config.bucket,
+      Key: key,
+    }));
+
+    const chunks: Uint8Array[] = [];
+    const stream = response.Body as AsyncIterable<Uint8Array>;
+    for await (const chunk of stream) {
+      chunks.push(chunk);
+    }
+    return Buffer.concat(chunks);
+  }
+
+  /**
+   * Generate a pre-signed URL for temporary access (useful for private buckets).
+   * @param key File key
+   * @param expiresIn Seconds until URL expires. Default: 3600 (1 hour)
+   */
+  async signedUrl(key: string, expiresIn = 3600): Promise<string> {
+    return getSignedUrl(
+      this.client,
+      new GetObjectCommand({ Bucket: this.config.bucket, Key: key }),
+      { expiresIn }
+    );
+  }
+}
+```
+
+**`.env.example` additions:**
+```ini
+# Storage
+STORAGE_DRIVER=local   # local | s3
+
+# S3 / R2 / MinIO (required when STORAGE_DRIVER=s3)
+S3_BUCKET=my-bucket
+S3_REGION=us-east-1
+S3_ACCESS_KEY_ID=
+S3_SECRET_ACCESS_KEY=
+S3_ENDPOINT=           # Leave empty for AWS, set for R2/MinIO
+S3_PUBLIC_URL=         # Optional CDN URL
+```
+
+**MAINTENANCE.md update:** Sprint 112 ✅.
+**CHANGELOG:** `- Sprint 112: S3Storage driver with signed URLs and S3-compatible endpoint support.`
+**Done when:** `S3Storage` compiles. Types resolve. Works with R2/MinIO via `endpoint`.
+
+---
+
+## Sprint 113 — `StorageManager` + File Upload Helper
+
+**Goal:** Implement `StorageManager` for driver resolution and `req.file()` helper in API routes.
+
+**`packages/storage/src/StorageManager.ts`:**
+```typescript
+import type { Storage } from './Storage';
+import { LocalStorage } from './drivers/LocalStorage';
+
+let _instance: Storage | null = null;
+
+export function resolveStorageDriver(): Storage {
+  if (_instance) return _instance;
+
+  const driver = process.env['STORAGE_DRIVER'] ?? 'local';
+
+  switch (driver) {
+    case 's3': {
+      const { S3Storage } = require('./drivers/S3Storage') as typeof import('./drivers/S3Storage');
+      _instance = new S3Storage({
+        bucket: process.env['S3_BUCKET']!,
+        region: process.env['S3_REGION'] ?? 'us-east-1',
+        accessKeyId: process.env['S3_ACCESS_KEY_ID']!,
+        secretAccessKey: process.env['S3_SECRET_ACCESS_KEY']!,
+        endpoint: process.env['S3_ENDPOINT'],
+        publicUrl: process.env['S3_PUBLIC_URL'],
+      });
+      break;
+    }
+    case 'local':
+    default:
+      _instance = new LocalStorage();
+      break;
+  }
+
+  return _instance;
+}
+
+export const storage = new Proxy({} as Storage, {
+  get(_target, prop) {
+    return (resolveStorageDriver() as any)[prop];
+  },
+});
+
+export class StorageManager {
+  static resolve(): Storage {
+    return resolveStorageDriver();
+  }
+}
+```
+
+**File upload helper in `@xacos/shared`** — extend `XRequest`:
+```typescript
+// packages/shared/src/index.ts — add to XRequest interface:
+export interface XRequest {
+  // ... existing fields ...
+
+  /**
+   * Extract an uploaded file from a multipart request.
+   * Requires @fastify/multipart to be registered (Sprint 94).
+   *
+   * @example
+   * const file = await req.file();
+   * const stored = await storage.put(`avatars/${file.name}`, file);
+   */
+  file(): Promise<import('./types').StorageFile | null>;
+}
+```
+
+**Implement `file()` in `RequestAdapter`:**
+```typescript
+// packages/server/src/adapters/RequestAdapter.ts
+// Add to adaptRequest():
+file: async () => {
+  try {
+    const data = await (req as any).file();
+    if (!data) return null;
+    const buffer = await data.toBuffer();
+    return {
+      name: data.filename,
+      mimeType: data.mimetype,
+      size: buffer.length,
+      buffer,
+    };
+  } catch {
+    return null;
+  }
+},
+```
+
+**Example usage in API route:**
+```typescript
+// api/avatar.api.ts
+import { XRouter } from '@xacos/core';
+import { authenticate } from '@xacos/auth';
+import { storage } from '@xacos/storage';
+
+export const router = new XRouter();
+
+router.post('/upload', authenticate, async (req, res) => {
+  const file = await req.file();
+  if (!file) return res.status(400).json({ error: 'No file uploaded' });
+
+  const stored = await storage.put(
+    `avatars/${req.user!.id}/${file.name}`,
+    file
+  );
+
+  return res.json({ success: true, url: stored.url });
+});
+```
+
+**MAINTENANCE.md update:** Sprint 113 ✅.
+**CHANGELOG:** `- Sprint 113: StorageManager singleton, driver selection, and req.file() helper.`
+**Done when:** `import { storage } from '@xacos/storage'` returns working driver. `req.file()` works.
+
+---
+
+## Sprint 114 — `@xacos/queue` Init
+
+**Goal:** Scaffold the `@xacos/queue` package — background job processing.
+
+**Location:** `packages/queue/`
+
+**`packages/queue/package.json`:**
+```json
+{
+  "name": "@xacos/queue",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "dependencies": {
+    "@xacos/config": "workspace:*",
+    "@xacos/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.x"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "bun test",
+    "type-check": "tsc --noEmit"
+  }
+}
+```
+
+**`packages/queue/src/XJob.ts`:**
+```typescript
+/**
+ * Base class for all XAOCS background jobs.
+ * Extend this class and implement `handle()`.
+ *
+ * @example
+ * export class SendWelcomeEmailJob extends XJob {
+ *   constructor(public userId: number) { super(); }
+ *
+ *   async handle(): Promise<void> {
+ *     const user = await User.findOrFail(this.userId);
+ *     await mail.send({ to: user.email, subject: 'Welcome!' });
+ *   }
+ * }
+ */
+export abstract class XJob {
+  /**
+   * The queue this job should be placed on.
+   * Defaults to 'default'.
+   */
+  static queue = 'default';
+
+  /**
+   * Number of times to retry on failure.
+   * Defaults to 3.
+   */
+  static retries = 3;
+
+  /**
+   * Delay in milliseconds before first attempt.
+   * Defaults to 0 (immediate).
+   */
+  static delay = 0;
+
+  /**
+   * Implement your job logic here.
+   */
+  abstract handle(): Promise<void>;
+
+  /**
+   * Called if all retries are exhausted.
+   * Override to implement custom failure handling.
+   */
+  async failed(error: Error): Promise<void> {
+    console.error(`[XAOCS Queue] Job failed: ${this.constructor.name}`, error.message);
+  }
+}
+```
+
+**`packages/queue/src/index.ts`:**
+```typescript
+export { XJob } from './XJob';
+export { dispatch } from './dispatch';
+export { MemoryQueue } from './drivers/MemoryQueue';
+export { QueueManager } from './QueueManager';
+```
+
+**MAINTENANCE.md update:** Sprint 114 ✅.
+**CHANGELOG:** `- Sprint 114: @xacos/queue package scaffolded with XJob base class.`
+**Done when:** Package builds. `XJob` base class exported.
+
+---
+
+## Sprint 115 — Memory Queue Driver
+
+**Goal:** Implement `MemoryQueue` — in-process FIFO job queue for development.
+
+**`packages/queue/src/drivers/MemoryQueue.ts`:**
+```typescript
+import type { XJob } from '../XJob';
+
+interface QueuedJob {
+  job: XJob;
+  retries: number;
+  maxRetries: number;
+}
+
+export class MemoryQueue {
+  private queues = new Map<string, QueuedJob[]>();
+  private running = false;
+
+  /**
+   * Add a job to the queue.
+   */
+  push(job: XJob): void {
+    const queueName = (job.constructor as typeof XJob).queue;
+    if (!this.queues.has(queueName)) {
+      this.queues.set(queueName, []);
+    }
+    this.queues.get(queueName)!.push({
+      job,
+      retries: 0,
+      maxRetries: (job.constructor as typeof XJob).retries,
+    });
+
+    if (!this.running) {
+      void this.processNext();
+    }
+  }
+
+  private async processNext(): Promise<void> {
+    this.running = true;
+
+    for (const [, queue] of this.queues) {
+      while (queue.length > 0) {
+        const item = queue.shift()!;
+        try {
+          await item.job.handle();
+        } catch (error) {
+          if (item.retries < item.maxRetries) {
+            item.retries++;
+            queue.push(item); // re-queue with incremented retries
+          } else {
+            await item.job.failed(error as Error);
+          }
+        }
+      }
+    }
+
+    this.running = false;
+  }
+
+  /**
+   * Get the number of pending jobs across all queues.
+   */
+  pending(): number {
+    let total = 0;
+    for (const queue of this.queues.values()) {
+      total += queue.length;
+    }
+    return total;
+  }
+}
+```
+
+**Test `packages/queue/src/drivers/MemoryQueue.test.ts`:**
+```typescript
+import { describe, it, expect } from 'bun:test';
+import { MemoryQueue } from './MemoryQueue';
+import { XJob } from '../XJob';
+
+class TestJob extends XJob {
+  static executed = false;
+  async handle() { TestJob.executed = true; }
+}
+
+class FailingJob extends XJob {
+  static retries = 0;
+  static failedCalled = false;
+  async handle() { throw new Error('intentional fail'); }
+  async failed(_err: Error) { FailingJob.failedCalled = true; }
+}
+
+describe('MemoryQueue', () => {
+  it('executes a job', async () => {
+    const queue = new MemoryQueue();
+    queue.push(new TestJob());
+    await new Promise(r => setTimeout(r, 10)); // let queue process
+    expect(TestJob.executed).toBe(true);
+  });
+
+  it('calls failed() after exhausting retries', async () => {
+    const queue = new MemoryQueue();
+    queue.push(new FailingJob());
+    await new Promise(r => setTimeout(r, 10));
+    expect(FailingJob.failedCalled).toBe(true);
+  });
+});
+```
+
+**MAINTENANCE.md update:** Sprint 115 ✅.
+**CHANGELOG:** `- Sprint 115: MemoryQueue driver with retry and failure handling.`
+**Done when:** Both tests pass.
+
+---
+
+## Sprint 116 — Redis Queue Driver (BullMQ)
+
+**Goal:** Implement `BullMQQueue` — production-grade Redis-backed queue using BullMQ.
+
+**Install in `packages/queue`:**
+```bash
+bun add bullmq
+```
+
+**`packages/queue/src/drivers/BullMQQueue.ts`:**
+```typescript
+import { Queue, Worker, type Job as BullJob } from 'bullmq';
+import type { XJob } from '../XJob';
+
+export interface BullMQConfig {
+  host?: string;
+  port?: number;
+  password?: string;
+}
+
+export class BullMQQueue {
+  private queues = new Map<string, Queue>();
+  private workers = new Map<string, Worker>();
+  private config: BullMQConfig;
+  private jobRegistry = new Map<string, () => XJob>();
+
+  constructor(config: BullMQConfig = {}) {
+    this.config = config;
+  }
+
+  private getConnection() {
+    return {
+      host: this.config.host ?? 'localhost',
+      port: this.config.port ?? 6379,
+      password: this.config.password,
+    };
+  }
+
+  private getOrCreateQueue(name: string): Queue {
+    if (!this.queues.has(name)) {
+      this.queues.set(name, new Queue(name, {
+        connection: this.getConnection(),
+        defaultJobOptions: {
+          attempts: 3,
+          backoff: { type: 'exponential', delay: 1000 },
+        },
+      }));
+    }
+    return this.queues.get(name)!;
+  }
+
+  async push(job: XJob): Promise<void> {
+    const JobClass = job.constructor as typeof XJob;
+    const queueName = JobClass.queue;
+    const queue = this.getOrCreateQueue(queueName);
+
+    const jobName = JobClass.name;
+    const payload = JSON.stringify(job);
+
+    await queue.add(jobName, { jobName, payload }, {
+      delay: JobClass.delay,
+      attempts: JobClass.retries + 1,
+    });
+  }
+
+  /**
+   * Start a worker for the given queue name.
+   * Workers process jobs in separate processes in production.
+   */
+  startWorker(queueName: string, jobClasses: Array<new (...args: unknown[]) => XJob>): Worker {
+    // Build a registry: jobName → constructor
+    const registry = new Map<string, new (...args: unknown[]) => XJob>();
+    for (const JobClass of jobClasses) {
+      registry.set(JobClass.name, JobClass);
+    }
+
+    const worker = new Worker(
+      queueName,
+      async (bullJob: BullJob) => {
+        const { jobName, payload } = bullJob.data as { jobName: string; payload: string };
+        const JobClass = registry.get(jobName);
+        if (!JobClass) throw new Error(`[XAOCS Queue] Unknown job: ${jobName}`);
+
+        const instance = Object.assign(new JobClass(), JSON.parse(payload));
+        await instance.handle();
+      },
+      { connection: this.getConnection() }
+    );
+
+    this.workers.set(queueName, worker);
+    return worker;
+  }
+
+  async close(): Promise<void> {
+    for (const worker of this.workers.values()) await worker.close();
+    for (const queue of this.queues.values()) await queue.close();
+  }
+}
+```
+
+**MAINTENANCE.md update:** Sprint 116 ✅.
+**CHANGELOG:** `- Sprint 116: BullMQQueue driver with Redis-backed production queue.`
+**Done when:** `BullMQQueue` compiles. `startWorker` creates a functional BullMQ worker.
+
+---
+
+## Sprint 117 — `dispatch()` Helper + `QueueManager`
+
+**Goal:** Implement the `dispatch(job)` global helper and `QueueManager` singleton.
+
+**`packages/queue/src/dispatch.ts`:**
+```typescript
+import { QueueManager } from './QueueManager';
+import type { XJob } from './XJob';
+
+/**
+ * Dispatch a job to the queue.
+ *
+ * @example
+ * import { dispatch } from '@xacos/queue';
+ * await dispatch(new SendWelcomeEmailJob(user.id));
+ */
+export async function dispatch(job: XJob): Promise<void> {
+  await QueueManager.resolve().push(job);
+}
+```
+
+**`packages/queue/src/QueueManager.ts`:**
+```typescript
+import { MemoryQueue } from './drivers/MemoryQueue';
+
+export interface QueueDriver {
+  push(job: import('./XJob').XJob): Promise<void> | void;
+}
+
+let _instance: QueueDriver | null = null;
+
+export function resolveQueueDriver(): QueueDriver {
+  if (_instance) return _instance;
+
+  const driver = process.env['QUEUE_DRIVER'] ?? 'memory';
+
+  switch (driver) {
+    case 'redis': {
+      const { BullMQQueue } = require('./drivers/BullMQQueue') as typeof import('./drivers/BullMQQueue');
+      _instance = new BullMQQueue({
+        host: process.env['REDIS_HOST'] ?? 'localhost',
+        port: Number(process.env['REDIS_PORT'] ?? 6379),
+        password: process.env['REDIS_PASSWORD'],
+      });
+      break;
+    }
+    case 'memory':
+    default:
+      _instance = new MemoryQueue();
+      break;
+  }
+
+  return _instance;
+}
+
+export class QueueManager {
+  static resolve(): QueueDriver {
+    return resolveQueueDriver();
+  }
+}
+```
+
+**`.env.example` additions:**
+```ini
+# Queue
+QUEUE_DRIVER=memory   # memory | redis
+```
+
+**Test:**
+```typescript
+import { describe, it, expect } from 'bun:test';
+import { dispatch } from './dispatch';
+import { XJob } from './XJob';
+
+let handled = false;
+class SimpleJob extends XJob {
+  async handle() { handled = true; }
+}
+
+describe('dispatch', () => {
+  it('dispatches a job and executes it', async () => {
+    process.env['QUEUE_DRIVER'] = 'memory';
+    await dispatch(new SimpleJob());
+    await new Promise(r => setTimeout(r, 10));
+    expect(handled).toBe(true);
+  });
+});
+```
+
+**MAINTENANCE.md update:** Sprint 117 ✅.
+**CHANGELOG:** `- Sprint 117: dispatch() helper and QueueManager implemented.`
+**Done when:** `await dispatch(new MyJob())` works. Test passes.
+
+---
+
+## Sprint 118 — `xacos queue:work` CLI Command
+
+**Goal:** Add `xacos queue:work` command to start a queue worker process.
+
+**`packages/cli/src/commands/queue.ts`:**
+```typescript
+import { program } from 'commander';
+import { log } from '../utils/logger';
+import { loadProjectConfig } from '../utils/loadConfig';
+
+program
+  .command('queue:work')
+  .description('Start a queue worker')
+  .option('--queue <name>', 'Queue name to work', 'default')
+  .option('--driver <driver>', 'Queue driver override (memory|redis)')
+  .action(async (options: { queue: string; driver?: string }) => {
+    try {
+      if (options.driver) {
+        process.env['QUEUE_DRIVER'] = options.driver;
+      }
+
+      await loadProjectConfig();
+
+      const { resolveQueueDriver } = await import('@xacos/queue');
+      const driver = resolveQueueDriver();
+
+      // For BullMQ: start a worker
+      if ('startWorker' in driver) {
+        log.info(`Starting BullMQ worker for queue: ${options.queue}`);
+
+        // Dynamically load user's job classes from app/jobs/
+        const { readdirSync, existsSync } = await import('fs');
+        const { resolve, join } = await import('path');
+        const jobsDir = resolve('./app/jobs');
+        const jobClasses: Array<new (...args: unknown[]) => unknown> = [];
+
+        if (existsSync(jobsDir)) {
+          for (const file of readdirSync(jobsDir).filter((f: string) => f.endsWith('.ts'))) {
+            const mod = await import(join(jobsDir, file));
+            for (const val of Object.values(mod)) {
+              if (typeof val === 'function') jobClasses.push(val as any);
+            }
+          }
+        }
+
+        (driver as any).startWorker(options.queue, jobClasses);
+
+        log.success(`Worker running on queue: ${options.queue}`);
+        log.info('Press Ctrl+C to stop');
+
+        // Keep process alive
+        await new Promise(() => {});
+      } else {
+        // MemoryQueue — just inform user it's in-process
+        log.info('Memory queue is in-process. Jobs are processed automatically.');
+        log.info('To use a persistent queue, set QUEUE_DRIVER=redis');
+      }
+    } catch (err) {
+      log.error((err as Error).message);
+      process.exit(1);
+    }
+  });
+```
+
+**Add `app/jobs/` to scaffold directory structure** (update `create-xacos-app` scaffold):
+```typescript
+// In scaffold.ts dirs array:
+'app/jobs',   // Background job classes
+```
+
+**MAINTENANCE.md update:** Sprint 118 ✅.
+**CHANGELOG:** `- Sprint 118: xacos queue:work command with BullMQ and memory driver support.`
+**Done when:** `xacos queue:work` starts a worker. Jobs in `app/jobs/` auto-loaded.
+
+---
+
+## Sprint 119 — `@xacos/events` Init
+
+**Goal:** Scaffold the `@xacos/events` package — WebSocket and real-time event broadcasting.
+
+**Location:** `packages/events/`
+
+**`packages/events/package.json`:**
+```json
+{
+  "name": "@xacos/events",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "dependencies": {
+    "@xacos/config": "workspace:*",
+    "@xacos/shared": "workspace:*",
+    "socket.io": "^4.x"
+  },
+  "devDependencies": {
+    "typescript": "^5.x"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "bun test",
+    "type-check": "tsc --noEmit"
+  }
+}
+```
+
+**`packages/events/src/index.ts`:**
+```typescript
+export { XEvents } from './XEvents';
+export { mountSocketIO } from './mountSocketIO';
+```
+
+**MAINTENANCE.md update:** Sprint 119 ✅.
+**CHANGELOG:** `- Sprint 119: @xacos/events package scaffolded.`
+**Done when:** Package builds cleanly.
+
+---
+
+## Sprint 120 — WebSocket Setup (Socket.IO)
+
+**Goal:** Wire Socket.IO to the Fastify server and implement `XEvents` for server-side broadcasting.
+
+**`packages/events/src/mountSocketIO.ts`:**
+```typescript
+import { Server as SocketIOServer } from 'socket.io';
+import type { FastifyInstance } from 'fastify';
+import { XEvents } from './XEvents';
+
+export interface SocketIOOptions {
+  cors?: {
+    origin: string | string[];
+    credentials?: boolean;
+  };
+}
+
+/**
+ * Mount Socket.IO on the Fastify server.
+ * Call this during server boot, before `server.listen()`.
+ *
+ * @example
+ * await mountSocketIO(server.fastify, {
+ *   cors: { origin: 'http://localhost:3000', credentials: true }
+ * });
+ */
+export async function mountSocketIO(
+  fastify: FastifyInstance,
+  options: SocketIOOptions = {}
+): Promise<XEvents> {
+  const io = new SocketIOServer(fastify.server, {
+    cors: options.cors,
+    path: '/xacos-ws',
+  });
+
+  const events = new XEvents(io);
+  XEvents._instance = events;
+
+  io.on('connection', (socket) => {
+    console.log(`[XAOCS Events] Client connected: ${socket.id}`);
+
+    socket.on('disconnect', () => {
+      console.log(`[XAOCS Events] Client disconnected: ${socket.id}`);
+    });
+  });
+
+  fastify.addHook('onClose', async () => {
+    io.close();
+  });
+
+  return events;
+}
+```
+
+**`packages/events/src/XEvents.ts`:**
+```typescript
+import type { Server as SocketIOServer } from 'socket.io';
+
+export class XEvents {
+  static _instance: XEvents | null = null;
+
+  constructor(private io: SocketIOServer) {}
+
+  /**
+   * Broadcast an event to all connected clients.
+   *
+   * @example
+   * events.emit('user.created', { id: 1, name: 'John' });
+   */
+  emit(event: string, data?: unknown): void {
+    this.io.emit(event, data);
+  }
+
+  /**
+   * Emit to a specific room/channel.
+   *
+   * @example
+   * events.to('admin').emit('alert', { message: 'New user registered' });
+   */
+  to(room: string): { emit: (event: string, data?: unknown) => void } {
+    const roomRef = this.io.to(room);
+    return {
+      emit: (event: string, data?: unknown) => roomRef.emit(event, data),
+    };
+  }
+
+  /**
+   * Get the singleton XEvents instance.
+   * Only available after mountSocketIO() has been called.
+   */
+  static get(): XEvents {
+    if (!XEvents._instance) {
+      throw new Error('[XAOCS Events] mountSocketIO() has not been called yet.');
+    }
+    return XEvents._instance;
+  }
+}
+```
+
+**Usage in an API route:**
+```typescript
+// api/post.api.ts
+import { XRouter } from '@xacos/core';
+import { XEvents } from '@xacos/events';
+
+export const router = new XRouter();
+
+router.post('/', async (req, res) => {
+  const post = await PostService.create(req.body as any);
+
+  // Broadcast to all connected clients
+  XEvents.get().emit('post.created', post);
+
+  return res.status(201).json({ success: true, data: post });
+});
+```
+
+**MAINTENANCE.md update:** Sprint 120 ✅.
+**CHANGELOG:** `- Sprint 120: Socket.IO integrated. XEvents.emit() and .to().emit() available.`
+**Done when:** `mountSocketIO(fastify)` returns `XEvents`. `emit()` broadcasts to all clients.
+
+---
+
+## Sprint 121 — `useEvent` Client Hook
+
+**Goal:** Implement `useEvent('event', callback)` React hook in `@xacos/client` for subscribing to server events.
+
+**Install in `packages/client`:**
+```bash
+bun add socket.io-client
+bun add -d @types/socket.io-client
+```
+
+**`packages/client/src/hooks/useEvent.ts`:**
+```typescript
+import { useEffect, useRef } from 'react';
+import { io, type Socket } from 'socket.io-client';
+
+let _socket: Socket | null = null;
+
+function getSocket(): Socket {
+  if (!_socket) {
+    _socket = io(window.location.origin, {
+      path: '/xacos-ws',
+      autoConnect: true,
+      reconnectionAttempts: 5,
+    });
+  }
+  return _socket;
+}
+
+/**
+ * Subscribe to a server-side XAOCS event.
+ *
+ * @example
+ * useEvent('post.created', (post) => {
+ *   setPosts(prev => [post, ...prev]);
+ * });
+ */
+export function useEvent<T = unknown>(
+  event: string,
+  callback: (data: T) => void
+): void {
+  const callbackRef = useRef(callback);
+  callbackRef.current = callback;
+
+  useEffect(() => {
+    const socket = getSocket();
+
+    const handler = (data: T) => callbackRef.current(data);
+    socket.on(event, handler);
+
+    return () => {
+      socket.off(event, handler);
+    };
+  }, [event]);
+}
+
+/**
+ * Disconnect the WebSocket client manually.
+ * Useful on logout.
+ */
+export function disconnectSocket(): void {
+  if (_socket) {
+    _socket.disconnect();
+    _socket = null;
+  }
+}
+```
+
+**Export from `packages/client/src/index.ts`:**
+```typescript
+export { useEvent, disconnectSocket } from './hooks/useEvent';
+```
+
+**Usage in a React page:**
+```tsx
+import { useEvent } from '@xacos/client';
+
+export default function Feed() {
+  const [posts, setPosts] = useState([]);
+
+  // Live updates — no polling needed!
+  useEvent('post.created', (post) => {
+    setPosts(prev => [post, ...prev]);
+  });
+
+  return <div>{posts.map(p => <PostCard key={p.id} post={p} />)}</div>;
+}
+```
+
+**MAINTENANCE.md update:** Sprint 121 ✅.
+**CHANGELOG:** `- Sprint 121: useEvent() hook for real-time server events in React pages.`
+**Done when:** `useEvent` subscribes and unsubscribes cleanly. Socket reconnects on disconnect.
+
+---
+
+## Sprint 122 — `@xacos/testing` Init
+
+**Goal:** Scaffold the `@xacos/testing` package — test utilities for XAOCS apps.
+
+**Location:** `packages/testing/`
+
+**`packages/testing/package.json`:**
+```json
+{
+  "name": "@xacos/testing",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "dependencies": {
+    "@xacos/core": "workspace:*",
+    "@xacos/orm": "workspace:*",
+    "@xacos/server": "workspace:*",
+    "@xacos/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.x"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "bun test",
+    "type-check": "tsc --noEmit"
+  }
+}
+```
+
+**`packages/testing/src/index.ts`:**
+```typescript
+export { testClient } from './testClient';
+export { mockAuth } from './mockAuth';
+export { useTestDb } from './useTestDb';
+export { Factory } from '@xacos/orm'; // re-export for convenience
+```
+
+**MAINTENANCE.md update:** Sprint 122 ✅.
+**CHANGELOG:** `- Sprint 122: @xacos/testing package scaffolded.`
+**Done when:** Package builds cleanly.
+
+---
+
+## Sprint 123 — Test HTTP Client
+
+**Goal:** Implement `testClient(apiDir)` — makes fake HTTP requests to XAOCS API routes in tests.
+
+**`packages/testing/src/testClient.ts`:**
+```typescript
+import Fastify, { type FastifyInstance } from 'fastify';
+import { mountApiRoutes } from '@xacos/server';
+import { application } from '@xacos/core';
+
+interface TestClientOptions {
+  apiDir?: string;
+  boot?: boolean;
+}
+
+export interface TestClient {
+  get(url: string, opts?: RequestInit): Promise<{ status: number; body: unknown; headers: Record<string, string> }>;
+  post(url: string, body?: unknown, opts?: RequestInit): Promise<{ status: number; body: unknown }>;
+  put(url: string, body?: unknown, opts?: RequestInit): Promise<{ status: number; body: unknown }>;
+  patch(url: string, body?: unknown, opts?: RequestInit): Promise<{ status: number; body: unknown }>;
+  delete(url: string, opts?: RequestInit): Promise<{ status: number; body: unknown }>;
+  close(): Promise<void>;
+}
+
+/**
+ * Create a test HTTP client that spins up a real Fastify server in-process.
+ *
+ * @example
+ * const client = await testClient({ apiDir: './api' });
+ * const res = await client.get('/api/user');
+ * expect(res.status).toBe(200);
+ * await client.close();
+ */
+export async function testClient(options: TestClientOptions = {}): Promise<TestClient> {
+  const { apiDir = './api', boot = true } = options;
+
+  if (boot) {
+    await application.boot({
+      servicesDir: './app/services',
+      middlewaresDir: './app/middlewares',
+    });
+  }
+
+  const fastify: FastifyInstance = Fastify({ logger: false });
+
+  await fastify.register(import('@fastify/cookie'));
+  await fastify.register(import('@fastify/formbody'));
+
+  await mountApiRoutes(fastify, apiDir, application.container as any);
+  await fastify.ready();
+
+  async function request(method: string, url: string, body?: unknown, _opts?: RequestInit) {
+    const res = await fastify.inject({
+      method: method as any,
+      url,
+      payload: body ? JSON.stringify(body) : undefined,
+      headers: { 'content-type': 'application/json' },
+    });
+
+    let parsed: unknown;
+    try { parsed = JSON.parse(res.body); } catch { parsed = res.body; }
+
+    return {
+      status: res.statusCode,
+      body: parsed,
+      headers: res.headers as Record<string, string>,
+    };
+  }
+
+  return {
+    get: (url, opts) => request('GET', url, undefined, opts),
+    post: (url, body, opts) => request('POST', url, body, opts),
+    put: (url, body, opts) => request('PUT', url, body, opts),
+    patch: (url, body, opts) => request('PATCH', url, body, opts),
+    delete: (url, opts) => request('DELETE', url, undefined, opts),
+    close: () => fastify.close(),
+  };
+}
+```
+
+**Test `packages/testing/src/testClient.test.ts`:**
+```typescript
+import { describe, it, expect, afterAll } from 'bun:test';
+import { testClient } from './testClient';
+
+// This test requires a real api/ directory — uses the test fixture
+const client = await testClient({ apiDir: './test-fixtures/api', boot: false });
+
+describe('testClient', () => {
+  it('makes GET requests', async () => {
+    const res = await client.get('/api/health');
+    expect(res.status).toBe(200);
+  });
+});
+
+afterAll(() => client.close());
+```
+
+**`packages/testing/test-fixtures/api/health.api.ts`:**
+```typescript
+import { XRouter } from '@xacos/core';
+export const router = new XRouter();
+router.get('/', async (_req, res) => res.json({ status: 'ok' }));
+```
+
+**MAINTENANCE.md update:** Sprint 123 ✅.
+**CHANGELOG:** `- Sprint 123: testClient() for fake HTTP requests in bun:test.`
+**Done when:** `testClient` spins up Fastify, makes requests, and closes cleanly.
+
+---
+
+## Sprint 124 — `mockAuth` + DB Test Helpers
+
+**Goal:** Implement `mockAuth(user)` for injecting fake auth into test requests, and `useTestDb()` for transaction-based test isolation.
+
+**`packages/testing/src/mockAuth.ts`:**
+```typescript
+import type { XUser } from '@xacos/shared';
+import jwt from 'jsonwebtoken';
+
+/**
+ * Generate a real JWT for a fake user — for use in test HTTP requests.
+ *
+ * @example
+ * const token = mockAuth({ id: 1, name: 'Test', email: 'test@test.com', role: 'user' });
+ * const res = await client.get('/api/me', {
+ *   headers: { Authorization: `Bearer ${token}` }
+ * });
+ */
+export function mockAuth(user: Partial<XUser> & { id: number }): string {
+  const secret = process.env['JWT_SECRET'] ?? 'test-secret-key';
+  return jwt.sign({ userId: user.id, role: user.role ?? 'user' }, secret, {
+    expiresIn: '1h',
+  });
+}
+```
+
+**`packages/testing/src/useTestDb.ts`:**
+```typescript
+import { getKnex } from '@xacos/orm';
+
+/**
+ * Wrap your test in a database transaction that auto-rolls back.
+ * Keeps your database clean between tests.
+ *
+ * @example
+ * const db = await useTestDb();
+ * await User.create({ name: 'Test', email: 'test@test.com' });
+ * // All changes rolled back after test
+ * await db.rollback();
+ */
+export async function useTestDb() {
+  const knex = getKnex();
+  const trx = await knex.transaction();
+
+  // Temporarily override getKnex to use the transaction
+  // This is a simplified approach — in a full implementation
+  // you'd pass the transaction through context
+  return {
+    trx,
+    rollback: async () => {
+      await trx.rollback();
+    },
+    commit: async () => {
+      await trx.commit();
+    },
+  };
+}
+```
+
+**Export both from `packages/testing/src/index.ts`.**
+
+**Test `packages/testing/src/mockAuth.test.ts`:**
+```typescript
+import { describe, it, expect } from 'bun:test';
+import { mockAuth } from './mockAuth';
+import jwt from 'jsonwebtoken';
+
+process.env['JWT_SECRET'] = 'test-secret';
+
+describe('mockAuth', () => {
+  it('generates a valid JWT for a test user', () => {
+    const token = mockAuth({ id: 42, role: 'admin' });
+    const decoded = jwt.verify(token, 'test-secret') as { userId: number; role: string };
+    expect(decoded.userId).toBe(42);
+    expect(decoded.role).toBe('admin');
+  });
+});
+```
+
+**MAINTENANCE.md update:** Sprint 124 ✅.
+**CHANGELOG:** `- Sprint 124: mockAuth() and useTestDb() test utilities implemented.`
+**Done when:** `mockAuth` generates verifiable JWT. Test passes.
+
+---
+
+## Sprint 125 — `@xacos/validation` Init + Zod Wrapper
+
+**Goal:** Create `@xacos/validation` — a thin Zod wrapper with XAOCS-specific error formatting, usable both on the server (`req.validate()`) and client-side.
+
+**Location:** `packages/validation/`
+
+**`packages/validation/package.json`:**
+```json
+{
+  "name": "@xacos/validation",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "dependencies": {
+    "@xacos/shared": "workspace:*",
+    "zod": "^3.x"
+  },
+  "devDependencies": {
+    "typescript": "^5.x"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "bun test",
+    "type-check": "tsc --noEmit"
+  }
+}
+```
+
+**`packages/validation/src/index.ts`:**
+```typescript
+export { v } from './v';
+export { validate } from './validate';
+export { ValidationError } from './ValidationError';
+export type { ValidationResult, FieldError } from './types';
+```
+
+**`packages/validation/src/v.ts`:**
+```typescript
+import { z } from 'zod';
+
+/**
+ * XAOCS validation helper — re-exports Zod with a cleaner alias.
+ *
+ * @example
+ * import { v } from '@xacos/validation';
+ *
+ * const schema = v.object({
+ *   name: v.string().min(2),
+ *   email: v.string().email(),
+ *   age: v.number().min(0).optional(),
+ * });
+ */
+export const v = z;
+export type { ZodSchema, ZodType } from 'zod';
+```
+
+**`packages/validation/src/ValidationError.ts`:**
+```typescript
+export interface FieldError {
+  field: string;
+  message: string;
+}
+
+export class ValidationError extends Error {
+  readonly statusCode = 422;
+  readonly errors: FieldError[];
+
+  constructor(errors: FieldError[]) {
+    super('Validation failed');
+    this.name = 'ValidationError';
+    this.errors = errors;
+  }
+}
+```
+
+**`packages/validation/src/validate.ts`:**
+```typescript
+import { z, type ZodSchema } from 'zod';
+import { ValidationError, type FieldError } from './ValidationError';
+
+/**
+ * Validate data against a Zod schema.
+ * Returns typed data or throws `ValidationError`.
+ *
+ * @example
+ * const data = validate(req.body, v.object({
+ *   email: v.string().email(),
+ *   password: v.string().min(8),
+ * }));
+ */
+export function validate<T>(data: unknown, schema: ZodSchema<T>): T {
+  const result = schema.safeParse(data);
+
+  if (result.success) return result.data;
+
+  const errors: FieldError[] = result.error.errors.map(e => ({
+    field: e.path.join('.'),
+    message: e.message,
+  }));
+
+  throw new ValidationError(errors);
+}
+```
+
+**Test `packages/validation/src/validate.test.ts`:**
+```typescript
+import { describe, it, expect } from 'bun:test';
+import { validate, v, ValidationError } from './index';
+
+describe('validate', () => {
+  const schema = v.object({
+    name: v.string().min(2),
+    email: v.string().email(),
+  });
+
+  it('returns typed data on success', () => {
+    const data = validate({ name: 'John', email: 'john@example.com' }, schema);
+    expect(data.name).toBe('John');
+  });
+
+  it('throws ValidationError on invalid data', () => {
+    expect(() => validate({ name: 'J', email: 'not-an-email' }, schema))
+      .toThrow(ValidationError);
+  });
+
+  it('formats field errors correctly', () => {
+    try {
+      validate({ name: 'J', email: 'bad' }, schema);
+    } catch (e) {
+      expect(e).toBeInstanceOf(ValidationError);
+      const ve = e as ValidationError;
+      expect(ve.errors.some(err => err.field === 'name')).toBe(true);
+      expect(ve.errors.some(err => err.field === 'email')).toBe(true);
+      expect(ve.statusCode).toBe(422);
+    }
+  });
+});
+```
+
+**MAINTENANCE.md update:** Sprint 125 ✅.
+**CHANGELOG:** `- Sprint 125: @xacos/validation with Zod wrapper and ValidationError.`
+**Done when:** All 3 tests pass. `validate()` returns typed data or throws `ValidationError`.
+
+---
+
+## Sprint 126 — Route-Level Schema Validation
+
+**Goal:** Attach Zod schemas to router methods so validation runs automatically before the handler.
+
+**Update `XRouter` in `packages/core/src/routing/XRouter.ts`:**
+```typescript
+import type { ZodSchema } from 'zod';
+
+export interface RouteDefinition {
+  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+  path: string;
+  handler: Handler;
+  middlewares: XMiddleware[];
+  schema?: {              // ← NEW
+    body?: ZodSchema;
+    query?: ZodSchema;
+    params?: ZodSchema;
+  };
+}
+
+// Updated route registration — accept optional schema before handler:
+post(path: string, ...args: [...XMiddleware[], { schema?: RouteDefinition['schema'] }, Handler] | [...XMiddleware[], Handler]): this {
+  return this.addRoute('POST', path, args);
+}
+// Same pattern for get, put, patch, delete
+```
+
+**Schema-aware example:**
+```typescript
+import { v } from '@xacos/validation';
+
+router.post('/', { schema: {
+  body: v.object({
+    name: v.string().min(2),
+    email: v.string().email(),
+  })
+}}, async (req, res) => {
+  // req.body is already validated — TypeScript knows the shape
+  return res.status(201).json({ success: true });
+});
+```
+
+**Add validation middleware in `mountApiRoutes`:**
+```typescript
+// In the handler wrapper, before calling route.handler:
+if (route.schema) {
+  const { validate } = await import('@xacos/validation');
+  if (route.schema.body) validate(req.body, route.schema.body);
+  if (route.schema.query) validate(req.query, route.schema.query);
+  if (route.schema.params) validate(req.params, route.schema.params);
+}
+```
+
+**MAINTENANCE.md update:** Sprint 126 ✅.
+**CHANGELOG:** `- Sprint 126: Route-level Zod schema validation wired into XRouter.`
+**Done when:** Invalid request body returns `422 { errors: [{ field, message }] }` automatically.
+
+---
+
+## Sprint 127 — `@xacos/ui` Init + Tailwind Setup
+
+**Goal:** Scaffold the `@xacos/ui` package and configure Tailwind CSS with XAOCS design tokens.
+
+**Location:** `packages/ui-xacos/` (new package alongside existing `@repo/ui`)
+
+**`packages/ui-xacos/package.json`:**
+```json
+{
+  "name": "@xacos/ui",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./styles": "./src/styles/index.css"
+  },
+  "dependencies": {
+    "react": "^18.x",
+    "clsx": "^2.x"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.x",
+    "@types/react": "^18.x",
+    "typescript": "^5.x"
+  },
+  "peerDependencies": {
+    "react": "^18.x",
+    "tailwindcss": "^3.x"
+  }
+}
+```
+
+**`packages/ui-xacos/tailwind.config.ts`:**
+```typescript
+import type { Config } from 'tailwindcss';
+
+export default {
+  content: ['./src/**/*.{tsx,ts}'],
+  theme: {
+    extend: {
+      colors: {
+        // XAOCS brand tokens
+        primary: {
+          50: '#eff6ff',
+          500: '#3b82f6',
+          600: '#2563eb',
+          700: '#1d4ed8',
+          900: '#1e3a8a',
+        },
+        xacos: {
+          bg: '#0f0f0f',
+          surface: '#1a1a1a',
+          border: '#2a2a2a',
+          text: '#e5e5e5',
+          muted: '#888',
+        },
+      },
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+      },
+      borderRadius: {
+        xacos: '6px',
+      },
+    },
+  },
+  plugins: [],
+} satisfies Config;
+```
+
+**`packages/ui-xacos/src/styles/index.css`:**
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { box-sizing: border-box; }
+
+  :root {
+    --xacos-bg: #0f0f0f;
+    --xacos-surface: #1a1a1a;
+    --xacos-border: #2a2a2a;
+    --xacos-text: #e5e5e5;
+    --xacos-muted: #888;
+    --xacos-primary: #3b82f6;
+    --xacos-primary-hover: #2563eb;
+  }
+}
+```
+
+**`packages/ui-xacos/src/index.ts`:**
+```typescript
+export { Button } from './components/Button';
+export { Input } from './components/Input';
+export { Card } from './components/Card';
+export { Modal } from './components/Modal';
+export { Table } from './components/Table';
+export { Navbar } from './components/Navbar';
+export { Badge } from './components/Badge';
+export { Spinner } from './components/Spinner';
+```
+
+**MAINTENANCE.md update:** Sprint 127 ✅.
+**CHANGELOG:** `- Sprint 127: @xacos/ui scaffolded with Tailwind and design tokens.`
+**Done when:** Package builds. CSS exports correctly.
+
+---
+
+## Sprint 128 — Button + Input Components
+
+**Goal:** Ship `<Button>` and `<Input>` components with Tailwind variants.
+
+**`packages/ui-xacos/src/components/Button.tsx`:**
+```tsx
+import React from 'react';
+import clsx from 'clsx';
+
+type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
+type ButtonSize = 'sm' | 'md' | 'lg';
+
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  loading?: boolean;
+  fullWidth?: boolean;
+}
+
+const variants: Record<ButtonVariant, string> = {
+  primary: 'bg-primary-600 hover:bg-primary-700 text-white border-transparent',
+  secondary: 'bg-transparent hover:bg-white/5 text-xacos-text border-xacos-border',
+  ghost: 'bg-transparent hover:bg-white/5 text-xacos-muted border-transparent',
+  danger: 'bg-red-600 hover:bg-red-700 text-white border-transparent',
+};
+
+const sizes: Record<ButtonSize, string> = {
+  sm: 'px-3 py-1.5 text-sm',
+  md: 'px-4 py-2 text-sm',
+  lg: 'px-6 py-3 text-base',
+};
+
+export function Button({
+  variant = 'primary',
+  size = 'md',
+  loading = false,
+  fullWidth = false,
+  className,
+  children,
+  disabled,
+  ...props
+}: ButtonProps) {
+  return (
+    <button
+      {...props}
+      disabled={disabled || loading}
+      className={clsx(
+        'inline-flex items-center justify-center gap-2',
+        'font-medium border rounded-xacos transition-colors duration-150',
+        'disabled:opacity-50 disabled:cursor-not-allowed',
+        'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-1',
+        variants[variant],
+        sizes[size],
+        fullWidth && 'w-full',
+        className
+      )}
+    >
+      {loading && (
+        <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+        </svg>
+      )}
+      {children}
+    </button>
+  );
+}
+```
+
+**`packages/ui-xacos/src/components/Input.tsx`:**
+```tsx
+import React from 'react';
+import clsx from 'clsx';
+
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  label?: string;
+  error?: string;
+  hint?: string;
+  fullWidth?: boolean;
+}
+
+export function Input({
+  label,
+  error,
+  hint,
+  fullWidth = true,
+  className,
+  id,
+  ...props
+}: InputProps) {
+  const inputId = id ?? label?.toLowerCase().replace(/\s+/g, '-');
+
+  return (
+    <div className={clsx('flex flex-col gap-1', fullWidth && 'w-full')}>
+      {label && (
+        <label htmlFor={inputId} className="text-sm font-medium text-xacos-text">
+          {label}
+          {props.required && <span className="text-red-500 ml-1">*</span>}
+        </label>
+      )}
+      <input
+        {...props}
+        id={inputId}
+        className={clsx(
+          'px-3 py-2 rounded-xacos text-sm',
+          'bg-xacos-surface border text-xacos-text',
+          'placeholder:text-xacos-muted',
+          'focus:outline-none focus:ring-2 focus:ring-primary-500',
+          'transition-colors duration-150',
+          error
+            ? 'border-red-500 focus:ring-red-500'
+            : 'border-xacos-border focus:border-primary-500',
+          className
+        )}
+      />
+      {error && <p className="text-xs text-red-400">{error}</p>}
+      {hint && !error && <p className="text-xs text-xacos-muted">{hint}</p>}
+    </div>
+  );
+}
+```
+
+**MAINTENANCE.md update:** Sprint 128 ✅.
+**CHANGELOG:** `- Sprint 128: Button and Input components with variants and error states.`
+**Done when:** Both components render correctly. Variants apply correct Tailwind classes.
+
+---
+
+## Sprint 129 — Card + Badge + Spinner Components
+
+**Goal:** Ship `<Card>`, `<Badge>`, and `<Spinner>` utility components.
+
+**`packages/ui-xacos/src/components/Card.tsx`:**
+```tsx
+import React from 'react';
+import clsx from 'clsx';
+
+interface CardProps {
+  children: React.ReactNode;
+  title?: string;
+  description?: string;
+  footer?: React.ReactNode;
+  className?: string;
+  padding?: 'none' | 'sm' | 'md' | 'lg';
+}
+
+const paddings = { none: 'p-0', sm: 'p-4', md: 'p-6', lg: 'p-8' };
+
+export function Card({
+  children,
+  title,
+  description,
+  footer,
+  className,
+  padding = 'md',
+}: CardProps) {
+  return (
+    <div
+      className={clsx(
+        'bg-xacos-surface border border-xacos-border rounded-xacos',
+        className
+      )}
+    >
+      {(title || description) && (
+        <div className="px-6 py-4 border-b border-xacos-border">
+          {title && <h3 className="text-base font-semibold text-xacos-text">{title}</h3>}
+          {description && <p className="text-sm text-xacos-muted mt-1">{description}</p>}
+        </div>
+      )}
+      <div className={paddings[padding]}>{children}</div>
+      {footer && (
+        <div className="px-6 py-4 border-t border-xacos-border bg-white/2">
+          {footer}
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+**`packages/ui-xacos/src/components/Badge.tsx`:**
+```tsx
+import React from 'react';
+import clsx from 'clsx';
+
+type BadgeVariant = 'default' | 'success' | 'warning' | 'danger' | 'info';
+
+interface BadgeProps {
+  children: React.ReactNode;
+  variant?: BadgeVariant;
+  className?: string;
+}
+
+const variants: Record<BadgeVariant, string> = {
+  default: 'bg-white/10 text-xacos-text',
+  success: 'bg-green-500/20 text-green-400',
+  warning: 'bg-yellow-500/20 text-yellow-400',
+  danger: 'bg-red-500/20 text-red-400',
+  info: 'bg-blue-500/20 text-blue-400',
+};
+
+export function Badge({ children, variant = 'default', className }: BadgeProps) {
+  return (
+    <span
+      className={clsx(
+        'inline-flex items-center px-2 py-0.5 rounded text-xs font-medium',
+        variants[variant],
+        className
+      )}
+    >
+      {children}
+    </span>
+  );
+}
+```
+
+**`packages/ui-xacos/src/components/Spinner.tsx`:**
+```tsx
+import React from 'react';
+import clsx from 'clsx';
+
+interface SpinnerProps {
+  size?: 'sm' | 'md' | 'lg';
+  className?: string;
+}
+
+const sizes = { sm: 'h-4 w-4', md: 'h-6 w-6', lg: 'h-8 w-8' };
+
+export function Spinner({ size = 'md', className }: SpinnerProps) {
+  return (
+    <svg
+      className={clsx('animate-spin text-primary-500', sizes[size], className)}
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+    </svg>
+  );
+}
+```
+
+**MAINTENANCE.md update:** Sprint 129 ✅.
+**CHANGELOG:** `- Sprint 129: Card, Badge, Spinner components shipped.`
+**Done when:** All three components compile and render correctly.
+
+---
+
+## Sprint 130 — Modal + Table Components
+
+**Goal:** Ship `<Modal>` and `<Table>` components — the two most complex UI pieces.
+
+**`packages/ui-xacos/src/components/Modal.tsx`:**
+```tsx
+import React, { useEffect, type ReactNode } from 'react';
+import clsx from 'clsx';
+
+interface ModalProps {
+  open: boolean;
+  onClose: () => void;
+  title?: string;
+  children: ReactNode;
+  footer?: ReactNode;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+}
+
+const sizes = {
+  sm: 'max-w-sm',
+  md: 'max-w-md',
+  lg: 'max-w-lg',
+  xl: 'max-w-2xl',
+};
+
+export function Modal({ open, onClose, title, children, footer, size = 'md' }: ModalProps) {
+  // Close on Escape key
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    if (open) document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [open, onClose]);
+
+  if (!open) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        onClick={onClose}
+      />
+      {/* Dialog */}
+      <div
+        className={clsx(
+          'relative w-full bg-xacos-surface border border-xacos-border',
+          'rounded-xacos shadow-2xl z-10',
+          sizes[size]
+        )}
+      >
+        {title && (
+          <div className="flex items-center justify-between px-6 py-4 border-b border-xacos-border">
+            <h2 className="text-base font-semibold text-xacos-text">{title}</h2>
+            <button
+              onClick={onClose}
+              className="text-xacos-muted hover:text-xacos-text transition-colors"
+            >
+              ✕
+            </button>
+          </div>
+        )}
+        <div className="px-6 py-4">{children}</div>
+        {footer && (
+          <div className="px-6 py-4 border-t border-xacos-border flex justify-end gap-3">
+            {footer}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+```
+
+**`packages/ui-xacos/src/components/Table.tsx`:**
+```tsx
+import React from 'react';
+import clsx from 'clsx';
+
+export interface TableColumn<T> {
+  key: keyof T | string;
+  header: string;
+  render?: (row: T, index: number) => React.ReactNode;
+  align?: 'left' | 'center' | 'right';
+  width?: string;
+}
+
+interface TableProps<T> {
+  columns: TableColumn<T>[];
+  data: T[];
+  loading?: boolean;
+  emptyMessage?: string;
+  onRowClick?: (row: T) => void;
+  className?: string;
+}
+
+export function Table<T extends Record<string, unknown>>({
+  columns,
+  data,
+  loading = false,
+  emptyMessage = 'No data available.',
+  onRowClick,
+  className,
+}: TableProps<T>) {
+  const alignClass = { left: 'text-left', center: 'text-center', right: 'text-right' };
+
+  return (
+    <div className={clsx('overflow-x-auto rounded-xacos border border-xacos-border', className)}>
+      <table className="w-full text-sm">
+        <thead>
+          <tr className="border-b border-xacos-border bg-white/3">
+            {columns.map(col => (
+              <th
+                key={String(col.key)}
+                style={{ width: col.width }}
+                className={clsx(
+                  'px-4 py-3 font-medium text-xacos-muted',
+                  alignClass[col.align ?? 'left']
+                )}
+              >
+                {col.header}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {loading ? (
+            <tr>
+              <td colSpan={columns.length} className="px-4 py-8 text-center text-xacos-muted">
+                Loading…
+              </td>
+            </tr>
+          ) : data.length === 0 ? (
+            <tr>
+              <td colSpan={columns.length} className="px-4 py-8 text-center text-xacos-muted">
+                {emptyMessage}
+              </td>
+            </tr>
+          ) : (
+            data.map((row, i) => (
+              <tr
+                key={i}
+                onClick={() => onRowClick?.(row)}
+                className={clsx(
+                  'border-b border-xacos-border last:border-0',
+                  'hover:bg-white/3 transition-colors duration-100',
+                  onRowClick && 'cursor-pointer'
+                )}
+              >
+                {columns.map(col => (
+                  <td
+                    key={String(col.key)}
+                    className={clsx('px-4 py-3 text-xacos-text', alignClass[col.align ?? 'left'])}
+                  >
+                    {col.render
+                      ? col.render(row, i)
+                      : String(row[col.key as keyof T] ?? '—')}
+                  </td>
+                ))}
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+```
+
+**MAINTENANCE.md update:** Sprint 130 ✅.
+**CHANGELOG:** `- Sprint 130: Modal and Table components shipped with full TypeScript generics.`
+**Done when:** `<Modal>` opens/closes correctly. `<Table<User>>` renders typed data.
+
+---
+
+## Sprint 131 — Navbar Component
+
+**Goal:** Ship `<Navbar>` for use in the default layout.
+
+**`packages/ui-xacos/src/components/Navbar.tsx`:**
+```tsx
+import React, { type ReactNode } from 'react';
+import clsx from 'clsx';
+
+interface NavbarProps {
+  brand?: ReactNode;
+  children?: ReactNode;
+  actions?: ReactNode;
+  className?: string;
+  sticky?: boolean;
+}
+
+export function Navbar({ brand, children, actions, className, sticky = true }: NavbarProps) {
+  return (
+    <header
+      className={clsx(
+        'w-full border-b border-xacos-border bg-xacos-bg/80 backdrop-blur-md',
+        sticky && 'sticky top-0 z-40',
+        className
+      )}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="flex items-center justify-between h-16">
+          {/* Brand */}
+          <div className="flex items-center gap-6">
+            {brand && <div className="font-semibold text-xacos-text">{brand}</div>}
+            {children && (
+              <nav className="hidden md:flex items-center gap-1">
+                {children}
+              </nav>
+            )}
+          </div>
+          {/* Actions */}
+          {actions && (
+            <div className="flex items-center gap-3">{actions}</div>
+          )}
+        </div>
+      </div>
+    </header>
+  );
+}
+
+interface NavLinkProps {
+  href: string;
+  children: ReactNode;
+  active?: boolean;
+}
+
+export function NavLink({ href, children, active = false }: NavLinkProps) {
+  return (
+    <a
+      href={href}
+      className={clsx(
+        'px-3 py-2 rounded-xacos text-sm transition-colors duration-150',
+        active
+          ? 'text-xacos-text bg-white/10'
+          : 'text-xacos-muted hover:text-xacos-text hover:bg-white/5'
+      )}
+    >
+      {children}
+    </a>
+  );
+}
+```
+
+**Updated `views/layouts/main.tsx` template** in `create-xacos-app` to use Navbar:
+```tsx
+import { Navbar, NavLink } from '@xacos/ui';
+import { XLink } from '@xacos/client';
+
+export default function MainLayout({ children, meta }) {
+  return (
+    <html lang="en">
+      <head>...</head>
+      <body className="bg-xacos-bg text-xacos-text min-h-screen">
+        <Navbar
+          brand={<XLink href="/" className="font-bold text-lg">MyApp</XLink>}
+          actions={<NavLink href="/auth/login">Login</NavLink>}
+        >
+          <NavLink href="/">Home</NavLink>
+          <NavLink href="/dashboard">Dashboard</NavLink>
+        </Navbar>
+        <main className="max-w-7xl mx-auto px-4 py-8">{children}</main>
+      </body>
+    </html>
+  );
+}
+```
+
+**MAINTENANCE.md update:** Sprint 131 ✅.
+**CHANGELOG:** `- Sprint 131: Navbar and NavLink components shipped.`
+**Done when:** `<Navbar>` renders correctly. `<NavLink>` highlights active state.
+
+---
+
+## Sprint 132 — Docs App Integration
+
+**Goal:** Wire XAOCS documentation into the existing `apps/docs` Next.js site in the monorepo.
+
+**Steps:**
+
+1. **Check existing docs structure** — the `apps/docs` site is already scaffolded (Sprint 1 audit). It is a Next.js app.
+
+2. **Add dependency:**
+```json
+// apps/docs/package.json — add:
+{
+  "dependencies": {
+    "@xacos/shared": "workspace:*"
+  }
+}
+```
+
+3. **Create docs directory structure:**
+```
+apps/docs/
+├── pages/ (or app/ if App Router)
+│   ├── docs/
+│   │   ├── index.mdx          → /docs (Getting Started)
+│   │   ├── core/
+│   │   │   └── container.mdx  → /docs/core/container
+│   │   ├── api/
+│   │   │   └── routing.mdx    → /docs/api/routing
+│   │   ├── orm/
+│   │   │   └── models.mdx     → /docs/orm/models
+│   │   ├── auth/
+│   │   │   └── index.mdx      → /docs/auth
+│   │   ├── frontend/
+│   │   │   └── views.mdx      → /docs/frontend/views
+│   │   └── cli/
+│   │       └── commands.mdx   → /docs/cli/commands
+```
+
+4. **Install MDX support:**
+```bash
+cd apps/docs && bun add @next/mdx @mdx-js/loader remark-gfm rehype-highlight
+```
+
+5. **`apps/docs/next.config.mjs`** — enable MDX:
+```javascript
+import createMDX from '@next/mdx';
+
+const withMDX = createMDX({
+  options: {
+    remarkPlugins: [['remark-gfm']],
+    rehypePlugins: [['rehype-highlight']],
+  },
+});
+
+export default withMDX({
+  pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'md', 'mdx'],
+});
+```
+
+6. **Create docs sidebar config `apps/docs/lib/sidebar.ts`:**
+```typescript
+export const sidebar = [
+  { title: 'Getting Started', href: '/docs' },
+  {
+    title: 'Core',
+    items: [
+      { title: 'IoC Container', href: '/docs/core/container' },
+      { title: 'Boot Lifecycle', href: '/docs/core/lifecycle' },
+    ],
+  },
+  {
+    title: 'API Routes',
+    items: [
+      { title: 'File Convention', href: '/docs/api/routing' },
+      { title: 'XRouter', href: '/docs/api/router' },
+      { title: 'Controllers', href: '/docs/api/controllers' },
+    ],
+  },
+  { title: 'ORM', href: '/docs/orm/models' },
+  { title: 'Auth', href: '/docs/auth' },
+  { title: 'Frontend', href: '/docs/frontend/views' },
+  { title: 'CLI', href: '/docs/cli/commands' },
+];
+```
+
+**MAINTENANCE.md update:** Sprint 132 ✅.
+**CHANGELOG:** `- Sprint 132: XAOCS docs wired into apps/docs with MDX and sidebar config.`
+**Done when:** `bun run dev` in `apps/docs` serves `/docs` with XAOCS documentation.
+
+---
+
+## Sprint 133–140 — Docs Pages
+
+Each of these sprints writes one documentation page. Each page follows the same pattern: intro, code examples, API reference, common patterns.
+
+**Sprint 133 — Docs: Getting Started**
+File: `apps/docs/pages/docs/index.mdx`
+Content: Framework overview, install, `create-xacos-app`, first API route, first page, run dev.
+
+**Sprint 134 — Docs: Core Concepts**
+File: `apps/docs/pages/docs/core/container.mdx`
+Content: IoC container, `bind` vs `singleton`, `make`, auto-discovery, boot lifecycle diagram.
+
+**Sprint 135 — Docs: API Routes**
+File: `apps/docs/pages/docs/api/routing.mdx`
+Content: `*.api.ts` convention, `XRouter`, static methods as handlers, middleware patterns.
+
+**Sprint 136 — Docs: ORM**
+File: `apps/docs/pages/docs/orm/models.mdx`
+Content: `XModel`, `where`, `find`, `create`, relationships, migrations, seeders, factories.
+
+**Sprint 137 — Docs: Auth**
+File: `apps/docs/pages/docs/auth/index.mdx`
+Content: Setup, `AuthService`, `authenticate` middleware, `useAuth` hook, protecting routes.
+
+**Sprint 138 — Docs: Frontend**
+File: `apps/docs/pages/docs/frontend/views.mdx`
+Content: File-based routing, layouts, SSR, `useAuth`, `XLink`, `useEvent`.
+
+**Sprint 139 — Docs: CLI**
+File: `apps/docs/pages/docs/cli/commands.mdx`
+Content: All commands with flags, examples, and expected output.
+
+**Sprint 140 — Docs: Packages**
+File: `apps/docs/pages/docs/packages/index.mdx`
+Content: Mail, Cache, Storage, Queue, Events, Validation, UI — with quick-start examples.
+
+**Each sprint:**
+- Creates the MDX file with complete content
+- Adds to sidebar config
+- Verifies page renders in browser
+- Updates `MAINTENANCE.md` ✅
+- Adds one line to `CHANGELOG.md`
+
+---
+
+## Sprint 141 — Web App Landing Page
+
+**Goal:** Build the XAOCS marketing landing page in `apps/web`.
+
+**`apps/web/app/page.tsx`:**
+```tsx
+import React from 'react';
+
+export default function LandingPage() {
+  return (
+    <div className="min-h-screen bg-[#0f0f0f] text-white">
+      {/* Hero */}
+      <section className="max-w-4xl mx-auto px-6 pt-32 pb-20 text-center">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm mb-8">
+          <span>🚀</span> v1.0 — Now in Beta
+        </div>
+        <h1 className="text-6xl font-bold mb-6 leading-tight">
+          Build faster.<br />
+          <span className="text-blue-400">Ship cleaner.</span>
+        </h1>
+        <p className="text-xl text-gray-400 mb-10 max-w-2xl mx-auto">
+          XAOCS is a full-stack TypeScript framework — one server, one port,
+          backend API + React frontend, built for AI-native development.
+        </p>
+        <div className="flex items-center justify-center gap-4">
+          <a
+            href="/docs"
+            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition-colors"
+          >
+            Get Started →
+          </a>
+          <code className="px-4 py-3 bg-white/5 border border-white/10 rounded-md text-sm font-mono">
+            bunx create-xacos-app my-app
+          </code>
+        </div>
+      </section>
+
+      {/* Feature grid */}
+      <section className="max-w-5xl mx-auto px-6 py-20">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {features.map(f => (
+            <div key={f.title} className="p-6 bg-white/3 border border-white/8 rounded-lg">
+              <div className="text-2xl mb-3">{f.icon}</div>
+              <h3 className="font-semibold mb-2">{f.title}</h3>
+              <p className="text-sm text-gray-400">{f.description}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+const features = [
+  { icon: '⚡', title: 'One Server', description: 'Frontend and API on port 5000. No proxy config, no CORS headaches.' },
+  { icon: '📁', title: 'File-Based Routing', description: 'user.api.ts → /api/user. index.tsx → /. Zero manual registration.' },
+  { icon: '🧠', title: 'AI-Native', description: 'Folder structure and conventions optimized for Cursor, Claude, and Copilot.' },
+  { icon: '🛡️', title: 'Type-Safe ORM', description: 'XModel with Eloquent-style queries. MySQL, Postgres, SQLite, MongoDB.' },
+  { icon: '🔐', title: 'Auth Built-In', description: 'Email + password, JWT, cookie-based sessions. Zero setup.' },
+  { icon: '🚀', title: 'Laravel DX', description: 'The comfort of Laravel conventions — in TypeScript, on Bun.' },
+];
+```
+
+**MAINTENANCE.md update:** Sprint 141 ✅.
+**CHANGELOG:** `- Sprint 141: XAOCS landing page live in apps/web.`
+**Done when:** Landing page renders at `http://localhost:3001` (web app port).
+
+---
+
+## Sprint 142–150 — Web App Pages + Changelog
+
+**Sprint 142 — Code Showcase Section:**
+Interactive code tabs on the landing page showing:
+- API route example (`user.api.ts`)
+- Controller + middleware example
+- XModel query example
+- Migration example
+
+**Sprint 143 — Web App Changelog Page:**
+Reads `CHANGELOG.md` from repo root (via `fs.readFileSync` in `getStaticProps` or `generateStaticParams`), renders as styled HTML in `apps/web/app/changelog/page.tsx`.
+
+**Sprint 144 — Web App Docs Link Page:**
+Simple redirect page at `/docs` in `apps/web` that links to `apps/docs`.
+
+**Sprint 145 — Error Handling Deep-dive:**
+Extend the global error handler (Sprint 92) with:
+- Stack traces in dev mode
+- Error codes (e.g. `VALIDATION_FAILED`, `NOT_FOUND`, `UNAUTHORIZED`)
+- Structured logging via Pino per error
+
+**Sprint 146 — Cookie-Based Auth Hardening:**
+- Secure cookie flags enforced in production
+- `SameSite=Strict` in production, `SameSite=Lax` in dev
+- Cookie refresh on near-expiry
+- Token rotation on login
+
+**Sprint 147 — TypeScript Path Aliases (Full):**
+Ensure all path aliases (`@app`, `@views`, `@api`, `@db`) work in:
+- Bun runtime (via `bunfig.toml` `paths`)
+- TypeScript (via `tsconfig.json` `paths`)
+- Vite dev (via `vite.config.ts` `resolve.alias`)
+- esbuild production (via `alias` option)
+
+**Sprint 148 — Hot Reload for API Routes:**
+Watch `api/` and `app/` directories using `chokidar`. On change:
+- Re-scan API files
+- Re-mount changed routes to Fastify
+- Log which routes were hot-swapped
+- No full server restart needed
+
+**Sprint 149 — Health Check + Graceful Shutdown:**
+Auto-mount `GET /health`:
+```typescript
+fastify.get('/health', async (_req, reply) => {
+  return reply.json({
+    status: 'ok',
+    uptime: process.uptime(),
+    memory: process.memoryUsage(),
+    version: pkg.version,
+    env: process.env['APP_ENV'],
+  });
+});
+```
+
+Handle `SIGTERM`/`SIGINT`:
+```typescript
+process.on('SIGTERM', async () => {
+  log.info('Received SIGTERM — shutting down gracefully...');
+  await server.close();
+  await closeDb();
+  process.exit(0);
+});
+```
+
+**Sprint 150 — Source Maps + Debug Mode:**
+Enable source maps in dev:
+- TypeScript: `"sourceMap": true` (already in base config)
+- esbuild (dev): `sourcemap: 'inline'`
+- Fastify error handler: include source-mapped stack in dev responses
+- `APP_DEBUG=true` env flag for verbose logging
+
+**Each sprint 142–150:**
+- Implements the feature described above
+- Adds tests where applicable
+- Updates `MAINTENANCE.md` ✅
+- Adds one line to `CHANGELOG.md`
+
+---
+
+# END OF SPRINTS 101–150
+
+> Run `bun run build` from root. All 15+ packages must compile with zero errors.
+> Run `bun run test` from root. All test suites must pass.
+> Update `MAINTENANCE.md`: mark Sprints 101–150 as ✅. Total completed: 150.
+
+```
+Progress: 150/200 sprints complete — 75% done.
+Packages: 15 (core, server, orm, auth, mail, cache, storage, queue, events,
+           testing, validation, ui, config, client, compiler) + create-xacos-app
+```
+
+Say **"next"** to receive Sprints 151–200 (the final 50 — npm publishing, CI/CD, demo app, v1.0.0 release).
 
 

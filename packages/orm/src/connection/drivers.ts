@@ -62,3 +62,4 @@ export function buildKnexConfig(): Knex.Config {
       throw new Error(`[XAOCS ORM] Unsupported driver: ${driver}`);
   }
 }
+

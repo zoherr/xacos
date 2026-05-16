@@ -1,0 +1,70 @@
+# ORM & Models (`XModel`)
+
+XAOCS features a powerful, active-record style ORM built on top of Knex. E.g., it provides a fully type-safe, Eloquent-like developer experience for interacting with your database.
+
+## Defining a Model
+
+Models live in `database/models/` and extend `XModel`. You can use decorators to define table columns and relationships.
+
+```typescript
+// database/models/User.ts
+import { XModel, Column, HasMany } from '@xacos/orm';
+import { Post } from './Post';
+
+export class User extends XModel {
+  static tableName = 'users';
+
+  @Column()
+  id!: number;
+
+  @Column()
+  name!: string;
+
+  @Column()
+  email!: string;
+
+  @Column({ hidden: true }) // Automatically stripped when calling toJSON()
+  password!: string;
+
+  @HasMany(() => Post, 'user_id')
+  posts!: Post[];
+}
+```
+
+## Querying Models
+
+`XModel` provides a rich, fluent query builder API:
+
+```typescript
+// Find by primary key (throws 404 if not found)
+const user = await User.findOrFail(1);
+
+// Find all with conditions
+const activeUsers = await User.where({ status: 'active' }).all();
+
+// Pagination
+const paginated = await User.where({ role: 'user' }).paginate(1, 20);
+```
+
+## Relationships
+
+Eager load relationships using the `with` method:
+
+```typescript
+const usersWithPosts = await User.with('posts').all();
+```
+
+## Migrations & Seeders
+
+XAOCS includes a robust CLI for managing database schema and seeding data:
+
+```bash
+# Run pending migrations
+xacos migrate
+
+# Rollback last migration batch
+xacos migrate rollback
+
+# Run database seeders
+xacos db:seed
+```

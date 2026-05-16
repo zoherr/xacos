@@ -6,7 +6,7 @@ import { scanApiFiles } from "./ApiScanner";
 
 describe("scanApiFiles", () => {
   it("builds prefixes for api files including dynamic segments", () => {
-    const dir = mkdtempSync(join(tmpdir(), "xaocs-api-"));
+    const dir = mkdtempSync(join(tmpdir(), "xacos-api-"));
 
     try {
       writeFileSync(join(dir, "user.api.ts"), "export {};", "utf8");
@@ -21,3 +21,4 @@ describe("scanApiFiles", () => {
     }
   });
 });
+

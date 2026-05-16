@@ -1,0 +1,68 @@
+# Frontend Views
+
+XAOCS provides a seamless frontend developer experience by integrating React directly into the framework's routing and bundling pipeline. E.g., your React components in `views/` map directly to web routes.
+
+## File-Based Routing
+
+The `ViewScanner` automatically discovers React components in the `views/` directory:
+- `views/index.tsx` → serves at `/`
+- `views/dashboard/index.tsx` → serves at `/dashboard`
+- `views/settings.tsx` → serves at `/settings`
+
+## Layouts
+
+XAOCS supports persistent layouts via the `views/layouts/main.tsx` convention. All page components are automatically wrapped in this layout during server-side rendering or production bundling.
+
+```tsx
+// views/layouts/main.tsx
+import React from 'react';
+import { Navbar, NavLink } from '@xacos/ui';
+
+export default function MainLayout({ children, meta }) {
+  return (
+    <html lang="en">
+      <head>
+        <title>{meta?.title ?? 'XAOCS App'}</title>
+      </head>
+      <body className="bg-xacos-bg text-xacos-text">
+        <Navbar brand={<span className="font-bold">App</span>}>
+          <NavLink href="/">Home</NavLink>
+        </Navbar>
+        <main className="p-8">{children}</main>
+      </body>
+    </html>
+  );
+}
+```
+
+## Navigation (`XLink`)
+
+For fast, client-side history navigation without full page reloads, use the `XLink` component from `@xacos/client`:
+
+```tsx
+import React from 'react';
+import { XLink } from '@xacos/client';
+
+export function Navigation() {
+  return <XLink href="/dashboard" className="text-blue-500">Go to Dashboard</XLink>;
+}
+```
+
+## Real-Time Events (`useEvent`)
+
+To subscribe to real-time WebSocket events broadcast from the backend, use the `useEvent` hook:
+
+```tsx
+import React, { useState } from 'react';
+import { useEvent } from '@xacos/client';
+
+export function LiveFeed() {
+  const [messages, setMessages] = useState<string[]>([]);
+
+  useEvent<string>('message.new', (msg) => {
+    setMessages(prev => [msg, ...prev]);
+  });
+
+  return <div>{messages.map((m, i) => <p key={i}>{m}</p>)}</div>;
+}
+```

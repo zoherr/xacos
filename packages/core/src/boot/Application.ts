@@ -6,8 +6,8 @@ import { ServiceProvider } from "../providers/ServiceProvider";
 
 interface BootOptions {
   providers?: Array<new (app: XContainer) => ServiceProvider>;
-  servicesDir?: string;
-  middlewaresDir?: string;
+  servicesDir?: string | undefined;
+  middlewaresDir?: string | undefined;
 }
 
 export class Application {
@@ -37,3 +37,4 @@ export class Application {
 }
 
 export const application = new Application();
+

@@ -1,11 +1,35 @@
+export * from './helpers';
+export * from './validation';
+import type { z } from 'zod';
+
+
+
 export interface XRequest {
   params: Record<string, string>;
   query: Record<string, string>;
   body: unknown;
   headers: Record<string, string | string[] | undefined>;
+  cookies: Record<string, string>;
   user?: XUser;
   app: XApp;
+  validate<T extends z.ZodTypeAny>(schema: T): z.infer<T>;
+  file(name: string): Promise<XFile | undefined>;
+  files(name?: string): Promise<XFile[]>;
 }
+
+export interface XFile {
+  fieldname: string;
+  filename: string;
+  mimetype: string;
+  encoding: string;
+  /** Stores the file in the designated path using the StorageManager. Returns the path. */
+  store(path: string): Promise<string>;
+  /** Gets the file content as a Buffer */
+  getBuffer(): Promise<Buffer>;
+}
+
+
+
 
 export interface XResponse {
   json(data: unknown): XResponse;
@@ -39,6 +63,7 @@ export interface CookieOptions {
   secure?: boolean;
   maxAge?: number;
   path?: string;
+  sameSite?: boolean | 'lax' | 'strict' | 'none';
 }
 
 export interface PaginatedResult<T> {
@@ -48,3 +73,4 @@ export interface PaginatedResult<T> {
   perPage: number;
   lastPage: number;
 }
+

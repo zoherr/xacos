@@ -12,3 +12,4 @@ describe("requireEnv", () => {
     expect(() => requireEnv("XAOCS_MISSING_ENV")).toThrow();
   });
 });
+

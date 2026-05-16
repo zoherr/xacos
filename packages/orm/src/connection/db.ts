@@ -37,7 +37,9 @@ export function initDb(config?: InitDbOptions): Knex {
   if (config && typeof config === "object" && "__memorySqlite" in config && config.__memorySqlite) {
     knexConfig = {
       client: "sqlite3",
-      connection: ":memory:",
+      connection: {
+        filename: ":memory:",
+      },
       useNullAsDefault: true,
     };
   } else if (config && typeof config === "object" && "client" in config) {
@@ -118,3 +120,4 @@ export async function closeDb(): Promise<void> {
     await mongoose.disconnect();
   }
 }
+

@@ -1,5 +1,5 @@
 {
-  "name": "@xaocs/config",
+  "name": "@xacos/config",
   "version": "0.0.1",
   "type": "module",
   "main": "./dist/index.js",
@@ -11,8 +11,8 @@
     }
   },
   "dependencies": {
-    "@xaocs/core": "workspace:*",
-    "@xaocs/shared": "workspace:*"
+    "@xacos/core": "workspace:*",
+    "@xacos/shared": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.15.3",

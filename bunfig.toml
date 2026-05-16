@@ -2,4 +2,10 @@
 frozen-lockfile = false
 
 [install.scopes]
-"@xaocs" = { token = "" }
+"@xacos" = { token = "" }
+
+[paths]
+"@app/*" = ["./app/*"]
+"@views/*" = ["./views/*"]
+"@api/*" = ["./api/*"]
+"@db/*" = ["./database/*"]

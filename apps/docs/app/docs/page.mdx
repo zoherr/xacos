@@ -1,0 +1,35 @@
+# Getting Started with XAOCS
+
+Welcome to **XAOCS** — a full-stack, AI-native TypeScript framework built on top of TurboRepo, Bun, Fastify, React, and Knex.
+
+## What is XAOCS?
+
+XAOCS is designed to give you the developer experience of Laravel combined with the performance and type-safety of modern TypeScript. E.g., it runs both your backend API and React frontend on a single server instance (port 5000 by default), eliminating CORS issues and proxy configuration headaches.
+
+## Quick Start
+
+You can scaffold a new XAOCS application in seconds using our interactive CLI:
+
+```bash
+bunx create-xacos-app my-app
+cd my-app
+bun install
+bun run dev
+```
+
+## Core Architecture & Conventions
+
+XAOCS enforces strict, clean architectural conventions:
+
+- **API Routes (`api/`)**: Files named `*.api.ts` (e.g. `user.api.ts`) define your API endpoints. The URL prefix is automatically derived from the filename (`/api/user`).
+- **Frontend Views (`views/`)**: React components map directly to web routes (`views/index.tsx` → `/`).
+- **Services (`app/services/`)**: Auto-discovered business logic classes injectable into controllers.
+- **Middlewares (`app/middlewares/`)**: Auto-discovered middleware classes.
+- **Models (`database/models/`)**: Knex-backed `XModel` classes for robust, type-safe ORM interactions.
+
+## Next Steps
+
+Explore the core documentation to master XAOCS:
+- [IoC Container](/docs/core/container)
+- [API Routing](/docs/api/routing)
+- [ORM & Models](/docs/orm/models)
