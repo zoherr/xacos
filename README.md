@@ -1,164 +1,87 @@
-# Turborepo starter
+<div align="center">
+  <h1>XAOCS</h1>
+  <p><strong>Full-Stack TypeScript Framework for AI-Native Development</strong></p>
+  <p>
+    <a href="https://xaocs.dev/docs">Docs</a> ·
+    <a href="https://xaocs-blog-demo.fly.dev">Live Demo</a> ·
+    <a href="https://github.com/zoherr/xaocs/releases">Changelog</a>
+  </p>
+  <p>
+    <img src="https://img.shields.io/npm/v/@xaocs/core?label=version" alt="npm version" />
+    <img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT License" />
+    <img src="https://img.shields.io/badge/built_with-Bun-orange" alt="Built with Bun" />
+    <img src="https://img.shields.io/badge/npm-provenance-blue" alt="npm provenance" />
+  </p>
+</div>
 
-[![npm provenance](https://img.shields.io/badge/npm-provenance-blue)](https://docs.npmjs.com/generating-provenance-statements)
+---
 
-This Turborepo starter is maintained by the Turborepo core team.
+XAOCS (pronounced "chaos") is a full-stack TypeScript framework inspired by Laravel's developer experience and Next.js's routing model — designed for AI-assisted development, rapid product shipping, and a magical developer experience.
 
-## Using this example
+## Quick Start
 
-Run the following command:
-
-```sh
-npx create-turbo@latest
+```bash
+bunx create-xaocs-app my-app
+cd my-app
+xaocs migrate
+xaocs dev
 ```
 
-## What's inside?
+## What You Get
 
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo build
+```
+my-app/
+├── api/               ← user.api.ts → /api/user/ (auto-registered)
+├── app/
+│   ├── controllers/   ← XController subclasses
+│   ├── services/      ← Business logic (auto-discovered)
+│   └── middlewares/   ← Auto-loaded middleware
+├── views/             ← React pages (file-based routing)
+├── database/
+│   ├── models/        ← XModel (Eloquent-style ORM)
+│   ├── migrations/    ← Type-safe schema migrations
+│   └── seeders/       ← Database seeders with Faker
+└── xaocs.config.ts    ← Framework configuration
 ```
 
-Without global `turbo`, use your package manager:
+## API Route in 5 Lines
 
-```sh
-cd my-turborepo
-npx turbo build
-bun dlx turbo build
-bun exec turbo build
+```typescript
+// api/user.api.ts → /api/user/
+import { XRouter } from '@xaocs/core';
+import { authenticate } from '@xaocs/auth';
+import { UserController } from '../app/controllers/UserController';
+
+export const router = new XRouter();
+
+router.get('/', UserController.index);
+router.get('/:id', authenticate, UserController.show);
+router.post('/', authenticate, UserController.store);
+router.put('/:id', authenticate, UserController.update);
+router.delete('/:id', authenticate, UserController.destroy);
 ```
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+## The Full Ecosystem
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+| Package | Purpose |
+|---------|---------|
+| `@xaocs/core` | IoC container, routing, middleware |
+| `@xaocs/orm` | Eloquent-style ORM (SQLite, MySQL, Postgres, MongoDB) |
+| `@xaocs/auth` | Built-in email/password auth + JWT |
+| `@xaocs/mail` | Email (SMTP, SES, Mailgun, Postmark, Resend) |
+| `@xaocs/cache` | Caching (Memory, Redis) |
+| `@xaocs/storage` | File storage (Local, S3, R2) |
+| `@xaocs/queue` | Background jobs (Memory, BullMQ) |
+| `@xaocs/events` | Real-time WebSocket events |
+| `@xaocs/validation` | Zod-based request validation |
+| `@xaocs/ui` | React component library (Tailwind) |
+| `@xaocs/testing` | Test utilities (testClient, mockAuth) |
+| `@xaocs/cli` | CLI — dev, build, migrate, generate |
 
-```sh
-turbo build --filter=docs
-```
+## Stack
 
-Without global `turbo`:
+**Bun** · **TypeScript** · **Fastify** · **React** · **Vite** · **esbuild** · **Knex** · **TurboRepo**
 
-```sh
-npx turbo build --filter=docs
-bun exec turbo build --filter=docs
-bun exec turbo build --filter=docs
-```
+## License
 
-### Develop
-
-To develop all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo dev
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo dev
-bun exec turbo dev
-bun exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo dev --filter=web
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo dev --filter=web
-bun exec turbo dev --filter=web
-bun exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo login
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo login
-bun exec turbo login
-bun exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo link
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo link
-bun exec turbo link
-bun exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
-
-
-
+MIT © XAOCS Team

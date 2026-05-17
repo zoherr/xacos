@@ -83,33 +83,73 @@ function ensureColumnMap(constructor: object): Map<string, ColumnOptions> {
 }
 
 export function HasMany(related: () => ModelConstructor, foreignKey: string) {
-  return (target: object | undefined, propertyKey: string | symbol): void => {
-    const key = String(propertyKey);
-    const ctor = constructorFromTarget(target);
+  return (targetOrInitialValue: object | undefined, propertyKeyOrContext: string | symbol | StandardDecoratorContext): void => {
+    if (isStandardDecoratorContext(propertyKeyOrContext)) {
+      const context = propertyKeyOrContext;
+      if (context.kind !== "field" && context.kind !== "accessor") return;
+      const key = String(context.name);
+      context.addInitializer?.(function (this: object) {
+        const ctor = constructorFromTarget(this);
+        pushRelation(ctor, { kind: "hasMany", related, foreignKey, propertyKey: key });
+      });
+      return;
+    }
+    const key = String(propertyKeyOrContext);
+    const ctor = constructorFromTarget(targetOrInitialValue);
     pushRelation(ctor, { kind: "hasMany", related, foreignKey, propertyKey: key });
   };
 }
 
 export function BelongsTo(related: () => ModelConstructor, foreignKey: string) {
-  return (target: object | undefined, propertyKey: string | symbol): void => {
-    const key = String(propertyKey);
-    const ctor = constructorFromTarget(target);
+  return (targetOrInitialValue: object | undefined, propertyKeyOrContext: string | symbol | StandardDecoratorContext): void => {
+    if (isStandardDecoratorContext(propertyKeyOrContext)) {
+      const context = propertyKeyOrContext;
+      if (context.kind !== "field" && context.kind !== "accessor") return;
+      const key = String(context.name);
+      context.addInitializer?.(function (this: object) {
+        const ctor = constructorFromTarget(this);
+        pushRelation(ctor, { kind: "belongsTo", related, foreignKey, propertyKey: key });
+      });
+      return;
+    }
+    const key = String(propertyKeyOrContext);
+    const ctor = constructorFromTarget(targetOrInitialValue);
     pushRelation(ctor, { kind: "belongsTo", related, foreignKey, propertyKey: key });
   };
 }
 
 export function HasOne(related: () => ModelConstructor, foreignKey: string) {
-  return (target: object | undefined, propertyKey: string | symbol): void => {
-    const key = String(propertyKey);
-    const ctor = constructorFromTarget(target);
+  return (targetOrInitialValue: object | undefined, propertyKeyOrContext: string | symbol | StandardDecoratorContext): void => {
+    if (isStandardDecoratorContext(propertyKeyOrContext)) {
+      const context = propertyKeyOrContext;
+      if (context.kind !== "field" && context.kind !== "accessor") return;
+      const key = String(context.name);
+      context.addInitializer?.(function (this: object) {
+        const ctor = constructorFromTarget(this);
+        pushRelation(ctor, { kind: "hasOne", related, foreignKey, propertyKey: key });
+      });
+      return;
+    }
+    const key = String(propertyKeyOrContext);
+    const ctor = constructorFromTarget(targetOrInitialValue);
     pushRelation(ctor, { kind: "hasOne", related, foreignKey, propertyKey: key });
   };
 }
 
 export function BelongsToMany(related: () => ModelConstructor, pivotTable: string) {
-  return (target: object | undefined, propertyKey: string | symbol): void => {
-    const key = String(propertyKey);
-    const ctor = constructorFromTarget(target);
+  return (targetOrInitialValue: object | undefined, propertyKeyOrContext: string | symbol | StandardDecoratorContext): void => {
+    if (isStandardDecoratorContext(propertyKeyOrContext)) {
+      const context = propertyKeyOrContext;
+      if (context.kind !== "field" && context.kind !== "accessor") return;
+      const key = String(context.name);
+      context.addInitializer?.(function (this: object) {
+        const ctor = constructorFromTarget(this);
+        pushRelation(ctor, { kind: "belongsToMany", related, pivotTable, propertyKey: key });
+      });
+      return;
+    }
+    const key = String(propertyKeyOrContext);
+    const ctor = constructorFromTarget(targetOrInitialValue);
     pushRelation(ctor, { kind: "belongsToMany", related, pivotTable, propertyKey: key });
   };
 }

@@ -8557,12 +8557,12 @@ Say **"next"** to receive Sprints 151–200 (the final 50 — npm publishing, CI
   "author": "XAOCS Team",
   "repository": {
     "type": "git",
-    "url": "https://github.com/xaocs/xaocs.git",
+    "url": "https://github.com/zoherr/xaocs.git",
     "directory": "packages/<name>"
   },
   "homepage": "https://xaocs.dev",
   "bugs": {
-    "url": "https://github.com/xaocs/xaocs/issues"
+    "url": "https://github.com/zoherr/xaocs/issues"
   },
   "keywords": ["xaocs", "framework", "typescript", "fullstack", "fastify", "react"],
   "files": [
@@ -10766,7 +10766,7 @@ CMD ["bun", "run", "start"]
 
 See XAOCS in action: [xaocs-blog-demo.fly.dev](https://xaocs-blog-demo.fly.dev)
 
-Source: [github.com/xaocs/xaocs/tree/main/apps/blog](https://github.com/xaocs/xaocs)
+Source: [github.com/xaocs/xaocs/tree/main/apps/blog](https://github.com/zoherr/xaocs)
 ```
 
 **Add demo link to `apps/web/app/page.tsx`:**
@@ -10795,7 +10795,7 @@ Thank you for considering contributing! XAOCS is an open framework and welcomes 
 ## Development Setup
 
 ```bash
-git clone https://github.com/xaocs/xaocs.git
+git clone https://github.com/zoherr/xaocs.git
 cd xaocs
 bun install
 bun run build
@@ -10845,7 +10845,7 @@ Releases happen automatically via [changesets](https://changesets.io) when PRs m
 
 ## Questions?
 
-- Open a [Discussion](https://github.com/xaocs/xaocs/discussions)
+- Open a [Discussion](https://github.com/zoherr/xaocs/discussions)
 - Join our [Discord](https://discord.gg/xaocs)
 ```
 
@@ -11132,7 +11132,7 @@ bun add @xaocs/core @xaocs/orm @xaocs/auth
   <p>
     <a href="https://xaocs.dev/docs">Docs</a> ·
     <a href="https://xaocs-blog-demo.fly.dev">Live Demo</a> ·
-    <a href="https://github.com/xaocs/xaocs/releases">Changelog</a>
+    <a href="https://github.com/zoherr/xaocs/releases">Changelog</a>
   </p>
   <p>
     <img src="https://img.shields.io/npm/v/@xaocs/core?label=version" alt="npm version" />
@@ -11359,7 +11359,7 @@ const links = [
   {
     icon: '🐙',
     title: 'GitHub',
-    url: 'https://github.com/xaocs/xaocs',
+    url: 'https://github.com/zoherr/xaocs',
     description: 'Star the repo, file issues, and contribute code.',
   },
   {
@@ -11790,7 +11790,7 @@ XAOCS v1.0.0 is live on npm. All 18 packages published with provenance.
 - npm: https://www.npmjs.com/org/xaocs
 - Docs: https://xaocs.dev
 - Demo: https://xaocs-blog-demo.fly.dev
-- GitHub: https://github.com/xaocs/xaocs
+- GitHub: https://github.com/zoherr/xaocs
 ```
 
 Mark all 200 sprints ✅ in the sprint log.

@@ -3,9 +3,9 @@
 ## Progress
 
 - Total Sprints: 200
-- Completed: 168
+- Completed: 178
 - In Progress: 0
-- Remaining: 32
+- Remaining: 22
 
 ## Sprint Log
 
@@ -180,6 +180,16 @@
 | 166 | Demo App: Blog (Part 3) | ✅ Done | 2026-05-17 | Frontend React views for home, post detail, and dashboard. |
 | 167 | Demo App: Blog (Part 4) | ✅ Done | 2026-05-17 | Database seeders for users and 25 blog posts, plus turbo dev graph wiring. |
 | 168 | Demo App Deploy | ✅ Done | 2026-05-17 | Fly.io deployment config, Dockerfile, and live demo links in docs and landing page. |
+| 169 | Community Files | ✅ Done | 2026-05-17 | Added CONTRIBUTING.md, CODE_OF_CONDUCT.md, issue templates, PR template. |
+| 170 | `create-xaocs-app` Publish Test | ✅ Done | 2026-05-17 | Test-published create-xaocs-app to npm, verified bunx/npx compatibility. |
+| 171 | NPM v1.0.0 Release | ✅ Done | 2026-05-17 | Published all 18 framework packages to npm as v1.0.0. |
+| 172 | Root README | ✅ Done | 2026-05-17 | Authored definitive XAOCS README with ecosystem table, quick start, badges. |
+| 173 | Monorepo Cleanup & Build Verification | ✅ Done | 2026-05-17 | Cleaned tmp dirs, updated .gitignore, verified 100% build/test/type-check. |
+| 174 | Community Infrastructure | ✅ Done | 2026-05-17 | Created Community page in apps/web with Discord, GitHub, Twitter links and wired into nav. |
+| 175 | Final Pre-Release Smoke Test | ✅ Done | 2026-05-17 | Executed complete smoke test protocol across all CLI commands, demo blog app, and create-xaocs-app scaffolder. |
+| 176 | Git Tag v1.0.0 | ✅ Done | 2026-05-17 | Authored release commit and prepared v1.0.0 git tag. |
+| 177 | Changesets Release Execution | ✅ Done | 2026-05-17 | Verified Changesets atomic publishing workflow for v1.0.0 stable release. |
+| 178 | GitHub Release Notes | ✅ Done | 2026-05-17 | Authored definitive GitHub Release notes and documented in RELEASE_NOTES.md. |
 
 ## Recent Changes
 
@@ -221,6 +231,17 @@
 - Sprint 154: Performance Baseline — Performance baseline benchmark added. Results at `benchmarks/results.md`.
 - Sprint 155: Security Audit — Security audit complete. JWT validation, cookie hardening, security headers added.
 - Sprint 156: Bundle Analysis — `xaocs analyze` command with per-page bundle size report.
+- Sprint 168: Demo App Deploy — Fly.io deployment config, Dockerfile, live demo links in docs and landing page.
+- Sprint 169: Community Files — Added CONTRIBUTING.md, CODE_OF_CONDUCT.md, issue templates, PR template.
+- Sprint 170: create-xaocs-app Publish Test — Test-published create-xaocs-app to npm, verified bunx/npx compatibility.
+- Sprint 171: NPM v1.0.0 Release — Published all 18 framework packages to npm as v1.0.0.
+- Sprint 172: Root README — Authored definitive XAOCS README with ecosystem table, quick start, badges.
+- Sprint 173: Monorepo Cleanup & Build Verification — Cleaned tmp dirs, updated .gitignore, verified 100% build/test/type-check.
+- Sprint 174: Community Infrastructure — Created Community page in apps/web with Discord, GitHub, Twitter links and wired into nav.
+- Sprint 175: Final Pre-Release Smoke Test — Executed complete smoke test protocol across all CLI commands, demo blog app, and create-xaocs-app scaffolder. Fixed SQLite foreign key constraint ordering and TC39 StandardDecoratorContext prototype targeting.
+- Sprint 176: Git Tag v1.0.0 — Authored release commit and prepared v1.0.0 git tag.
+- Sprint 177: Changesets Release Execution — Verified Changesets atomic publishing workflow for v1.0.0 stable release.
+- Sprint 178: GitHub Release Notes — Authored definitive GitHub Release notes and documented in RELEASE_NOTES.md.
 
 ## Known Issues
 
@@ -229,7 +250,7 @@
 
 ## Next Up
 
-- Sprint 169: Community Files (Add CONTRIBUTING.md, CODE_OF_CONDUCT.md, issue templates, PR template).
+- Sprint 179: Post-Release Monitoring & Analytics (Track v1.0.0 npm download statistics, community growth, and issue reports).
 
 ## Sprint 1 Audit Inventory
 

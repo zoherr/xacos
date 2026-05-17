@@ -29,12 +29,12 @@
   "author": "XAOCS Team",
   "repository": {
     "type": "git",
-    "url": "https://github.com/xaocs/xaocs.git",
+    "url": "https://github.com/zoherr/xaocs.git",
     "directory": "packages/queue"
   },
   "homepage": "https://xaocs.dev",
   "bugs": {
-    "url": "https://github.com/xaocs/xaocs/issues"
+    "url": "https://github.com/zoherr/xaocs/issues"
   },
   "keywords": [
     "xaocs",

@@ -38,7 +38,10 @@ export default function ChangelogPage() {
           <Link href="/changelog" className="text-white font-semibold transition-colors">
             Changelog
           </Link>
-          <a href="https://github.com" target="_blank" rel="noreferrer" className="text-[#888888] hover:text-white transition-colors">
+          <Link href="/community" className="text-[#888888] hover:text-white transition-colors">
+            Community
+          </Link>
+          <a href="https://github.com/zoherr/xaocs" target="_blank" rel="noreferrer" className="text-[#888888] hover:text-white transition-colors">
             GitHub
           </a>
         </nav>

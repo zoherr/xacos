@@ -5,7 +5,7 @@ Thank you for considering contributing! XAOCS is an open framework and welcomes 
 ## Development Setup
 
 ```bash
-git clone https://github.com/xaocs/xaocs.git
+git clone https://github.com/zoherr/xaocs.git
 cd xaocs
 bun install
 bun run build
@@ -55,5 +55,5 @@ Releases happen automatically via [changesets](https://changesets.io) when PRs m
 
 ## Questions?
 
-- Open a [Discussion](https://github.com/xaocs/xaocs/discussions)
+- Open a [Discussion](https://github.com/zoherr/xaocs/discussions)
 - Join our [Discord](https://discord.gg/xaocs)

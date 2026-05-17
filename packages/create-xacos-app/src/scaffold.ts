@@ -149,6 +149,8 @@ function writeTsConfig(projectDir: string) {
       moduleResolution: 'Bundler',
       jsx: 'react-jsx',
       strict: true,
+      experimentalDecorators: true,
+      useDefineForClassFields: false,
       esModuleInterop: true,
       skipLibCheck: true,
       baseUrl: '.',

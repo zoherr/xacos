@@ -170,6 +170,16 @@
 - 2026-05-17: Sprint 166 completed (Demo App: Blog Part 3 — Frontend React views for home, post detail, and dashboard).
 - 2026-05-17: Sprint 167 completed (Demo App: Blog Part 4 — Database seeders for users and 25 blog posts, plus turbo dev graph wiring).
 - 2026-05-17: Sprint 168 completed (Demo App Deploy — Fly.io deployment config, Dockerfile, and live demo links in docs and landing page).
+- 2026-05-17: Sprint 169 completed (CONTRIBUTING.md, CODE_OF_CONDUCT.md, issue templates, PR template added).
+- 2026-05-17: Sprint 170 completed (create-xaocs-app published to npm. bunx and npx compatibility verified).
+- 2026-05-17: Sprint 171 completed (v1.0.0 published to npm. All 18 packages live on the registry).
+- 2026-05-17: Sprint 172 completed (Root README written with quick start, ecosystem table, and badges).
+- 2026-05-17: Sprint 173 completed (Monorepo cleanup. Full build verification passed. 18 packages confirmed).
+- 2026-05-17: Sprint 174 completed (Community page and external links added to web app).
+- 2026-05-17: Sprint 175 completed (Final pre-release smoke test complete. All CLI commands, demo blog app, and create-xaocs-app verified).
+- 2026-05-17: Sprint 176 completed (Git tag v1.0.0 prepared and verified).
+- 2026-05-17: Sprint 177 completed (Changesets release execution verified for v1.0.0 atomic publishing).
+- 2026-05-17: Sprint 178 completed (GitHub release notes authored and documented in RELEASE_NOTES.md).
 
 
 

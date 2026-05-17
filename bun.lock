@@ -152,7 +152,7 @@
         "typescript": "^5.x",
       },
       "peerDependencies": {
-        "react": "^19.x",
+        "react": "^18.x || ^19.x",
       },
     },
     "packages/compiler": {

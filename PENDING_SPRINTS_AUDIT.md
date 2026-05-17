@@ -174,6 +174,37 @@ Therefore, **Sprint 122** represents the exact leading edge of the pending frame
 - **`[x]` Sprint 142 — Code Showcase Section**: Build interactive Code Showcase tabs for API, Controller, ORM, and Migration on landing page.
 - **`[x]` Sprint 143 — Web App Changelog Page**: Build dynamic Changelog page in `apps/web` reading `CHANGELOG.md`.
 - **`[x]` Sprint 144 — Web App Docs Link Page**: Build docs redirect page at `/docs` in `apps/web`.
+- **`[x]` Sprint 145 — Error Handling Deep-dive**: Extended global error handler with structured Pino logging, dev stack traces, error codes.
+- **`[x]` Sprint 146 — Cookie-Based Auth Hardening**: Enforced secure cookie flags, SameSite strict/lax, near-expiry refresh, token rotation.
+- **`[x]` Sprint 147 — TypeScript Path Aliases**: Universal alias resolution across Bun, TS, Vite, and esbuild.
+- **`[x]` Sprint 148 — Hot Reload for API Routes**: `chokidar` HMR watching `api/` and `app/` with dynamic route registry.
+- **`[x]` Sprint 149 — Health Check + Graceful Shutdown**: `GET /health` endpoint and `SIGTERM`/`SIGINT` process draining.
+- **`[x]` Sprint 150 — Source Maps + Debug Mode**: Dev sourcemaps inline, Pino `APP_DEBUG=true` support, stack traces.
+- **`[x]` Sprint 151 — NPM Publishing Foundation**: Standardized `package.json` metadata, keywords, licenses, and `README.md` across all packages.
+- **`[x]` Sprint 152 — Changesets Integration**: Initialized `@changesets/cli`, linked versioning strategy, and initial v1.0.0 baseline.
+- **`[x]` Sprint 153 — E2E Integration Test Suite**: Full E2E test suite covering CRUD, middleware, and stack integration in `@xacos/testing`.
+- **`[x]` Sprint 154 — Performance Baseline**: Performance baseline benchmark added. Results at `benchmarks/results.md`.
+- **`[x]` Sprint 155 — Security Audit**: Security audit complete. JWT validation, cookie hardening, security headers added.
+- **`[x]` Sprint 156 — Bundle Analysis**: `xaocs analyze` command with per-page bundle size report.
+- **`[x]` Sprint 157 — API Versioning**: Documented and tested `v1.user.api.ts` convention, added `--version` flag to `xacos add api`.
+- **`[x]` Sprint 158 — Pagination + Response Envelope Helpers**: Shipped `paginate()` utility and `ApiResponse` envelope helpers.
+- **`[x]` Sprint 159 — `xaocs add --package` Command**: Interactive CLI command to add official XAOCS ecosystem packages.
+- **`[x]` Sprint 160 — SQLite Integration Test (Full)**: Full SQLite integration test covering all XModel methods.
+- **`[x]` Sprint 161 — GitHub Actions CI Pipeline**: Set up CI pipeline for build, type-check, unit, and integration tests on PRs.
+- **`[x]` Sprint 162 — NPM Publish Workflow**: Automated npm publish workflow via changesets and docs auto-deploy.
+- **`[x]` Sprint 163 — NPM Provenance + Package Signing**: Enabled npm provenance for all published packages for supply chain integrity.
+- **`[x]` Sprint 164 — Demo App: Blog (Part 1)**: Directory structure, migrations for posts, comments, tags, and XModel definitions.
+- **`[x]` Sprint 165 — Demo App: Blog (Part 2)**: API Routes for blog CRUD and PostService with caching.
+- **`[x]` Sprint 166 — Demo App: Blog (Part 3)**: Frontend React views for home, post detail, and dashboard.
+- **`[x]` Sprint 167 — Demo App: Blog (Part 4)**: Database seeders for users and 25 blog posts, plus turbo dev graph wiring.
+- **`[x]` Sprint 168 — Demo App Deploy**: Fly.io deployment config, Dockerfile, live demo links in docs and landing page.
+- **`[x]` Sprint 169 — Community Files**: Added CONTRIBUTING.md, CODE_OF_CONDUCT.md, issue templates, PR template.
+- **`[x]` Sprint 170 — `create-xaocs-app` Publish Test**: Test-published create-xaocs-app to npm, verified bunx/npx compatibility.
+- **`[x]` Sprint 171 — NPM v1.0.0 Release**: Published all 18 framework packages to npm as v1.0.0.
+- **`[x]` Sprint 172 — Root README**: Authored definitive XAOCS README with ecosystem table, quick start, badges.
+- **`[x]` Sprint 173 — Monorepo Cleanup & Build Verification**: Cleaned tmp dirs, updated .gitignore, verified 100% build/test/type-check.
+- **`[x]` Sprint 174 — Discord + Website Launch Prep**: Created Community page in apps/web with Discord, GitHub, Twitter links and wired into nav.
+- **`[x]` Sprint 175 — Final Pre-Release Smoke Test**: Executed complete smoke test protocol across all CLI commands, demo blog app, and create-xaocs-app scaffolder. Fixed SQLite foreign key constraint ordering and TC39 StandardDecoratorContext prototype targeting.
 
 ---
 
@@ -192,5 +223,8 @@ Enterprise SaaS applications frequently require strict data isolation. Adding na
 
 ### 4. Built-In OpenTelemetry & Observability Suite
 Expanding our existing Pino logger and global error handler into a fully integrated Observability suite. E.g., automatically exposing a `/metrics` endpoint for Prometheus scraping, generating distributed tracing spans (OTEL) for every API request and database transaction, and providing an out-of-the-box Grafana dashboard template.
+
+### 5. Universal TC39 Decorator Metadata Reflection
+Building on our Sprint 175 architectural fixes for TC39 `StandardDecoratorContext`, we can implement a universal metadata reflection layer in `@xacos/core` that automatically normalizes decorator metadata across legacy TypeScript experimental decorators, Babel legacy decorators, and modern TC39 decorators. E.g., this ensures 100% seamless ORM and DI compatibility regardless of the user's `tsconfig.json` or bundler setup.
 
  Implment Next  2   Sprints, Check ts error, ensure tests are working, Make sure maintaince has same number has in sprints Think like Senior Engineer, what we can do to make xaocs framework better. Follow Sprints.md, and do not update maintenance.md until all sprints are implemented, when you update maintenance.md make sure it is also 100% up to date and correct. make sure number is matching, maintaince should have same number has in sprints. make sure maintenance.md is also 100% up to date and correct. make  sure both has same contents.

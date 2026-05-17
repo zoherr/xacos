@@ -22,7 +22,10 @@ export default function LandingPage() {
           <Link href="/changelog" className="text-[#888888] hover:text-white transition-colors">
             Changelog
           </Link>
-          <a href="https://github.com" target="_blank" rel="noreferrer" className="text-[#888888] hover:text-white transition-colors">
+          <Link href="/community" className="text-[#888888] hover:text-white transition-colors">
+            Community
+          </Link>
+          <a href="https://github.com/zoherr/xaocs" target="_blank" rel="noreferrer" className="text-[#888888] hover:text-white transition-colors">
             GitHub
           </a>
         </nav>
@@ -81,11 +84,10 @@ export default function LandingPage() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className={`px-5 py-3 text-sm font-medium rounded-t-lg transition-all border-t border-x border-transparent flex items-center gap-2 ${
-                  activeTab === tab.id
+                className={`px-5 py-3 text-sm font-medium rounded-t-lg transition-all border-t border-x border-transparent flex items-center gap-2 ${activeTab === tab.id
                     ? 'bg-[#1a1a1a] text-white border-[#2a2a2a]'
                     : 'text-[#888888] hover:text-[#e5e5e5] hover:bg-[#1a1a1a]/50'
-                }`}
+                  }`}
               >
                 <span className="text-blue-500">📄</span> {tab.label}
               </button>
@@ -96,7 +98,7 @@ export default function LandingPage() {
           <div className="p-6 sm:p-8 font-mono text-sm overflow-x-auto bg-[#141414]">
             {activeTab === 'api' && (
               <pre className="text-blue-400 leading-relaxed">
-{`import { XRouter, app } from '@xacos/core';
+                {`import { XRouter, app } from '@xacos/core';
 import { UserController } from '../app/controllers/UserController';
 
 export const router = new XRouter();
@@ -112,7 +114,7 @@ router.get('/:id', (req, res) => controller.show(req, res));`}
 
             {activeTab === 'controller' && (
               <pre className="text-purple-400 leading-relaxed">
-{`import { XController } from '@xacos/core';
+                {`import { XController } from '@xacos/core';
 import { UserService } from '../services/UserService';
 
 export class UserController extends XController {
@@ -137,7 +139,7 @@ export class UserController extends XController {
 
             {activeTab === 'orm' && (
               <pre className="text-emerald-400 leading-relaxed">
-{`import { XModel, Column, HasMany } from '@xacos/orm';
+                {`import { XModel, Column, HasMany } from '@xacos/orm';
 import { Post } from './Post';
 
 export class User extends XModel {
@@ -163,7 +165,7 @@ export class User extends XModel {
 
             {activeTab === 'migration' && (
               <pre className="text-amber-400 leading-relaxed">
-{`import { Migration, Schema } from '@xacos/orm';
+                {`import { Migration, Schema } from '@xacos/orm';
 
 export class CreateUsersTable extends Migration {
   async up() {
