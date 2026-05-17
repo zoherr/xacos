@@ -3,9 +3,9 @@
 ## Progress
 
 - Total Sprints: 200
-- Completed: 150
+- Completed: 168
 - In Progress: 0
-- Remaining: 50
+- Remaining: 32
 
 ## Sprint Log
 
@@ -162,6 +162,24 @@
 | 148 | Hot Reload for API Routes | ✅ Done | 2026-05-16 | `chokidar` HMR watching `api/` and `app/` with dynamic route registry. |
 | 149 | Health Check + Graceful Shutdown | ✅ Done | 2026-05-16 | `GET /health` endpoint and `SIGTERM`/`SIGINT` process draining. |
 | 150 | Source Maps + Debug Mode | ✅ Done | 2026-05-16 | Dev sourcemaps inline, Pino `APP_DEBUG=true` support, stack traces. |
+| 151 | NPM Publishing Foundation | ✅ Done | 2026-05-16 | Standardized `package.json` metadata, keywords, licenses, and `README.md` across all packages. |
+| 152 | Changesets Integration | ✅ Done | 2026-05-16 | Initialized `@changesets/cli`, linked versioning strategy, and initial v1.0.0 baseline. |
+| 153 | E2E Integration Test Suite | ✅ Done | 2026-05-17 | Full E2E test suite covering CRUD, middleware, and stack integration in `@xacos/testing`. |
+| 154 | Performance Baseline | ✅ Done | 2026-05-17 | Performance baseline benchmark added. Results at `benchmarks/results.md`. |
+| 155 | Security Audit | ✅ Done | 2026-05-17 | Security audit complete. JWT validation, cookie hardening, security headers added. |
+| 156 | Bundle Analysis | ✅ Done | 2026-05-17 | `xaocs analyze` command with per-page bundle size report. |
+| 157 | API Versioning | ✅ Done | 2026-05-17 | Documented and tested `v1.user.api.ts` convention, added `--version` flag to `xacos add api`. |
+| 158 | Pagination + Response Envelope Helpers | ✅ Done | 2026-05-17 | Shipped `paginate()` utility and `ApiResponse` envelope helpers. |
+| 159 | `xaocs add --package` Command | ✅ Done | 2026-05-17 | Interactive CLI command to add official XAOCS ecosystem packages. |
+| 160 | SQLite Integration Test (Full) | ✅ Done | 2026-05-17 | Full SQLite integration test covering all XModel methods. |
+| 161 | GitHub Actions CI Pipeline | ✅ Done | 2026-05-17 | Set up CI pipeline for build, type-check, unit, and integration tests on PRs. |
+| 162 | NPM Publish Workflow | ✅ Done | 2026-05-17 | Automated npm publish workflow via changesets and docs auto-deploy. |
+| 163 | NPM Provenance + Package Signing | ✅ Done | 2026-05-17 | Enabled npm provenance for all published packages for supply chain integrity. |
+| 164 | Demo App: Blog (Part 1) | ✅ Done | 2026-05-17 | Directory structure, migrations for posts, comments, tags, and XModel definitions. |
+| 165 | Demo App: Blog (Part 2) | ✅ Done | 2026-05-17 | API Routes for blog CRUD and PostService with caching. |
+| 166 | Demo App: Blog (Part 3) | ✅ Done | 2026-05-17 | Frontend React views for home, post detail, and dashboard. |
+| 167 | Demo App: Blog (Part 4) | ✅ Done | 2026-05-17 | Database seeders for users and 25 blog posts, plus turbo dev graph wiring. |
+| 168 | Demo App Deploy | ✅ Done | 2026-05-17 | Fly.io deployment config, Dockerfile, and live demo links in docs and landing page. |
 
 ## Recent Changes
 
@@ -197,6 +215,12 @@
 - Sprint 148: Hot Reload for API Routes — `chokidar` HMR watching `api/` and `app/` with dynamic route registry.
 - Sprint 149: Health Check + Graceful Shutdown — `GET /health` endpoint and `SIGTERM`/`SIGINT` process draining.
 - Sprint 150: Source Maps + Debug Mode — Dev sourcemaps inline, Pino `APP_DEBUG=true` support, stack traces.
+- Sprint 151: NPM Publishing Foundation — Standardized `package.json` metadata, keywords, licenses, and `README.md` across all packages.
+- Sprint 152: Changesets Integration — Initialized `@changesets/cli`, linked versioning strategy, and initial v1.0.0 baseline.
+- Sprint 153: E2E Integration Test Suite — Full E2E test suite covering CRUD, middleware, and stack integration in `@xacos/testing`.
+- Sprint 154: Performance Baseline — Performance baseline benchmark added. Results at `benchmarks/results.md`.
+- Sprint 155: Security Audit — Security audit complete. JWT validation, cookie hardening, security headers added.
+- Sprint 156: Bundle Analysis — `xaocs analyze` command with per-page bundle size report.
 
 ## Known Issues
 
@@ -205,7 +229,7 @@
 
 ## Next Up
 
-- Sprint 151: NPM Package Publishing Prep (see `agents/Sprints.md`).
+- Sprint 169: Community Files (Add CONTRIBUTING.md, CODE_OF_CONDUCT.md, issue templates, PR template).
 
 ## Sprint 1 Audit Inventory
 

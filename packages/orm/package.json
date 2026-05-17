@@ -1,18 +1,19 @@
 {
   "name": "@xacos/orm",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
     }
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "test": "bun test src",
+    "test": "bun test src --seq",
+    "test:integration": "DB_DRIVER=sqlite DB_PATH=./tmp-integration.sqlite bun test src/__tests__/sqlite.integration.test.ts",
     "type-check": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
@@ -29,6 +30,46 @@
   "devDependencies": {
     "@types/node": "^22.15.3",
     "bun-types": "^1.3.12"
+  },
+  "license": "MIT",
+  "author": "XAOCS Team",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xaocs/xaocs.git",
+    "directory": "packages/orm"
+  },
+  "homepage": "https://xaocs.dev",
+  "bugs": {
+    "url": "https://github.com/xaocs/xaocs/issues"
+  },
+  "keywords": [
+    "xaocs",
+    "xacos",
+    "framework",
+    "typescript",
+    "fullstack",
+    "fastify",
+    "react",
+    "orm",
+    "knex",
+    "sqlite",
+    "postgres",
+    "mysql",
+    "active-record"
+  ],
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org",
+    "provenance": true
+  },
+  "engines": {
+    "bun": ">=1.0.0",
+    "node": ">=18.0.0"
   }
 }
-

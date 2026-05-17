@@ -11,7 +11,16 @@ XAOCS is designed to give you the developer experience of Laravel combined with 
 You can scaffold a new XAOCS application in seconds using our interactive CLI:
 
 ```bash
+# Using Bun (recommended)
 bunx create-xacos-app my-app
+
+# Using npm
+npx create-xacos-app my-app
+```
+
+Once created, navigate into your project and start the development server:
+
+```bash
 cd my-app
 bun install
 bun run dev
@@ -26,6 +35,12 @@ XAOCS enforces strict, clean architectural conventions:
 - **Services (`app/services/`)**: Auto-discovered business logic classes injectable into controllers.
 - **Middlewares (`app/middlewares/`)**: Auto-discovered middleware classes.
 - **Models (`database/models/`)**: Knex-backed `XModel` classes for robust, type-safe ORM interactions.
+
+## Live Demo
+
+See XAOCS in action: [xaocs-blog-demo.fly.dev](https://xaocs-blog-demo.fly.dev)
+
+Source: [github.com/xaocs/xaocs/tree/main/apps/blog](https://github.com/xaocs/xaocs)
 
 ## Next Steps
 

@@ -48,3 +48,21 @@ router.get('/', async (req, res) => {
   return res.json({ postId: id });
 });
 ```
+
+## API Versioning
+
+XAOCS supports versioning via filename prefix. No config needed.
+
+```
+api/
+├── user.api.ts         → /api/user/
+├── v1.user.api.ts      → /api/v1/user/
+└── v2.user.api.ts      → /api/v2/user/
+```
+
+```bash
+xaocs add api user --version v1
+# Creates: api/v1.user.api.ts
+# Routes at: /api/v1/user/
+```
+

@@ -10,6 +10,14 @@ export function requireEnv(key: string): string {
     throw new Error(`[XAOCS Config] Missing env var: ${key}`);
   }
 
+  if (key === "JWT_SECRET" && value.length < 32) {
+    throw new Error(
+      `[XAOCS Config] JWT_SECRET must be at least 32 characters long. ` +
+        `Current length: ${value.length}. ` +
+        `Generate one with: openssl rand -base64 32`
+    );
+  }
+
   return value;
 }
 

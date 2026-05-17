@@ -1,0 +1,46 @@
+name: Bug Report
+description: Something isn't working as expected
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: "Thanks for taking the time to file a bug report!"
+
+  - type: input
+    id: version
+    attributes:
+      label: XAOCS Version
+      placeholder: "1.0.0"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      placeholder: "A clear description of the bug"
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      placeholder: "Code snippet or repo link that reproduces the issue"
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+
+  - type: dropdown
+    id: db
+    attributes:
+      label: Database
+      options: [SQLite, MySQL, PostgreSQL, MongoDB, N/A]
+    validations:
+      required: true

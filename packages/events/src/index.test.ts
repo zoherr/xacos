@@ -18,10 +18,12 @@ describe('@xacos/events', () => {
     clientSocket = io(`http://127.0.0.1:${port}`, {
       path: '/test-ws',
       autoConnect: true,
+      transports: ['websocket', 'polling'],
     });
 
-    await new Promise<void>((resolve) => {
+    await new Promise<void>((resolve, reject) => {
       clientSocket.on('connect', () => resolve());
+      clientSocket.on('connect_error', (err) => reject(err));
     });
   });
 

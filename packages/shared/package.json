@@ -1,6 +1,6 @@
 {
   "name": "@xacos/shared",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -16,5 +16,40 @@
   },
   "dependencies": {
     "zod": "^4.4.3"
+  },
+  "license": "MIT",
+  "author": "XAOCS Team",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xaocs/xaocs.git",
+    "directory": "packages/shared"
+  },
+  "homepage": "https://xaocs.dev",
+  "bugs": {
+    "url": "https://github.com/xaocs/xaocs/issues"
+  },
+  "keywords": [
+    "xaocs",
+    "xacos",
+    "framework",
+    "typescript",
+    "fullstack",
+    "fastify",
+    "react"
+  ],
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org",
+    "provenance": true
+  },
+  "engines": {
+    "bun": ">=1.0.0",
+    "node": ">=18.0.0"
   }
 }

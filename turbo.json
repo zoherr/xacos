@@ -31,6 +31,18 @@
         "coverage/**"
       ]
     },
+    "test:e2e": {
+      "dependsOn": [
+        "build"
+      ],
+      "outputs": []
+    },
+    "test:integration": {
+      "dependsOn": [
+        "build"
+      ],
+      "outputs": []
+    },
     "lint": {
       "outputs": []
     },
@@ -46,6 +58,10 @@
       ]
     },
     "dev": {
+      "dependsOn": [
+        "@xacos/core#build",
+        "@xacos/orm#build"
+      ],
       "cache": false,
       "persistent": true
     },

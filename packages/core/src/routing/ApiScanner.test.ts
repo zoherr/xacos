@@ -20,5 +20,21 @@ describe("scanApiFiles", () => {
       rmSync(dir, { recursive: true, force: true });
     }
   });
+
+  it("builds prefixes for versioned api files", () => {
+    const dir = mkdtempSync(join(tmpdir(), "xacos-api-versioned-"));
+
+    try {
+      writeFileSync(join(dir, "v1.user.api.ts"), "export {};", "utf8");
+      writeFileSync(join(dir, "v2.auth.api.ts"), "export {};", "utf8");
+
+      const routes = scanApiFiles(dir);
+      const prefixes = routes.map((r) => r.urlPrefix).sort();
+
+      expect(prefixes).toEqual(["/api/v1/user/", "/api/v2/auth/"]);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
 });
 

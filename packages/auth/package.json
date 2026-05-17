@@ -1,13 +1,13 @@
 {
   "name": "@xacos/auth",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
     }
   },
   "dependencies": {
@@ -17,7 +17,6 @@
     "@xacos/config": "workspace:*",
     "@xacos/client": "workspace:*",
     "bcryptjs": "^2.4.3",
-
     "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
@@ -31,6 +30,44 @@
     "dev": "tsc --watch",
     "test": "bun test",
     "type-check": "tsc --noEmit"
+  },
+  "license": "MIT",
+  "author": "XAOCS Team",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xaocs/xaocs.git",
+    "directory": "packages/auth"
+  },
+  "homepage": "https://xaocs.dev",
+  "bugs": {
+    "url": "https://github.com/xaocs/xaocs/issues"
+  },
+  "keywords": [
+    "xaocs",
+    "xacos",
+    "framework",
+    "typescript",
+    "fullstack",
+    "fastify",
+    "react",
+    "auth",
+    "jwt",
+    "authentication",
+    "bcrypt"
+  ],
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org",
+    "provenance": true
+  },
+  "engines": {
+    "bun": ">=1.0.0",
+    "node": ">=18.0.0"
   }
 }
-

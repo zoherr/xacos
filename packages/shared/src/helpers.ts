@@ -7,7 +7,7 @@ export class XRedirect {
   constructor(
     public readonly url: string,
     public readonly statusCode: 302 | 301 = 302
-  ) {}
+  ) { }
 }
 
 /**

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@3.0.0/schema.json",
+  "changelog": ["@changesets/changelog-github", { "repo": "xaocs/xaocs" }],
+  "commit": false,
+  "fixed": [],
+  "linked": [
+    [
+      "@xacos/core",
+      "@xacos/shared",
+      "@xacos/config",
+      "@xacos/server",
+      "@xacos/compiler",
+      "@xacos/client",
+      "@xacos/auth",
+      "@xacos/orm",
+      "@xacos/mail",
+      "@xacos/cache",
+      "@xacos/storage",
+      "@xacos/queue",
+      "@xacos/events",
+      "@xacos/testing",
+      "@xacos/validation",
+      "@xacos/ui",
+      "@xacos/cli",
+      "create-xacos-app"
+    ]
+  ],
+  "access": "public",
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+  "ignore": ["docs", "web"]
+}

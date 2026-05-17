@@ -25,6 +25,7 @@ function createReq(): XRequest {
 function createRes(): XResponse {
   let self!: XResponse;
   self = {
+    setHeader: (_name: string, _value: string) => self,
     json: (_data: unknown) => self,
     status: (_code: number) => self,
     send: (_data?: string) => self,

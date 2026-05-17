@@ -1,0 +1,23 @@
+name: PR Checks
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  changeset:
+    name: Changeset Required
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: oven-sh/setup-bun@v1
+      - run: bun install --frozen-lockfile
+      - name: Check changeset exists
+        run: |
+          if [ -z "$(ls .changeset/*.md 2>/dev/null | grep -v README | grep -v config)" ]; then
+            echo "::error::No changeset found. Run 'bun changeset' to add one."
+            exit 1
+          fi
+          echo "✓ Changeset found"

@@ -12,6 +12,7 @@ export { augmentTable, type XCreateTableBuilder } from "./migrations/columnHelpe
 export { Seeder } from "./seeders/Seeder";
 export { SeederRunner } from "./seeders/SeederRunner";
 export { Factory } from "./factories/Factory";
+export { paginate } from "./utils/paginate";
 
 
 

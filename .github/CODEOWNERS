@@ -1,0 +1,10 @@
+# Framework core — review by lead maintainers
+packages/core/   @xaocs/core-team
+packages/orm/    @xaocs/core-team
+packages/server/ @xaocs/core-team
+
+# Packages — any maintainer
+packages/auth/        @xaocs/maintainers
+packages/cli/         @xaocs/maintainers
+packages/create-xacos-app/ @xaocs/maintainers
+create-xacos-app/     @xaocs/maintainers

@@ -1,0 +1,417 @@
+xacos
+├── .gitignore
+├── .npmrc
+├── apps
+│   ├── docs
+│   │   ├── .gitignore
+│   │   ├── app
+│   │   │   ├── docs
+│   │   │   │   ├── api
+│   │   │   │   │   ├── controllers
+│   │   │   │   │   │   └── page.mdx
+│   │   │   │   │   ├── router
+│   │   │   │   │   │   └── page.mdx
+│   │   │   │   │   └── routing
+│   │   │   │   │       └── page.mdx
+│   │   │   │   ├── auth
+│   │   │   │   │   └── page.mdx
+│   │   │   │   ├── cli
+│   │   │   │   │   └── commands
+│   │   │   │   │       └── page.mdx
+│   │   │   │   ├── core
+│   │   │   │   │   ├── container
+│   │   │   │   │   │   └── page.mdx
+│   │   │   │   │   └── lifecycle
+│   │   │   │   │       └── page.mdx
+│   │   │   │   ├── frontend
+│   │   │   │   │   └── views
+│   │   │   │   │       └── page.mdx
+│   │   │   │   ├── layout.tsx
+│   │   │   │   ├── orm
+│   │   │   │   │   └── models
+│   │   │   │   │       └── page.mdx
+│   │   │   │   ├── packages
+│   │   │   │   │   └── page.mdx
+│   │   │   │   └── page.mdx
+│   │   │   ├── fonts
+│   │   │   │   ├── GeistMonoVF.woff
+│   │   │   │   └── GeistVF.woff
+│   │   │   ├── globals.css
+│   │   │   ├── layout.tsx
+│   │   │   ├── page.module.css
+│   │   │   └── page.tsx
+│   │   ├── eslint.config.js
+│   │   ├── lib
+│   │   │   └── sidebar.ts
+│   │   ├── mdx-components.tsx
+│   │   ├── next-env.d.ts
+│   │   ├── next.config.js
+│   │   ├── package.json
+│   │   ├── public
+│   │   │   ├── file-text.svg
+│   │   │   ├── globe.svg
+│   │   │   ├── next.svg
+│   │   │   ├── turborepo-dark.svg
+│   │   │   ├── turborepo-light.svg
+│   │   │   ├── vercel.svg
+│   │   │   └── window.svg
+│   │   ├── README.md
+│   │   └── tsconfig.json
+│   └── web
+│       ├── .gitignore
+│       ├── app
+│       │   ├── changelog
+│       │   │   └── page.tsx
+│       │   ├── docs
+│       │   │   └── page.tsx
+│       │   ├── fonts
+│       │   │   ├── GeistMonoVF.woff
+│       │   │   └── GeistVF.woff
+│       │   ├── globals.css
+│       │   ├── layout.tsx
+│       │   ├── page.module.css
+│       │   └── page.tsx
+│       ├── eslint.config.js
+│       ├── next-env.d.ts
+│       ├── next.config.js
+│       ├── package.json
+│       ├── public
+│       │   ├── file-text.svg
+│       │   ├── globe.svg
+│       │   ├── next.svg
+│       │   ├── turborepo-dark.svg
+│       │   ├── turborepo-light.svg
+│       │   ├── vercel.svg
+│       │   └── window.svg
+│       ├── README.md
+│       └── tsconfig.json
+├── bun.lock
+├── bunfig.toml
+├── CHANGELOG.md
+├── MAINTENANCE.md
+├── package.json
+├── packages
+│   ├── auth
+│   │   ├── package.json
+│   │   ├── src
+│   │   │   ├── controllers
+│   │   │   │   └── AuthController.ts
+│   │   │   ├── index.ts
+│   │   │   ├── middlewares
+│   │   │   │   └── authenticate.ts
+│   │   │   ├── migrations
+│   │   │   │   ├── 001_create_users_table.ts
+│   │   │   │   └── 002_create_sessions_table.ts
+│   │   │   ├── models
+│   │   │   │   └── User.ts
+│   │   │   ├── routes
+│   │   │   │   └── auth.api.ts
+│   │   │   ├── services
+│   │   │   │   ├── AuthService.test.ts
+│   │   │   │   └── AuthService.ts
+│   │   │   └── views
+│   │   │       ├── auth.login.tsx
+│   │   │       └── auth.register.tsx
+│   │   └── tsconfig.json
+│   ├── cache
+│   │   ├── package.json
+│   │   ├── src
+│   │   │   ├── Cache.ts
+│   │   │   ├── CacheManager.ts
+│   │   │   ├── drivers
+│   │   │   │   ├── MemoryCache.ts
+│   │   │   │   └── RedisCache.ts
+│   │   │   ├── index.test.ts
+│   │   │   ├── index.ts
+│   │   │   └── middleware
+│   │   │       └── ResponseCache.ts
+│   │   └── tsconfig.json
+│   ├── cli
+│   │   ├── package.json
+│   │   ├── src
+│   │   │   ├── bin
+│   │   │   │   └── xacos.ts
+│   │   │   ├── commands
+│   │   │   │   ├── add.ts
+│   │   │   │   ├── build.ts
+│   │   │   │   ├── dev.ts
+│   │   │   │   ├── info.ts
+│   │   │   │   ├── make.ts
+│   │   │   │   ├── migrate.ts
+│   │   │   │   ├── QueueWorkCommand.ts
+│   │   │   │   ├── routes.ts
+│   │   │   │   ├── seed.ts
+│   │   │   │   ├── start.ts
+│   │   │   │   ├── StorageLinkCommand.ts
+│   │   │   │   └── tinker.ts
+│   │   │   ├── index.test.ts
+│   │   │   ├── index.ts
+│   │   │   └── utils
+│   │   │       ├── loadConfig.ts
+│   │   │       └── logger.ts
+│   │   └── tsconfig.json
+│   ├── client
+│   │   ├── package.json
+│   │   ├── src
+│   │   │   ├── context
+│   │   │   │   └── XacosProvider.tsx
+│   │   │   ├── hooks
+│   │   │   │   ├── useAuth.ts
+│   │   │   │   ├── useEvent.ts
+│   │   │   │   └── useXacos.ts
+│   │   │   ├── http
+│   │   │   │   └── XHttpClient.ts
+│   │   │   ├── index.test.ts
+│   │   │   ├── index.ts
+│   │   │   └── navigation
+│   │   │       ├── redirect.ts
+│   │   │       └── XLink.tsx
+│   │   └── tsconfig.json
+│   ├── compiler
+│   │   ├── package.json
+│   │   ├── src
+│   │   │   ├── esbuild
+│   │   │   │   ├── buildProduction.test.ts
+│   │   │   │   └── buildProduction.ts
+│   │   │   ├── index.ts
+│   │   │   ├── scanner
+│   │   │   │   ├── ViewScanner.test.ts
+│   │   │   │   └── ViewScanner.ts
+│   │   │   ├── views
+│   │   │   │   ├── extractPageMeta.test.ts
+│   │   │   │   ├── extractPageMeta.ts
+│   │   │   │   ├── renderSSR.ts
+│   │   │   │   ├── resolveLayout.test.ts
+│   │   │   │   ├── resolveLayout.ts
+│   │   │   │   └── scanViews.ts
+│   │   │   └── vite
+│   │   │       └── createViteConfig.ts
+│   │   └── tsconfig.json
+│   ├── config
+│   │   ├── package.json
+│   │   ├── src
+│   │   │   ├── defineConfig.test.ts
+│   │   │   ├── defineConfig.ts
+│   │   │   ├── env.test.ts
+│   │   │   ├── env.ts
+│   │   │   ├── index.ts
+│   │   │   └── types.ts
+│   │   └── tsconfig.json
+│   ├── core
+│   │   ├── package.json
+│   │   ├── src
+│   │   │   ├── boot
+│   │   │   │   ├── Application.test.ts
+│   │   │   │   └── Application.ts
+│   │   │   ├── container
+│   │   │   │   ├── XContainer.test.ts
+│   │   │   │   └── XContainer.ts
+│   │   │   ├── controllers
+│   │   │   │   └── XController.ts
+│   │   │   ├── discovery
+│   │   │   │   └── ServiceDiscovery.ts
+│   │   │   ├── index.ts
+│   │   │   ├── middleware
+│   │   │   │   ├── compose.test.ts
+│   │   │   │   ├── compose.ts
+│   │   │   │   ├── discoverMiddlewares.ts
+│   │   │   │   ├── GlobalMiddlewareRegistry.test.ts
+│   │   │   │   ├── GlobalMiddlewareRegistry.ts
+│   │   │   │   └── MiddlewareRegistry.ts
+│   │   │   ├── providers
+│   │   │   │   ├── ProviderRegistry.ts
+│   │   │   │   └── ServiceProvider.ts
+│   │   │   └── routing
+│   │   │       ├── ApiScanner.test.ts
+│   │   │       ├── ApiScanner.ts
+│   │   │       ├── XRouter.test.ts
+│   │   │       └── XRouter.ts
+│   │   └── tsconfig.json
+│   ├── create-xacos-app
+│   │   ├── package.json
+│   │   ├── src
+│   │   │   ├── bin
+│   │   │   │   └── create.ts
+│   │   │   └── scaffold.ts
+│   │   └── tsconfig.json
+│   ├── eslint-config
+│   │   ├── base.js
+│   │   ├── next.js
+│   │   ├── package.json
+│   │   ├── react-internal.js
+│   │   └── README.md
+│   ├── events
+│   │   ├── package.json
+│   │   ├── src
+│   │   │   ├── index.test.ts
+│   │   │   ├── index.ts
+│   │   │   ├── mountSocketIO.ts
+│   │   │   └── XEvents.ts
+│   │   └── tsconfig.json
+│   ├── mail
+│   │   ├── package.json
+│   │   ├── src
+│   │   │   ├── drivers
+│   │   │   │   ├── drivers.test.ts
+│   │   │   │   ├── LogMailer.ts
+│   │   │   │   ├── MailgunMailer.ts
+│   │   │   │   ├── PostmarkMailer.ts
+│   │   │   │   ├── ResendMailer.ts
+│   │   │   │   ├── SesMailer.ts
+│   │   │   │   └── SmtpMailer.ts
+│   │   │   ├── index.test.ts
+│   │   │   ├── index.ts
+│   │   │   ├── Mailer.ts
+│   │   │   ├── MailManager.ts
+│   │   │   └── utils
+│   │   │       └── interpolate.ts
+│   │   └── tsconfig.json
+│   ├── orm
+│   │   ├── package.json
+│   │   ├── src
+│   │   │   ├── connection
+│   │   │   │   ├── db.ts
+│   │   │   │   ├── drivers.ts
+│   │   │   │   └── mongoUri.ts
+│   │   │   ├── decorators.ts
+│   │   │   ├── factories
+│   │   │   │   ├── Factory.test.ts
+│   │   │   │   └── Factory.ts
+│   │   │   ├── index.ts
+│   │   │   ├── migrations
+│   │   │   │   ├── columnHelpers.ts
+│   │   │   │   ├── Migration.ts
+│   │   │   │   ├── MigrationRunner.test.ts
+│   │   │   │   ├── MigrationRunner.ts
+│   │   │   │   ├── Schema.ts
+│   │   │   │   └── __fixtures__
+│   │   │   ├── seeders
+│   │   │   │   ├── Seeder.ts
+│   │   │   │   ├── SeederRunner.test.ts
+│   │   │   │   └── SeederRunner.ts
+│   │   │   ├── types
+│   │   │   │   └── bun-test.d.ts
+│   │   │   ├── XModel.test.ts
+│   │   │   ├── XModel.ts
+│   │   │   ├── XMongoModel.test.ts
+│   │   │   └── XMongoModel.ts
+│   │   ├── test-fixtures
+│   │   │   └── migrations
+│   │   │       └── 001_test.ts
+│   │   └── tsconfig.json
+│   ├── queue
+│   │   ├── package.json
+│   │   ├── src
+│   │   │   ├── dispatch.test.ts
+│   │   │   ├── dispatch.ts
+│   │   │   ├── drivers
+│   │   │   │   ├── BullMQQueue.ts
+│   │   │   │   ├── MemoryQueue.test.ts
+│   │   │   │   └── MemoryQueue.ts
+│   │   │   ├── index.ts
+│   │   │   ├── QueueManager.ts
+│   │   │   └── XJob.ts
+│   │   └── tsconfig.json
+│   ├── server
+│   │   ├── package.json
+│   │   ├── src
+│   │   │   ├── adapters
+│   │   │   │   ├── RequestAdapter.test.ts
+│   │   │   │   └── RequestAdapter.ts
+│   │   │   ├── dev
+│   │   │   │   └── mountVite.ts
+│   │   │   ├── index.ts
+│   │   │   ├── Logger.ts
+│   │   │   ├── routing
+│   │   │   │   └── mountApiRoutes.ts
+│   │   │   ├── static
+│   │   │   │   └── serveStaticChunks.ts
+│   │   │   ├── views
+│   │   │   │   ├── buildHtmlShell.test.ts
+│   │   │   │   ├── buildHtmlShell.ts
+│   │   │   │   └── mountViewRoutes.ts
+│   │   │   ├── XServer.test.ts
+│   │   │   └── XServer.ts
+│   │   ├── test-fixtures
+│   │   │   └── api
+│   │   │       ├── echo.api.ts
+│   │   │       └── validated.api.ts
+│   │   └── tsconfig.json
+│   ├── shared
+│   │   ├── package.json
+│   │   ├── src
+│   │   │   ├── helpers.ts
+│   │   │   ├── index.ts
+│   │   │   └── validation.ts
+│   │   └── tsconfig.json
+│   ├── storage
+│   │   ├── package.json
+│   │   ├── src
+│   │   │   ├── drivers
+│   │   │   │   ├── LocalStorage.ts
+│   │   │   │   └── S3Storage.ts
+│   │   │   ├── index.test.ts
+│   │   │   ├── index.ts
+│   │   │   ├── Storage.ts
+│   │   │   └── StorageManager.ts
+│   │   └── tsconfig.json
+│   ├── testing
+│   │   ├── package.json
+│   │   ├── src
+│   │   │   ├── index.ts
+│   │   │   ├── mockAuth.test.ts
+│   │   │   ├── mockAuth.ts
+│   │   │   ├── testClient.test.ts
+│   │   │   ├── testClient.ts
+│   │   │   └── useTestDb.ts
+│   │   ├── test-fixtures
+│   │   │   └── api
+│   │   │       └── health.api.ts
+│   │   └── tsconfig.json
+│   ├── typescript-config
+│   │   ├── base.json
+│   │   ├── nextjs.json
+│   │   ├── package.json
+│   │   └── react-library.json
+│   ├── ui
+│   │   ├── eslint.config.mjs
+│   │   ├── package.json
+│   │   ├── src
+│   │   │   ├── button.tsx
+│   │   │   ├── card.tsx
+│   │   │   └── code.tsx
+│   │   └── tsconfig.json
+│   ├── ui-xacos
+│   │   ├── package.json
+│   │   ├── src
+│   │   │   ├── components
+│   │   │   │   ├── Badge.tsx
+│   │   │   │   ├── Button.tsx
+│   │   │   │   ├── Card.tsx
+│   │   │   │   ├── Input.tsx
+│   │   │   │   ├── Modal.tsx
+│   │   │   │   ├── Navbar.tsx
+│   │   │   │   ├── Spinner.tsx
+│   │   │   │   └── Table.tsx
+│   │   │   ├── index.test.tsx
+│   │   │   ├── index.ts
+│   │   │   └── styles
+│   │   │       └── index.css
+│   │   ├── tailwind-preset.ts
+│   │   ├── tailwind.config.ts
+│   │   └── tsconfig.json
+│   └── validation
+│       ├── package.json
+│       ├── src
+│       │   ├── index.ts
+│       │   ├── types.ts
+│       │   ├── v.ts
+│       │   ├── validate.test.ts
+│       │   ├── validate.ts
+│       │   └── ValidationError.ts
+│       └── tsconfig.json
+├── PENDING_SPRINTS_AUDIT.md
+├── README.md
+├── STATUS.md
+├── tsconfig.base.json
+└── turbo.json

@@ -8,6 +8,7 @@ export { extractPageMeta, type PageMeta } from './views/extractPageMeta';
 export { renderSSR, type SSRResult } from './views/renderSSR';
 export { scanViews } from './views/scanViews';
 export { buildProduction, type BuildResult } from './esbuild/buildProduction';
+export { analyzeBundle, formatBundleReport, type BundleReport } from './esbuild/analyzeBundle';
 
 
 

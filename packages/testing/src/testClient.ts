@@ -26,6 +26,7 @@ export interface TestResponse<T = unknown> {
 }
 
 export interface TestClient {
+  _fastify: FastifyInstance;
   get<T = unknown>(url: string, opts?: RequestInit): Promise<TestResponse<T>>;
   post<T = unknown>(url: string, body?: unknown, opts?: RequestInit): Promise<TestResponse<T>>;
   put<T = unknown>(url: string, body?: unknown, opts?: RequestInit): Promise<TestResponse<T>>;
@@ -101,6 +102,7 @@ export async function testClient(options: TestClientOptions = {}): Promise<TestC
   }
 
   return {
+    _fastify: fastify,
     get: <T>(url: string, opts?: RequestInit) => request<T>('GET', url, undefined, opts),
     post: <T>(url: string, body?: unknown, opts?: RequestInit) => request<T>('POST', url, body, opts),
     put: <T>(url: string, body?: unknown, opts?: RequestInit) => request<T>('PUT', url, body, opts),
@@ -111,4 +113,5 @@ export async function testClient(options: TestClientOptions = {}): Promise<TestC
     },
   };
 }
+
 

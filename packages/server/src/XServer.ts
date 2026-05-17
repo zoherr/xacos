@@ -21,21 +21,30 @@ export class XServer {
   constructor() {
     const isDev = process.env["APP_ENV"] !== "production";
     this.fastify = Fastify({
+      bodyLimit: 10 * 1024 * 1024, // 10MB max body size
       logger: {
         level: process.env["APP_DEBUG"] === "true" || isDev ? "debug" : "info",
         transport: isDev
           ? {
-              target: "pino-pretty",
-              options: {
-                translateTime: "HH:MM:ss Z",
-                ignore: "pid,hostname",
-              },
-            }
+            target: "pino-pretty",
+            options: {
+              translateTime: "HH:MM:ss Z",
+              ignore: "pid,hostname",
+            },
+          }
           : undefined,
       } as any,
     });
 
-
+    this.fastify.addHook('onSend', async (_request, reply) => {
+      reply.header('X-Content-Type-Options', 'nosniff');
+      reply.header('X-Frame-Options', 'SAMEORIGIN');
+      reply.header('X-XSS-Protection', '1; mode=block');
+      reply.header('Referrer-Policy', 'strict-origin-when-cross-origin');
+      if (process.env['APP_ENV'] === 'production') {
+        reply.header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+      }
+    });
 
     void this.fastify.register(cookie as any);
     void this.fastify.register(formbody as any);

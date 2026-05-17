@@ -41,6 +41,10 @@ export function initDb(config?: InitDbOptions): Knex {
         filename: ":memory:",
       },
       useNullAsDefault: true,
+      pool: {
+        min: 1,
+        max: 1,
+      },
     };
   } else if (config && typeof config === "object" && "client" in config) {
     knexConfig = config;

@@ -54,12 +54,16 @@ export function registerAddCommand(program: Command) {
   add
     .command('api <name>')
     .description('Generate a new *.api.ts route file')
-    .action((name: string) => {
-      const path = resolve(`./api/${name}.api.ts`);
+    .option('-v, --version <version>', 'API version prefix (e.g. v1)')
+    .action((name: string, options: { version?: string }) => {
+      const prefix = options.version ? `${options.version}.` : '';
+      const filename = `${prefix}${name}.api.ts`;
+      const path = resolve(`./api/${filename}`);
       guard(path);
-      writeFileSync(path, apiTemplate(name));
-      log.success(`API route created: api/${name}.api.ts`);
-      log.info(`Routes available at: /api/${name}/`);
+      writeFileSync(path, apiTemplate(name, options.version));
+      log.success(`API route created: api/${filename}`);
+      const urlPrefix = options.version ? `/api/${options.version}/${name}` : `/api/${name}`;
+      log.info(`Routes available at: ${urlPrefix}/`);
     });
 }
 
@@ -143,37 +147,38 @@ export class ${name}Controller extends XController {
 `;
 }
 
-function apiTemplate(name: string): string {
+function apiTemplate(name: string, version?: string): string {
   const Name = name.charAt(0).toUpperCase() + name.slice(1);
+  const urlPrefix = version ? `/api/${version}/${name}` : `/api/${name}`;
   return `import { XRouter } from '@xacos/core';
 // import { authenticate } from '@xacos/auth';
 // import { ${Name}Service } from '../app/services/${Name}Service';
 
 export const router = new XRouter();
 
-// GET /api/${name}/
+// GET ${urlPrefix}/
 router.get('/', async (req, res) => {
   return res.json({ success: true, data: [] });
 });
 
-// GET /api/${name}/:id
+// GET ${urlPrefix}/:id
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
   return res.json({ success: true, data: { id } });
 });
 
-// POST /api/${name}/
+// POST ${urlPrefix}/
 router.post('/', async (req, res) => {
   return res.status(201).json({ success: true, data: req.body });
 });
 
-// PUT /api/${name}/:id
+// PUT ${urlPrefix}/:id
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
   return res.json({ success: true, data: { id, ...req.body as object } });
 });
 
-// DELETE /api/${name}/:id
+// DELETE ${urlPrefix}/:id
 router.delete('/:id', async (req, res) => {
   return res.status(204).send();
 });

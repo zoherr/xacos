@@ -53,6 +53,11 @@ export default function LandingPage() {
             bunx create-xacos-app my-app
           </code>
         </div>
+        <div className="mt-6 animate-fade-in">
+          <a href="https://xaocs-blog-demo.fly.dev" className="text-blue-400 underline hover:text-blue-300 transition-colors text-base font-medium">
+            View live demo →
+          </a>
+        </div>
       </section>
 
       {/* Interactive Code Showcase Section (Sprint 142) */}

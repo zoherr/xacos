@@ -41,10 +41,11 @@ export class AuthService {
       throw Object.assign(new Error('Email already registered'), { statusCode: 409 });
     }
 
+    const BCRYPT_ROUNDS = Math.max(12, Number(process.env['BCRYPT_ROUNDS'] ?? 12));
     const created = await User.create({
       name: data.name,
       email: data.email,
-      password: await bcrypt.hash(data.password, 12),
+      password: await bcrypt.hash(data.password, BCRYPT_ROUNDS),
       role: 'user',
       email_verified: false,
       email_verified_at: null,

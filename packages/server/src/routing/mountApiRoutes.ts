@@ -32,13 +32,13 @@ export async function mountApiRoutes(
 
   for (const { filePath, urlPrefix } of files) {
     try {
-      const mod = await import(pathToFileURL(filePath).href + "?t=" + Date.now());
+      const mod = await import(pathToFileURL(filePath).href);
       const router = mod?.router;
       if (!router) continue;
 
       for (const route of router.routes) {
         const routePath = route.path === "/" ? "" : route.path;
-        const fullPath = `${urlPrefix}${routePath}`;
+        const fullPath = `${urlPrefix}${routePath}`.replace(/\/+/g, "/");
         const pipeline = route.middlewares && route.middlewares.length ? compose(route.middlewares) : null;
         const routeKey = `${route.method}:${fullPath}`;
 
@@ -91,6 +91,7 @@ export async function mountApiRoutes(
         }
       }
     } catch (err) {
+      console.error("IMPORT ERROR:", err);
       log.error(`Failed to mount API file ${filePath}: ${(err as Error).message}`);
     }
   }
@@ -101,6 +102,11 @@ export async function mountApiRoutes(
       const chokidar = await import("chokidar");
       const watcher = chokidar.watch([apiDir, resolve(apiDir, "../app")], {
         ignoreInitial: true,
+      });
+
+      fastify.addHook("onClose", async () => {
+        await watcher.close();
+        activeWatchers.delete(fastify);
       });
 
       watcher.on("all", (event, path) => {
@@ -118,7 +124,7 @@ export async function mountApiRoutes(
 
               for (const route of router.routes) {
                 const routePath = route.path === "/" ? "" : route.path;
-                const fullPath = `${urlPrefix}${routePath}`;
+                const fullPath = `${urlPrefix}${routePath}`.replace(/\/+/g, "/");
                 const pipeline = route.middlewares && route.middlewares.length ? compose(route.middlewares) : null;
                 const routeKey = `${route.method}:${fullPath}`;
 

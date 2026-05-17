@@ -1,5 +1,7 @@
 # Turborepo starter
 
+[![npm provenance](https://img.shields.io/badge/npm-provenance-blue)](https://docs.npmjs.com/generating-provenance-statements)
+
 This Turborepo starter is maintained by the Turborepo core team.
 
 ## Using this example

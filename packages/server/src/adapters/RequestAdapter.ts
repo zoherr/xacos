@@ -5,6 +5,7 @@ import { z } from 'zod';
 
 export function adaptRequest(req: FastifyRequest, app: XApp): XRequest {
   const xReq: XRequest = {
+    ip: req.ip,
     params: (req.params as Record<string, string>) ?? {},
     query: (req.query as Record<string, string>) ?? {},
     body: req.body,
@@ -73,6 +74,10 @@ function createXFile(part: any, app: XApp) {
 export function adaptResponse(reply: FastifyReply): XResponse {
   const res: any = {
     _payload: undefined,
+    setHeader(name: string, value: string) {
+      reply.header(name, value);
+      return res;
+    },
     json(data: unknown) {
       this._payload = data;
       return res;

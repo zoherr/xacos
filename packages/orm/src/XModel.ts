@@ -140,6 +140,14 @@ export abstract class XModel {
     return getKnex()(Model.table);
   }
 
+  /**
+   * @security WARNING: Never pass user input directly to raw().
+   * Always use parameterized bindings: db.raw('WHERE id = ?', [userInput])
+   */
+  static raw(sql: string, bindings?: readonly Knex.RawBinding[]): Knex.Raw {
+    return getKnex().raw(sql, bindings ?? []);
+  }
+
   static with(...relations: string[]): RelationScope {
     const Model = this as typeof XModel;
     return new RelationScope(Model, relations, Model.query());

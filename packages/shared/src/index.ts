@@ -1,10 +1,12 @@
 export * from './helpers';
 export * from './validation';
+export * from './response';
 import type { z } from 'zod';
 
 
 
 export interface XRequest {
+  ip?: string;
   params: Record<string, string>;
   query: Record<string, string>;
   body: unknown;
@@ -32,6 +34,7 @@ export interface XFile {
 
 
 export interface XResponse {
+  setHeader(name: string, value: string): XResponse;
   json(data: unknown): XResponse;
   status(code: number): XResponse;
   send(data?: string): XResponse;

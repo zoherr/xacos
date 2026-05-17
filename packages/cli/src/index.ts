@@ -13,6 +13,8 @@ import { registerAddCommand } from './commands/add';
 import { registerMakeCommand } from './commands/make';
 import { registerStorageLinkCommand } from './commands/StorageLinkCommand';
 import { registerQueueWorkCommand } from './commands/QueueWorkCommand';
+import { registerAnalyzeCommand } from './commands/analyze';
+import { registerAddPackageCommand } from './commands/addPackage';
 
 import { fileURLToPath } from 'node:url';
 
@@ -43,6 +45,8 @@ export async function runCLI(argv: string[]): Promise<void> {
   registerMakeCommand(program);
   registerStorageLinkCommand(program);
   registerQueueWorkCommand(program);
+  registerAnalyzeCommand(program);
+  registerAddPackageCommand(program);
 
   program.parse(argv);
 

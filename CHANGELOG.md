@@ -152,6 +152,24 @@
 - 2026-05-16: Sprint 148 completed (Hot Reload for API Routes: chokidar HMR watching api/ and app/ with dynamic route registry).
 - 2026-05-16: Sprint 149 completed (Health Check + Graceful Shutdown: GET /health endpoint and SIGTERM/SIGINT process draining).
 - 2026-05-16: Sprint 150 completed (Source Maps + Debug Mode: dev sourcemaps inline, Pino APP_DEBUG=true support, stack traces).
+- 2026-05-16: Sprint 151 completed (NPM Publishing Foundation: standardized package.json metadata, keywords, licenses, and READMEs).
+- 2026-05-16: Sprint 152 completed (Changesets Integration: initialized @changesets/cli, linked versioning strategy, and initial v1.0.0 baseline).
+- 2026-05-17: Sprint 153 completed (E2E Integration Test Suite: full E2E test suite covering CRUD, middleware, and stack integration in `@xacos/testing`).
+- 2026-05-17: Sprint 154 completed (Performance Baseline: performance baseline benchmark added. Results at `benchmarks/results.md`).
+- 2026-05-17: Sprint 155 completed (Security Audit: JWT validation, cookie hardening, security headers, request limits, and SECURITY.md policy).
+- 2026-05-17: Sprint 156 completed (Bundle Analysis: `xaocs analyze` command with per-page bundle size report).
+- 2026-05-17: Sprint 157 completed (API Versioning: documented and tested `v1.user.api.ts` convention, added `--version` flag to `xacos add api`).
+- 2026-05-17: Sprint 158 completed (Pagination + Response Envelope Helpers: shipped `paginate()` utility and `ApiResponse` envelope helpers).
+- 2026-05-17: Sprint 159 completed (xaocs add:package interactive ecosystem package installer).
+- 2026-05-17: Sprint 160 completed (Full SQLite integration test — passing assertions covering all XModel methods).
+- 2026-05-17: Sprint 161 completed (GitHub Actions CI — build, type-check, unit, and integration tests on every PR).
+- 2026-05-17: Sprint 162 completed (npm publish workflow via changesets. Docs auto-deploy on push to main).
+- 2026-05-17: Sprint 163 completed (npm provenance enabled for all packages. Supply chain integrity assured).
+- 2026-05-17: Sprint 164 completed (Demo App: Blog Part 1 — Directory structure, migrations for posts, comments, tags, and XModel definitions).
+- 2026-05-17: Sprint 165 completed (Demo App: Blog Part 2 — API Routes for blog CRUD and PostService with caching).
+- 2026-05-17: Sprint 166 completed (Demo App: Blog Part 3 — Frontend React views for home, post detail, and dashboard).
+- 2026-05-17: Sprint 167 completed (Demo App: Blog Part 4 — Database seeders for users and 25 blog posts, plus turbo dev graph wiring).
+- 2026-05-17: Sprint 168 completed (Demo App Deploy — Fly.io deployment config, Dockerfile, and live demo links in docs and landing page).
 
 
 
